@@ -60,7 +60,7 @@ public class AccountController extends CommonController {
             accountMapper.insert(account);
             return  wrapperMsg(HttpsCode.REGISTER_SUCCEED, "regsiter succeed");
         }catch (Exception e){
-            return wrapperMsg(200, "Error:"+e.getMessage());
+            return wrapperMsg(HttpsCode.LOGIN_FAILED, "Error:"+e.getMessage());
         }
     }
 

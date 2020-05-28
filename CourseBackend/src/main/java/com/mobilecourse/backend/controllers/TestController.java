@@ -2,7 +2,6 @@ package com.mobilecourse.backend.controllers;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.mobilecourse.backend.dao.AccountDao;
 import com.mobilecourse.backend.dao.TestDao;
 import com.mobilecourse.backend.model.Test;
 import com.mobilecourse.backend.WebSocketServer;
@@ -20,25 +19,16 @@ import java.util.List;
 @RestController
 @EnableAutoConfiguration
 //设置此参数可以给这个类的所有接口都加上前缀
-@RequestMapping("/test")
+//@RequestMapping("/test")
 public class TestController extends CommonController {
 
     @Autowired
     private TestDao testMapper;
-    @Autowired
-    private AccountDao accountMapper;
 
     // 普通请求，不指定method意味着接受所有类型的请求
     @RequestMapping(value = "/hello")
     public String hello() {
-        int cnt = accountMapper.testCnt();
-        return wrapperMsg(200, "当前数据库中共有：" + cnt + "条数据！");
-    }
-
-    @RequestMapping(value = "/login/{id}", method = { RequestMethod.GET })
-    public String login(@PathVariable String id) {
-
-        return wrapperMsg(200, "");
+        return wrapperMsg(200, "当前数据库中共有：" + testMapper.testCnt() + "条数据！");
     }
 
     // 带路径参数的GET请求，示例/delete/1，指定method意味着只接受对应类型的请求
