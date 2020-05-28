@@ -25,6 +25,6 @@ public interface AccountDao {
     void delete(int id);
 
     // 更新, 可以使用param对参数进行重新命名，则mapper解析按照重新命名以后的参数名进行
-    int updatePwd(@Param("id")int id, String pwd);
+    int updatePwd(@Param("username")int username, String pwd);
 
 }

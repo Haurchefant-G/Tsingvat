@@ -39,9 +39,9 @@ public class AccountController extends CommonController {
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
     public String login(@RequestBody Account account) {
         int login = 0;
-        if(account.id != null && account.password != null) {
+        if(account.username != null && account.password != null) {
             // 前端应保证传来的都不为null
-            login = accountMapper.login(account.id, account.password);
+            login = accountMapper.login(account.username, account.password);
         }
         if(login == 0){
             return wrapperMsg(HttpsCode.LOGIN_FAILED, "Error:id or password is wrong");
@@ -54,13 +54,12 @@ public class AccountController extends CommonController {
     @RequestMapping(value = "/register", method = { RequestMethod.POST })
     public String register(@RequestBody Account account) {
         // 如果对应参数没有传的话，则会默认为null
-        String email = account.email;
-        account.id = generateId(email);
+        String username = account.username;
         try {
             accountMapper.insert(account);
             return  wrapperMsg(HttpsCode.REGISTER_SUCCEED, "regsiter succeed");
         }catch (Exception e){
-            return wrapperMsg(HttpsCode.LOGIN_FAILED, "Error:"+e.getMessage());
+            return wrapperMsg(HttpsCode.REGISTER_SUCCEED, "Error:"+e.getMessage());
         }
     }
 
