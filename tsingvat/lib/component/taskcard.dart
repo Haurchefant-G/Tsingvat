@@ -79,7 +79,7 @@ class _TaskCardState extends State<TaskCard>
                           opacity: _opacity.value,
                           child: Column(
                             children: <Widget>[
-                              Text("1235566"),
+                              Text("具体任务描述"),
                               ButtonBar(
                                 alignment: MainAxisAlignment.center,
                                 children: <Widget>[

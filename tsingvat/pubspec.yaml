@@ -51,6 +51,7 @@ flutter:
   assets:
     - assets/avatar_logo.png
     - assets/placeholder_image.png
+    - assets/icon/RMB.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

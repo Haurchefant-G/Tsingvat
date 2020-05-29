@@ -1,7 +1,13 @@
 // import 'dart:js';
 
+//import 'dart:js';
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+import 'newTaskPage.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
 import 'loginPage.dart';
@@ -10,6 +16,13 @@ Dio dio = Dio();
 
 void main() {
   runApp(MyApp());
+
+  if (Platform.isAndroid) {
+    // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
+    SystemUiOverlayStyle systemUiOverlayStyle =
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -51,9 +64,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: 'startPage',
       routes: {
-        'startPage': (context) => startPage(),
+        'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
-        'homepage': (context) => HomePage(title: 'Flutter Demo Home Page')
+        'homePage': (context) => HomePage(title: 'Flutter Demo Home Page'),
+        'newTaskPage': (context) => newTaskPage()
       },
       //home: Login(),
     );
