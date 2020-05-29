@@ -6,14 +6,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class User {
-  String login;
-  int id;
-  String avatarUrl;
+  final String login;
+  final int id;
+  final String avatarUrl;
   String url;
-  String username;
-  String email;
-  int followers;
-  int following;
+  final String username;
+  final String email;
+  final int followers;
+  final int following;
 //  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 
@@ -28,6 +28,6 @@ class User {
       this.following);
 
   // 命名构造函数
-  User.empty();
+  //User.empty();
 
 }
