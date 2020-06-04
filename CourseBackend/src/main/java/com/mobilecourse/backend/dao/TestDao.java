@@ -1,6 +1,6 @@
 package com.mobilecourse.backend.dao;
 
-import com.mobilecourse.backend.model.Test;
+import com.mobilecourse.backend.entity.Test;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

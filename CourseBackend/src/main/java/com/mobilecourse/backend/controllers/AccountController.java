@@ -1,23 +1,15 @@
 package com.mobilecourse.backend.controllers;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.mobilecourse.backend.dao.AccountDao;
-import com.mobilecourse.backend.dao.TestDao;
-import com.mobilecourse.backend.model.Account;
-import com.mobilecourse.backend.model.Test;
-import com.mobilecourse.backend.WebSocketServer;
-import org.apache.tomcat.jni.Time;
+import com.mobilecourse.backend.entity.Account;
+import com.mobilecourse.backend.utils.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -30,41 +22,39 @@ public class AccountController extends CommonController {
 
     // 普通请求，不指定method意味着接受所有类型的请求
     @RequestMapping(value = "/hello")
-    public String hello() {
-        int cnt = accountMapper.testCnt();
-        return wrapperMsg(200, "当前数据库中共有：" + cnt + "条数据！");
+    public ResponseEntity<ResultModel> hello() {
+        int cnt = accountMapper.test();
+        return new ResponseEntity<>(ResultModel.ok(cnt),HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
-    public String login(@RequestBody Account account) {
-        int login = 0;
-        if(account.username != null && account.password != null) {
+    public ResponseEntity<ResultModel> login(@RequestBody Account account) {
+        List<Account> login = null;
+        if(account.getUsername() != null && account.getPassword() != null) {
             // 前端应保证传来的都不为null
-            login = accountMapper.login(account.username, account.password);
+            login = accountMapper.login(account.getUsername(), account.getPassword());
         }
-        if(login == 0){
-            return wrapperMsg(HttpsCode.LOGIN_FAILED, "Error:id or password is wrong");
-        } else if(login == 1){
-            return wrapperMsg(HttpsCode.LOGIN_SUCCEED, "Successfully login");
+        if(login == null || login.size() == 0)
+            return new ResponseEntity<>(ResultModel.error(ResultModel.ResultStatus.LOGIN_FAIL),HttpStatus.NOT_FOUND);
+        if(login.size() == 1){
+            Account data = login.get(0);
+            data.setPassword(null);
+            return new ResponseEntity<>(ResultModel.ok(data),HttpStatus.OK);
+        } else{
+            // TODO 说明出现重复主键，应当删除其中一个，但是应该不会
         }
-        return wrapperMsg(200, "");
+        return new ResponseEntity<>(ResultModel.error(ResultModel.ResultStatus.LOGIN_FAIL),HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/register", method = { RequestMethod.POST })
-    public String register(@RequestBody Account account) {
+    public ResponseEntity<ResultModel> register(@RequestBody Account account) {
         // 如果对应参数没有传的话，则会默认为null
-        String username = account.username;
-        try {
-            accountMapper.insert(account);
-            return  wrapperMsg(HttpsCode.REGISTER_SUCCEED, "regsiter succeed");
-        }catch (Exception e){
-            return wrapperMsg(HttpsCode.REGISTER_SUCCEED, "Error:"+e.getMessage());
-        }
+        // TODO 发送邮箱验证码验证
+        String username = account.getUsername();
+        accountMapper.register(account);
+        return new ResponseEntity<>(ResultModel.ok(),HttpStatus.OK);
     }
 
-    private String generateId(String email){
-        // 生成唯一id
-        return "2";
-    }
+    // TODO 用户修改用户名、密码、之类的。
 }

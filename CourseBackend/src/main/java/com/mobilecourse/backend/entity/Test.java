@@ -1,4 +1,4 @@
-package com.mobilecourse.backend.model;
+package com.mobilecourse.backend.entity;
 
 import java.sql.Timestamp;
 

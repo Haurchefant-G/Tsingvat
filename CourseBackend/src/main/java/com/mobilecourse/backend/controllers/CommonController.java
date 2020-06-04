@@ -20,6 +20,14 @@ public class CommonController {
         return wrapperMsg.toJSONString();
     }
 
+    String wrapperResp(int code, String msg,String data) {
+        JSONObject wrapperResp = new JSONObject();
+        wrapperResp.put("code", code);
+        wrapperResp.put("msg",msg);
+        wrapperResp.put("data", data);
+        return  wrapperResp.toJSONString();
+    }
+
     // 添加信息到session之中，此部分用途很广泛，比如可以通过session获取到对应的用户名或者用户ID，避免繁冗操作
     public void putInfoToSession(HttpServletRequest request, String keyName, Object info)
     {

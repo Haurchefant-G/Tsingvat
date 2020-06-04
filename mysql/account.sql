@@ -1,8 +1,27 @@
-drop table if exists account
-create table account(username varchar(30) not null primary key,
-	password varchar(30) not null,
+SHOW DATABASES;
+USE tsinghua;
+DROP TABLE IF EXISTS account;
+CREATE TABLE account(
+  username varchar(30) NOT NULL PRIMARY KEY,
+	password varchar(30) NOT NULL,
+  email varchar(30) NOT NULL,
 	nickname varchar(40),
 	signature varchar(100),
 	avatar varchar(100)
 	);
-insert into account values("admin","admin",null,null,null);
+INSERT INTO account VALUES("admin","admin","",NULL,NULL,NULL);
+INSERT INTO account VALUES("zxj","zxj","zxj@mails.tsinghua.edu.cn","LittleHealth","loser","http://img");
+INSERT INTO account VALUES("gac","gac","gac@mails.tsinghua.edu.cn","H",NULL,NULL);
+
+CREATE TABLE follow(
+  username varchar(30) NOT NULL,
+  follow varchar(30) NOT NULL,
+  PRIMARY KEY(username,follow)
+  );
+
+INSERT INTO follow VALUES("zxj","gac");
+
+
+SELECT * FROM account;
+
+SELECT * FROM account JOIN follow ON account.username=follow.following;
