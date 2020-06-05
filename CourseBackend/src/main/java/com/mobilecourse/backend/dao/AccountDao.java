@@ -14,4 +14,6 @@ public interface AccountDao {
 
     List<Account> getFollowers(String username);
 
+    List<Account> getFollowings(String username);
+
 }

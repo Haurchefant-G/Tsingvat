@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 public class Post {
-    private UUID uuid;
+    private String uuid;
     private String username;
     private Timestamp created;
     private String content;
@@ -25,7 +25,7 @@ public class Post {
         return content;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
@@ -37,7 +37,7 @@ public class Post {
         this.created = created;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 }

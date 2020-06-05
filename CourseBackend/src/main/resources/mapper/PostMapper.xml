@@ -10,4 +10,8 @@
     <select id="getPosts" resultType="com.mobilecourse.backend.entity.Post">
         select * from post where username=#{username}
     </select>
+
+    <insert id="createPost" parameterType="com.mobilecourse.backend.entity.Post">
+        INSERT INTO post(uuid,username,created,content) VALUES(#{uuid},#{username},#{created},#{content});
+    </insert>
 </mapper>
