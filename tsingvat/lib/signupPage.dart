@@ -43,7 +43,6 @@ class _Login extends State<SignupPage> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(top: 0, bottom: 30),
-              // TODO child可以改成icon
               child: Hero(
                 tag: 'tsingvat',
                 child: Text(
@@ -77,14 +76,12 @@ class _Login extends State<SignupPage> {
                             hintText: '清华邮箱',
                             border: InputBorder.none,
                           ),
-                          // TODO 除了检查邮箱外还应检查清华邮箱，或者只需填写用户名即可
                           keyboardType: TextInputType.text,
                           onSaved: (value) {
                             userName = value;
                           },
                           validator: (username) {
                             if (username.length == 0) {
-                              // TODO showToast
                               print('请输入用户名');
                             }
                           },

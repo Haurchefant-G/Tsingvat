@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsingvat/loginPage.dart';
 
-class startPage extends StatelessWidget {
+class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 1), () {

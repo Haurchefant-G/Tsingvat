@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       //       children: tabs.map((e) => Text(e)).toList())
       // ]),
       floatingActionButton: OpenContainer(
-        transitionDuration: const Duration(milliseconds: 2000),
+        //transitionDuration: const Duration(milliseconds: 2000),
         closedColor: Theme.of(context).primaryColorDark,
         transitionType: ContainerTransitionType.fade,
         closedBuilder: (BuildContext context, VoidCallback _) {
