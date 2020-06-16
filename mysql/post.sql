@@ -1,3 +1,4 @@
+#source C:/code/android/project/Tsingvat/mysql/post.sql
 SHOW DATABASES;
 USE tsinghua;
 DROP TABLE IF EXISTS post;
@@ -14,9 +15,6 @@ CREATE TABLE imgs(
   img varchar(40)
   );
 
-INSERT INTO post VALUES("1111222233334444","admin","2020-06-01:10:36:20","I am a post");
-INSERT INTO post VALUES("1111222233334445","zxj","2020-06-01:10:36:20","I am a post");
-INSERT INTO post VALUES("1111222233334446","zxj","2020-06-01:10:36:20","I am a post");
-INSERT INTO post VALUES("1111222233334447","gac","2020-06-01:10:36:20","I am a post");
+INSERT INTO post VALUES("5ad6e47a-02b7-4cb4-b7d6-cd13a2e783e6","admin","2020-06-01 10:36:20","I am a post");
 
 SELECT * FROM post;

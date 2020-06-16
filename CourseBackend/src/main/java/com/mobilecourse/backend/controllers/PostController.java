@@ -2,11 +2,10 @@ package com.mobilecourse.backend.controllers;
 
 import com.mobilecourse.backend.dao.PostDao;
 import com.mobilecourse.backend.entity.Post;
+import com.mobilecourse.backend.entity.Reply;
 import com.mobilecourse.backend.utils.ResultModel;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +29,7 @@ public class PostController extends CommonController {
         return ResponseEntity.ok(ResultModel.ok(posts));
     }
 
+    // 创建post
     @RequestMapping(value="/create", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> createPost(@RequestBody Post post){
         Timestamp time = new Timestamp(new Date().getTime());
@@ -39,4 +39,17 @@ public class PostController extends CommonController {
         postDao.createPost(post);
         return ResponseEntity.ok(ResultModel.ok());
     }
+
+    @RequestMapping(value = "/replies", method = {RequestMethod.GET})
+    public ResponseEntity<ResultModel> getReplies(@RequestParam String postUuid){
+        List<Reply> replies = postDao.getReplies(postUuid);
+        return ResponseEntity.ok(ResultModel.ok(replies));
+    }
+
+    @RequestMapping(value = "/create_reply", method = {RequestMethod.POST})
+    public ResponseEntity<ResultModel> createReply(@RequestBody Reply reply){
+        postDao.createReply(reply);
+        return ResponseEntity.ok(ResultModel.ok());
+    }
+
 }

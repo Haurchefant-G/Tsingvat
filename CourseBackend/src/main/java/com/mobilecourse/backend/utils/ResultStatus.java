@@ -1,5 +1,7 @@
 package com.mobilecourse.backend.utils;
 
+import org.springframework.http.HttpStatus;
+
 public enum ResultStatus {
     SUCCESS(20,"success"),
     LOGIN_SUCCESS(20, "登录成功"),

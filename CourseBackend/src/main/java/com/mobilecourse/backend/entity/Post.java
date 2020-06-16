@@ -4,10 +4,12 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 public class Post {
+    // 暂时先做没有图片的
     private String uuid;
     private String username;
     private Timestamp created;
     private String content;
+
 
     public void setUsername(String username) {
         this.username = username;
