@@ -9,12 +9,6 @@
         VALUES(#{uuid},#{username},#{created},#{content},#{fromAddr},#{toAddr},#{ddl});
     </insert>
 
-    <update id="updateTaker" parameterType="com.mobilecourse.backend.entity.Errand">
-        UPDATE errand
-        SET taker=#{taker},takeTime=#{takeTime}
-        WHERE uuid=#{uuid}
-    </update>
-
     <select id="getErrands" resultType="com.mobilecourse.backend.entity.Errand">
         SELECT * FROM errand
         WHERE username=#{username}
@@ -25,11 +19,21 @@
         WHERE taker=#{taker}
     </select>
 
-    <update id="updateErrand" parameterType="com.mobilecourse.backend.entity.Errand">
+    <update id="modifyErrand" parameterType="com.mobilecourse.backend.entity.Errand">
         UPDATE errand
         SET created=#{created},fromAddr=#{fromAddr},toAddr=#{toAddr},ddl=#{ddl}
         where uuid=#{uuid}
     </update>
 
+    <update id="takeErrand" parameterType="com.mobilecourse.backend.entity.Errand">
+        UPDATE errand
+        SET taker=#{taker},takeTime=#{takeTime}
+        WHERE uuid=#{uuid}
+    </update>
+
+    <delete id="deleteErrand" parameterType="java.lang.String">
+        DELETE FROM errand
+        WHERE uuid=#{uuid}
+    </delete>
 
 </mapper>
