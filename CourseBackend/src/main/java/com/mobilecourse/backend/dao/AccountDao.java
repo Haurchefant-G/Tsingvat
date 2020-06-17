@@ -8,6 +8,8 @@ public interface AccountDao {
     // 作为测试
     int test();
 
+    List<Account> getUser(String username);
+
     List<Account> login(String username, String pwd);
 
     void register(Account account);

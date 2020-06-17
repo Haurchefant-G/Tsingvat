@@ -13,6 +13,7 @@ INSERT INTO account VALUES("admin","admin","",NULL,NULL,NULL);
 INSERT INTO account VALUES("zxj","zxj","zxj@mails.tsinghua.edu.cn","LittleHealth","loser","http://img");
 INSERT INTO account VALUES("gac","gac","gac@mails.tsinghua.edu.cn","H",NULL,NULL);
 
+DROP TABLE IF EXISTS follow;
 CREATE TABLE follow(
   username varchar(30) NOT NULL,
   follow varchar(30) NOT NULL,

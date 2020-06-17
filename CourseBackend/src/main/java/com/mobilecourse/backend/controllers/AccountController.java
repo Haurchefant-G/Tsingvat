@@ -3,10 +3,8 @@ package com.mobilecourse.backend.controllers;
 import com.mobilecourse.backend.dao.AccountDao;
 import com.mobilecourse.backend.entity.Account;
 import com.mobilecourse.backend.utils.ResultModel;
-import com.mobilecourse.backend.utils.ResultStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,33 +24,33 @@ public class AccountController extends CommonController {
         List<Account> login = null;
         if(account.getUsername() != null && account.getPassword() != null)
             login = accountDao.login(account.getUsername(), account.getPassword()); // 前端应保证传来的都不为null
-        if(login == null || login.size() == 0)
-            return new ResponseEntity(ResultModel.error(ResultStatus.LOGIN_FAIL),HttpStatus.NOT_FOUND);
+        else{
+            return wrapperErrorResp(ResultModel.LOGIN_FAIL, "username or password can't be null!");
+        }
+        if(login == null || login.size() == 0) {
+            return wrapperErrorResp(ResultModel.LOGIN_FAIL, "can't find "+ account.getUsername() +" or password wrong!");
+        }
         Account data = login.get(0);
         data.setPassword(null);// 将密码处理为空
-        return ResponseEntity.ok(ResultModel.ok(data));
+        return wrapperOKResp(data);
     }
 
     @RequestMapping(value = "/register", method = { RequestMethod.POST })
     public ResponseEntity<ResultModel> register(@RequestBody Account account) {
         // 如果对应参数没有传的话，则会默认为null
         // TODO 发送邮箱验证码验证
-        if(account.getUsername()==null || account.getPassword() == null)
-            return new ResponseEntity<>(ResultModel.error(ResultStatus.RESGISTER_FAIL), HttpStatus.BAD_REQUEST);
-        accountDao.register(account);
-        return ResponseEntity.ok(ResultModel.ok(account));
-    }
-
-    @RequestMapping(value = "/followers", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getFollower(@RequestParam String username) {
-        List<Account> accounts = accountDao.getFollowers(username);
-        return ResponseEntity.ok(ResultModel.ok(accounts));
-    }
-
-    @RequestMapping(value = "/followings", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getFollowings(@RequestParam String username) {
-        List<Account> accounts = accountDao.getFollowings(username);
-        return ResponseEntity.ok(ResultModel.ok(accounts));
+        if(account.getUsername()==null || account.getPassword() == null || account.getEmail() == null)
+            return wrapperErrorResp(ResultModel.REGISTER_FAIL, "username or password or email can't be null!");
+        try {
+            List<Account> accounts = accountDao.getUser(account.getUsername());
+            if(accounts!= null && accounts.size() >= 1){
+                return wrapperErrorResp(ResultModel.ACCOUNT_ALREADY_EXISTS, account.getUsername() + " already exists.");
+            }
+            accountDao.register(account);
+        } catch (Exception e){
+            return wrapperErrorResp(ResultModel.REGISTER_FAIL, e.getMessage());
+        }
+        return wrapperOKResp(account);
     }
     // TODO 用户修改用户名、密码、之类的。
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 指定了mapper对应的dao -->
+<mapper namespace="com.mobilecourse.backend.dao.ErrandDao">
+
+    <insert id="createErrand" parameterType="com.mobilecourse.backend.entity.Errand">
+        INSERT INTO
+        errand(uuid,username,created,content,fromAddr,toAddr,ddl)
+        VALUES(#{uuid},#{username},#{created},#{content},#{fromAddr},#{toAddr},#{ddl});
+    </insert>
+
+    <update id="updateTaker" parameterType="com.mobilecourse.backend.entity.Errand">
+        UPDATE errand
+        SET taker=#{taker},takeTime=#{takeTime}
+        WHERE uuid=#{uuid}
+    </update>
+
+    <select id="getErrands" resultType="com.mobilecourse.backend.entity.Errand">
+        SELECT * FROM errand
+        WHERE username=#{username}
+    </select>
+
+    <select id="getTakeErrands" resultType="com.mobilecourse.backend.entity.Errand">
+        SELECT * FROM errand
+        WHERE taker=#{taker}
+    </select>
+
+    <update id="updateErrand" parameterType="com.mobilecourse.backend.entity.Errand">
+        UPDATE errand
+        SET created=#{created},fromAddr=#{fromAddr},toAddr=#{toAddr},ddl=#{ddl}
+        where uuid=#{uuid}
+    </update>
+
+
+</mapper>

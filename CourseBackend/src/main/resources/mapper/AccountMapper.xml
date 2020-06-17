@@ -36,4 +36,9 @@
         SELECT * FROM account where account.username in
         (SELECT follow FROM follow where follow.username=account.username);
     </select>
+
+    <select id="getUser" resultType="com.mobilecourse.backend.entity.Account">
+        SELECT * FROM account
+        where username=#{username}
+    </select>
 </mapper>
