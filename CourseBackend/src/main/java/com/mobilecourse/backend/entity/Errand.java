@@ -14,6 +14,14 @@ public class Errand extends Post {
 
     private Timestamp ddl = null;
 
+    public String getFromAddr() {
+        return fromAddr;
+    }
+
+    public void setFromAddr(String fromAddr) {
+        this.fromAddr = fromAddr;
+    }
+
     public String getTaker() {
         return taker;
     }
