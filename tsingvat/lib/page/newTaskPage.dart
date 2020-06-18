@@ -369,6 +369,7 @@ class _newTaskPageState extends State<newTaskPage> {
                           // inputFormatters: [
                           //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
                           // ],
+                          style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(height: 1.8),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
                           onSaved: (v) {},
