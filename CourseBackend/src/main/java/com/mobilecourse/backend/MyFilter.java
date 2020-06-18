@@ -1,10 +1,13 @@
 package com.mobilecourse.backend;
 
+import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Component
 @WebFilter(filterName = "myFilter",urlPatterns = {"/*"})
 public class MyFilter implements Filter {
 

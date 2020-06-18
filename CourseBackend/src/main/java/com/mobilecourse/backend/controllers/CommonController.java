@@ -31,6 +31,7 @@ public class CommonController {
      * @return
      */
     ResponseEntity<ResultModel> wrapperOKResp(Object data){
+
         return ResponseEntity.ok(ResultModel.ok(data));
     }
 
@@ -65,7 +66,6 @@ public class CommonController {
         session.setAttribute(keyName, info);
     }
 
-    // 添加信息到session之中，此部分用途很广泛，比如可以通过session获取到对应的用户名或者用户ID，避免繁冗操作
     public void removeInfoFromSession(HttpServletRequest request, String keyName)
     {
         HttpSession session = request.getSession();

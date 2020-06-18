@@ -52,5 +52,29 @@ public class AccountController extends CommonController {
         }
         return wrapperOKResp(account);
     }
+
+    /**
+    * 上述login和register使用的是post,以下为get，这样就不会有出现二义性
+    **/
+
+    @RequestMapping(value = "/{username}",method = {RequestMethod.GET})
+    public ResponseEntity<ResultModel> getUser(@PathVariable("username") String username){
+        List<Account> accounts = accountDao.getUser(username);
+        if(accounts == null || accounts.size() == 0)
+            return wrapperErrorResp(ResultModel.ACCOUNT_NOT_FOUND,"can't find user: "+username);
+        return wrapperOKResp(accounts.get(0));
+    }
+
+    @RequestMapping(value = "/{username}/followers", method = {RequestMethod.GET})
+    public ResponseEntity<ResultModel> getFollower(@PathVariable("username") String username) {
+        List<Account> accounts = accountDao.getFollowers(username);
+        return wrapperOKResp(accounts);
+    }
+
+    @RequestMapping(value = "/{username}/followings", method = {RequestMethod.GET})
+    public ResponseEntity<ResultModel> getFollowings(@PathVariable("username") String username) {
+        List<Account> accounts = accountDao.getFollowings(username);
+        return wrapperOKResp(accounts);
+    }
     // TODO 用户修改用户名、密码、之类的。
 }

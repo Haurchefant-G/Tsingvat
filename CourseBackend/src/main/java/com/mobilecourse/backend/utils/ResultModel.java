@@ -29,6 +29,8 @@ public class ResultModel {
      */
     private Object data;
 
+    private String token;
+
     public ResultModel(int code, String message) {
         this.code = code;
         this.message = message;

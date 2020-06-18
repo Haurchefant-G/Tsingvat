@@ -23,15 +23,8 @@ public class PostController extends CommonController {
     @Autowired
     private PostDao postDao;
 
-    @RequestMapping(value="/image/", method = {RequestMethod.POST})
-    public ResponseEntity<ResultModel> image(
-            @RequestParam("images") MultipartFile[] multipartFiles,String uuid) throws IOException {
-        FileUtils.saveImage(multipartFiles, uuid);
-        return wrapperOKResp(null);
-    }
-
     // 创建post
-    @RequestMapping(value="", method = {RequestMethod.POST})
+    @RequestMapping(value="/create", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> createPost(@RequestBody Post post){
         Timestamp time = this.getCurrentTime();
         String uuid = this.getUuid();
@@ -41,7 +34,7 @@ public class PostController extends CommonController {
         return wrapperOKResp(post);
     }
 
-    @RequestMapping(value="", method = {RequestMethod.PUT})
+    @RequestMapping(value="/modify", method = {RequestMethod.PUT})
     public ResponseEntity<ResultModel> modifyPost(@RequestBody Post post){
         Timestamp time = this.getCurrentTime();
         post.setCreated(time);
@@ -49,7 +42,7 @@ public class PostController extends CommonController {
         return wrapperOKResp(post);
     }
 
-    @RequestMapping(value="", method = {RequestMethod.DELETE})
+    @RequestMapping(value="/delete", method = {RequestMethod.DELETE})
     public ResponseEntity<ResultModel> deletePost(@RequestParam String uuid){
         postDao.deletePost(uuid);
         return wrapperOKResp(null);

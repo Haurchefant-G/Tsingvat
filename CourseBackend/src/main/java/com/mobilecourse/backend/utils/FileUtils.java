@@ -24,8 +24,8 @@ public class FileUtils {
      * @param dir, dir为uuid
      * @return
      */
-    public static void saveImage(MultipartFile[] images, String dir) throws IOException {
-        File file = new File(Global.BASE_IMAGE_PATH + dir + "/");
+    public static void saveFiles(MultipartFile[] images, String dir) throws IOException {
+        File file = new File(Global.BASE_FILE_PATH + dir + "/");
         if(!file.exists() && !file.isDirectory()){
             file.mkdir();
         }
@@ -36,7 +36,20 @@ public class FileUtils {
         }
     }
 
-
+    /**
+     *
+     * @param image
+     * @param dir
+     * @throws IOException
+     */
+    public static void saveFile(MultipartFile image, String dir, String fileName) throws IOException {
+        File file = new File(Global.BASE_FILE_PATH + dir + "/");
+        if(!file.exists() && !file.isDirectory()){
+            file.mkdir();
+        }
+        File desFile = new File(file.getPath() + "/" + fileName);
+        image.transferTo(desFile);
+    }
     /**
      * 根据url拿取file
      *

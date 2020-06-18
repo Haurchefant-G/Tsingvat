@@ -24,7 +24,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 @Component
 public class QRCodeUtils {
 
-    public void createQRCode(String filePath, String content) {
+    public static void createQRCode(String filePath, String content) {
         //图片的宽度
         int width=300;
         //图片的高度
@@ -56,7 +56,7 @@ public class QRCodeUtils {
         }
     }
 
-    public String getContentFromQRCode(String filePath) {
+    public static String getContentFromQRCode(String filePath) {
         MultiFormatReader formatReader=new MultiFormatReader();
         File file=new File(filePath);
         BufferedImage image;
@@ -73,6 +73,12 @@ public class QRCodeUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void main(String[] args){
+        String filePath = Global.BASE_FILE_PATH + "/qrcode/" + "qrcode.png";
+        createQRCode(filePath, "zxj");
+        String content = getContentFromQRCode(filePath);
     }
 }
 

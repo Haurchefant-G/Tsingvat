@@ -8,7 +8,8 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Hashtable;
 
-@ServerEndpoint("/websocket/{sid}")
+// websocket用于在线聊天
+@ServerEndpoint(value = "/websocket/{sid}")
 @Component
 public class WebSocketServer {
 
