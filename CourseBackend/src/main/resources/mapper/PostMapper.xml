@@ -6,7 +6,23 @@
         select * from post where username=#{username}
     </select>
 
+    <select id="getPost" resultType="com.mobilecourse.backend.entity.Post">
+        select * from post where uuid=#{uuid}
+    </select>
+
+
     <insert id="createPost" parameterType="com.mobilecourse.backend.entity.Post">
         INSERT INTO post(uuid,username,created,content) VALUES(#{uuid},#{username},#{created},#{content});
     </insert>
+
+    <update id="modifyPost" parameterType="com.mobilecourse.backend.entity.Post">
+        UPDATE post
+        SET content=#{content},created=#{created}
+        WHERE uuid=#{uuid}
+    </update>
+
+    <delete id="deletePost" parameterType="java.lang.String">
+        DELETE FROM post
+        WHERE uuid=#{uuid}
+    </delete>
 </mapper>
