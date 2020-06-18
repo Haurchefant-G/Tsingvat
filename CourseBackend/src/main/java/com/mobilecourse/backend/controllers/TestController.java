@@ -3,9 +3,8 @@ package com.mobilecourse.backend.controllers;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mobilecourse.backend.dao.TestDao;
-import com.mobilecourse.backend.model.Test;
+import com.mobilecourse.backend.entity.Test;
 import com.mobilecourse.backend.WebSocketServer;
-import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -23,18 +22,18 @@ import java.util.List;
 public class TestController extends CommonController {
 
     @Autowired
-    private TestDao testMapper;
+    private TestDao testDao;
 
     // 普通请求，不指定method意味着接受所有类型的请求
     @RequestMapping(value = "/hello")
     public String hello() {
-        return wrapperMsg(200, "当前数据库中共有：" + testMapper.testCnt() + "条数据！");
+        return wrapperMsg(200, "当前数据库中共有：" + testDao.testCnt() + "条数据！");
     }
 
     // 带路径参数的GET请求，示例/delete/1，指定method意味着只接受对应类型的请求
     @RequestMapping(value = "/delete/{id}", method = { RequestMethod.GET })
     public String delete(@PathVariable int id) {
-        testMapper.delete(id);
+        testDao.delete(id);
         return wrapperMsg(200, "成功删除id为：" + id + "的数据！");
     }
 
@@ -42,7 +41,7 @@ public class TestController extends CommonController {
     @RequestMapping(value = "/update/{id}", method = { RequestMethod.GET })
     public String update(@PathVariable int id,
                             @RequestParam(value = "content", defaultValue = "test")String content) {
-        testMapper.update(id, content);
+        testDao.update(id, content);
         return wrapperMsg(200, "success");
     }
 
@@ -52,7 +51,7 @@ public class TestController extends CommonController {
         Test t = new Test();
         t.setContent(content);
         t.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
-        testMapper.insert(t);
+        testDao.insert(t);
         return wrapperMsg(200, "success");
     }
 
@@ -67,7 +66,7 @@ public class TestController extends CommonController {
     public String selectAll() {
         try {
             JSONArray jsonArray = new JSONArray();
-            List<Test> list = testMapper.selectAll();
+            List<Test> list = testDao.selectAll();
             if (list.size() == 0)
                 return wrapperMsg(201, "没有找到对应的数据！");
             for (Test s : list) {

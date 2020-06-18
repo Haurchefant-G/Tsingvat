@@ -1,30 +1,21 @@
 package com.mobilecourse.backend.dao;
 
-import com.mobilecourse.backend.model.Account;
-import org.apache.ibatis.annotations.Param;
+import com.mobilecourse.backend.entity.Account;
 
 import java.util.List;
 
 public interface AccountDao {
+    // 作为测试
+    int test();
 
-    // 通过id查找Account
-    Account selectById(String id);
+    List<Account> getUser(String username);
 
-    int login(String id, String pwd);
+    List<Account> login(String username, String pwd);
 
-    // 查找
-    List<Account> selectAll();
+    void register(Account account);
 
-    // 统计
-    int testCnt();
+    List<Account> getFollowers(String username);
 
-    // 插入，可以指定类为输入的参数
-    void insert(Account account);
-
-    // 删除
-    void delete(int id);
-
-    // 更新, 可以使用param对参数进行重新命名，则mapper解析按照重新命名以后的参数名进行
-    int updatePwd(@Param("username")int username, String pwd);
+    List<Account> getFollowings(String username);
 
 }

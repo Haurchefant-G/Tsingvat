@@ -12,9 +12,11 @@ public static int LOGIN_SUCCEED = 201;
 public static int LOGIN_FAILED = 202;
 public static int REGISTER_SUCCEED = 203;
 public static int REGISTER_FAILED = 204;
+...
 ```
 
-#### 登录
+### 1. Account-Follow部分
+#### 1.1登录
 
 username和email的关系是`email=username@(mail(s)?.)?tsinghua.edu.cn`，比如email是zhang-xj17@mails.tsinghua.edu.cn，那么username是`zhang-xj17`
 
@@ -26,26 +28,23 @@ body{
     "username":String,
     "password":String
 }
-or
-{
-  	"email":String,
-    "password":String
-}
 ```
 ```json
 response{
 	code:int,
-    "msg":String
+    msg:String,
+    data:Account
 }
 ```
 
-#### 注册
+#### .1.2 注册
 
 ```json
 method:POST
 uri: /register
 content-type:application/json
 body{
+    "username":String,
     "email": String,
     "password":String
 }
@@ -56,4 +55,8 @@ response{
     "msg":String
 }
 ```
+
+#### 1.3 获取关注者
+
+
 

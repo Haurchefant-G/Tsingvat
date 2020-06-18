@@ -3,44 +3,42 @@
 <!-- 指定了mapper对应的dao -->
 <mapper namespace="com.mobilecourse.backend.dao.AccountDao">
 
-    <!-- 这个id要和dao中的函数名称一一对应，resultType代表了查询的结果，要和数据库类型一一对应 -->
-    <select id="selectById" resultType="com.mobilecourse.backend.model.Account">
-        SELECT * FROM Test WHERE id=#{id}
+    <select id="test" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM account;
     </select>
 
-    <select id="login" resultType="java.lang.Integer">
-        select count(*) from Account where username=#{username} and password=#{pwd}
+    <!--
+    1. 登录：根据username和password选择符合条件的用户
+    如果登录成功，返回account的相关信息
+    -->
+    <select id="login" resultType="com.mobilecourse.backend.entity.Account">
+        select * from account where username=#{username} and password=#{pwd}
     </select>
 
-    <!-- parameterType指定了参数类型 -->
-    <insert id="insert"  keyProperty="id" useGeneratedKeys="true" parameterType="com.mobilecourse.backend.model.Account">
-        INSERT INTO Account
+    <!--2. 注册
+        需要指定email和password.
+        username需要唯一
+    -->
+    <insert id="register"  keyProperty="id" useGeneratedKeys="true" parameterType="com.mobilecourse.backend.entity.Account">
+        INSERT INTO account
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            id, email, password, nickname, signature, avatar
+            username, email, password, nickname, signature, avatar
         </trim>
         <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
-            #{id}, #{email}, #{password}, #{nickname}, #{signature}, #{avatar}
+            #{username}, #{email}, #{password}, #{nickname}, #{signature}, #{avatar}
         </trim>;
     </insert>
 
-    <!-- 有返回值的一定要指定返回值类型！ -->
-    <select id="testCnt" resultType="java.lang.Integer">
-        SELECT COUNT(*)
-        FROM Account
+    <!--3.
+        给定用户名，获取其follows的相关信息
+    -->
+    <select id="getFollowers" resultType="com.mobilecourse.backend.entity.Account">
+        SELECT * FROM account where account.username in
+        (SELECT follow FROM follow where follow.username=account.username);
     </select>
 
-
-    <!-- 输入的参数要用#{}包裹,且与dao里面传入的参数一样 -->
-    <delete id="delete">
-        DELETE FROM Account
-        WHERE id=#{id}
-    </delete>
-
-    <!-- 更新操作 -->
-    <update id="updatePwd">
-        UPDATE Account
-        SET password=#{pwd}
-        WHERE id=#{id}
-    </update>
-
+    <select id="getUser" resultType="com.mobilecourse.backend.entity.Account">
+        SELECT * FROM account
+        where username=#{username}
+    </select>
 </mapper>

@@ -1,23 +1,14 @@
 package com.mobilecourse.backend.controllers;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.mobilecourse.backend.dao.AccountDao;
-import com.mobilecourse.backend.dao.TestDao;
-import com.mobilecourse.backend.model.Account;
-import com.mobilecourse.backend.model.Test;
-import com.mobilecourse.backend.WebSocketServer;
-import org.apache.tomcat.jni.Time;
+import com.mobilecourse.backend.entity.Account;
+import com.mobilecourse.backend.utils.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -26,45 +17,40 @@ import java.util.Map;
 public class AccountController extends CommonController {
 
     @Autowired
-    private AccountDao accountMapper;
-
-    // 普通请求，不指定method意味着接受所有类型的请求
-    @RequestMapping(value = "/hello")
-    public String hello() {
-        int cnt = accountMapper.testCnt();
-        return wrapperMsg(200, "当前数据库中共有：" + cnt + "条数据！");
-    }
-
+    private AccountDao accountDao;
 
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
-    public String login(@RequestBody Account account) {
-        int login = 0;
-        if(account.username != null && account.password != null) {
-            // 前端应保证传来的都不为null
-            login = accountMapper.login(account.username, account.password);
+    public ResponseEntity<ResultModel> login(@RequestBody Account account) {
+        List<Account> login = null;
+        if(account.getUsername() != null && account.getPassword() != null)
+            login = accountDao.login(account.getUsername(), account.getPassword()); // 前端应保证传来的都不为null
+        else{
+            return wrapperErrorResp(ResultModel.LOGIN_FAIL, "username or password can't be null!");
         }
-        if(login == 0){
-            return wrapperMsg(HttpsCode.LOGIN_FAILED, "Error:id or password is wrong");
-        } else if(login == 1){
-            return wrapperMsg(HttpsCode.LOGIN_SUCCEED, "Successfully login");
+        if(login == null || login.size() == 0) {
+            return wrapperErrorResp(ResultModel.LOGIN_FAIL, "can't find "+ account.getUsername() +" or password wrong!");
         }
-        return wrapperMsg(200, "");
+        Account data = login.get(0);
+        data.setPassword(null);// 将密码处理为空
+        return wrapperOKResp(data);
     }
 
     @RequestMapping(value = "/register", method = { RequestMethod.POST })
-    public String register(@RequestBody Account account) {
+    public ResponseEntity<ResultModel> register(@RequestBody Account account) {
         // 如果对应参数没有传的话，则会默认为null
-        String username = account.username;
+        // TODO 发送邮箱验证码验证
+        if(account.getUsername()==null || account.getPassword() == null || account.getEmail() == null)
+            return wrapperErrorResp(ResultModel.REGISTER_FAIL, "username or password or email can't be null!");
         try {
-            accountMapper.insert(account);
-            return  wrapperMsg(HttpsCode.REGISTER_SUCCEED, "regsiter succeed");
-        }catch (Exception e){
-            return wrapperMsg(HttpsCode.REGISTER_SUCCEED, "Error:"+e.getMessage());
+            List<Account> accounts = accountDao.getUser(account.getUsername());
+            if(accounts!= null && accounts.size() >= 1){
+                return wrapperErrorResp(ResultModel.ACCOUNT_ALREADY_EXISTS, account.getUsername() + " already exists.");
+            }
+            accountDao.register(account);
+        } catch (Exception e){
+            return wrapperErrorResp(ResultModel.REGISTER_FAIL, e.getMessage());
         }
+        return wrapperOKResp(account);
     }
-
-    private String generateId(String email){
-        // 生成唯一id
-        return "2";
-    }
+    // TODO 用户修改用户名、密码、之类的。
 }

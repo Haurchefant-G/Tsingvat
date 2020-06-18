@@ -4,7 +4,7 @@
 <mapper namespace="com.mobilecourse.backend.dao.TestDao">
 
     <!-- 这个id要和dao中的函数名称一一对应，resultType代表了查询的结果，要和数据库类型一一对应 -->
-    <select id="selectAll" resultType="com.mobilecourse.backend.model.Test">
+    <select id="selectAll" resultType="com.mobilecourse.backend.entity.Test">
         SELECT *
         FROM Test
     </select>
@@ -16,7 +16,7 @@
     </select>
 
     <!-- parameterType指定了参数类型 -->
-    <insert id="insert"  keyProperty="id" useGeneratedKeys="true" parameterType="com.mobilecourse.backend.model.Test">
+    <insert id="insert"  keyProperty="id" useGeneratedKeys="true" parameterType="com.mobilecourse.backend.entity.Test">
         INSERT INTO Test
         <trim prefix="(" suffix=")" suffixOverrides="," >
             content, createTime
