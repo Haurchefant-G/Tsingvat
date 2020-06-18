@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-import 'newTaskPage.dart';
+import 'package:tsingvat/page/newTaskPage.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
 import 'loginPage.dart';
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         // primaryIconTheme:
         //     Theme.of(context).accentIconTheme.copyWith(color: Colors.white)
       ),
-      initialRoute: 'startPage',
+      initialRoute: 'homePage',//'startPage',
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),

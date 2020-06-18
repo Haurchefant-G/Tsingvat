@@ -15,8 +15,8 @@ class _TaskCardState extends State<TaskCard>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        duration: Duration(milliseconds: 500), vsync: this);
+    _controller =
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _heightFactor = _controller.drive(CurveTween(curve: Curves.easeInOut));
     _opacity = _controller.drive(CurveTween(curve: Curves.easeInOut));
   }
@@ -61,7 +61,7 @@ class _TaskCardState extends State<TaskCard>
                       icon: Icon(Icons.location_on, color: Colors.purple[200])),
                   //Icon(Icons.location_on, color: Colors.purple),
                   Padding(
-                    padding: const EdgeInsets.only(bottom:16),
+                    padding: const EdgeInsets.only(bottom: 16),
                     child: DefaultTextStyle(
                         style: Theme.of(context)
                             .primaryTextTheme
@@ -69,31 +69,36 @@ class _TaskCardState extends State<TaskCard>
                             .copyWith(color: Colors.grey[700]),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[Text("时间"), Text("地点"), Text("报酬")],
+                          children: <Widget>[
+                            Text("时间"),
+                            Text("地点"),
+                            Text("报酬")
+                          ],
                         )),
                   ),
                   ClipRect(
                       child: Align(
-                        heightFactor: _heightFactor.value,
-                        child: Opacity(
-                          opacity: _opacity.value,
-                          child: Column(
+                    heightFactor: _heightFactor.value,
+                    child: Opacity(
+                      opacity: _opacity.value,
+                      child: Column(
+                        children: <Widget>[
+                          Text("具体任务描述"),
+                          ButtonBar(
+                            alignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text("具体任务描述"),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  FlatButton.icon(
-                                      color: Colors.purple[200], //Color(0xFFBB86FC),
-                                      textColor: Colors.white,
-                                      onPressed: () {},
-                                      icon: Icon(Icons.done),
-                                      label: Text("接取"))
+                              FlatButton.icon(
+                                  color:
+                                      Colors.purple[200], //Color(0xFFBB86FC),
+                                  textColor: Colors.white,
+                                  onPressed: () {},
+                                  icon: Icon(Icons.done),
+                                  label: Text("接取"))
                             ],
                           )
-                      ],
+                        ],
+                      ),
                     ),
-                        ),
                   ))
                 ]),
           ),

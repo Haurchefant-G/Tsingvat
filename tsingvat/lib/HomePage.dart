@@ -1,7 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import 'newTaskPage.dart';
-import 'component/taskcard.dart';
+import 'package:tsingvat/page/newTaskPage.dart';
+import 'package:tsingvat/page/newGoodsPage.dart';
+import 'package:tsingvat/component/taskcard.dart';
+import 'package:tsingvat/tabPage/GoodsPage.dart';
+import 'package:tsingvat/tabPage/NewsPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -25,6 +29,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _counter = 0;
   TabController _tabController;
   List tabs = ["跑腿", "交易", "资讯", "我的"];
+  AnimationController _fabController;
+  Animation<double> _expandAnimation;
+  bool _showFab = true;
+  bool _fabTappable = true;
 
   void _incrementCounter() {
     setState(() {
@@ -37,6 +45,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController.addListener(() {
+      _handleTabs(_tabController.index);
+    });
+    _fabController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    // _expandAnimation =
+    //     Tween<double>(begin: 200.0, end: 0.0).animate(_expandController)
+    //       ..addListener(() {
+    //         setState(() {});
+    //       });
     //_tabController.addListener(() { })
   }
 
@@ -50,6 +68,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _handleTabs(int tabindex) {
     _tabController.animateTo(tabindex,
         duration: const Duration(milliseconds: 300));
+    print(_tabController.index);
+    if (_tabController.index == 3) {
+      setState(() {
+        _showFab = false;
+        _fabController.forward();
+      });
+    } else {
+      setState(() {
+        _showFab = true;
+        _fabController.reverse();
+      });
+    }
+    // if (_tabController.index != 0) {
+    //   _expandController.forward();
+    // } else {
+    //   _expandController.reverse();
+    // }
   }
 
   Future<void> _refresh() async {
@@ -64,15 +99,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       // appBar: AppBar(
       //   title: Text(widget.title),
       // ),
-      body: NestedScrollView(
+      // appBar:HomeAppBar(
+      //                 tabController: _tabController,
+      //                 tabHandler: _handleTabs,
+      //                 tabs: tabs),
+      body: 
+      NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
                   automaticallyImplyLeading: false,
                   floating: false,
                   pinned: true,
-                  expandedHeight: 200,
-                  flexibleSpace: CraneAppBar(
+                  expandedHeight: 0,//_expandAnimation.value,
+                  flexibleSpace: HomeAppBar(
                       tabController: _tabController,
                       tabHandler: _handleTabs,
                       tabs: tabs))
@@ -81,43 +121,64 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           body: Container(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               child: TabBarView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  controller: _tabController,
-                  children: tabs
-                      .map((e) => Container(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          //padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: Colors
-                                  .white70, //Theme.of(context).backgroundColor,
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(15))),
-                          child: RefreshIndicator(
-                              child:
-                                  ListView.builder(itemBuilder: (context, i) {
-                                // if (i.isOdd) return new Divider();
-                                // final index = i ~/ 2;
-                                // return ListTile(
-                                //   title: Text(i.toString()),
-                                // );
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: TaskCard(),
-                                );
-                              }),
-                              // SliverFixedExtentList(
-                              //   itemExtent: 50.0,
-                              //   delegate: SliverChildBuilderDelegate(
-                              //     (context, index) => ListTile(
-                              //       title: Text("Item $index"),
-                              //     ),
-                              //     childCount: 30,
-                              //   ),
-                              // ),
-                              //Text(e),
-                              onRefresh: _refresh)))
-                      .toList()))),
+                //physics: NeverScrollableScrollPhysics(),
+                controller: _tabController,
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      //padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          color: Colors
+                              .white70, //Theme.of(context).backgroundColor,
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(15))),
+                      child: RefreshIndicator(
+                          child: ListView.builder(itemBuilder: (context, i) {
+                            // if (i.isOdd) return new Divider();
+                            // final index = i ~/ 2;
+                            // return ListTile(
+                            //   title: Text(i.toString()),
+                            // );
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: TaskCard(),
+                            );
+                          }),
+                          // SliverFixedExtentList(
+                          //   itemExtent: 50.0,
+                          //   delegate: SliverChildBuilderDelegate(
+                          //     (context, index) => ListTile(
+                          //       title: Text("Item $index"),
+                          //     ),
+                          //     childCount: 30,
+                          //   ),
+                          // ),
+                          //Text(e),
+                          onRefresh: _refresh)),
+                  // Container(
+                  //     padding: EdgeInsets.only(left: 10, right: 10),
+                  //     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  //     //padding: EdgeInsets.all(16),
+                  //     decoration: BoxDecoration(
+                  //         color: Colors
+                  //             .white70, //Theme.of(context).backgroundColor,
+                  //         borderRadius:
+                  //             BorderRadius.vertical(top: Radius.circular(15))),
+                  //     child: RefreshIndicator(
+                  //         child: ListView.builder(itemBuilder: (context, i) {
+                  //           return Padding(
+                  //             padding: const EdgeInsets.only(bottom: 10),
+                  //             child: GoodsCard(),
+                  //           );
+                  //         }),
+                  //         onRefresh: _refresh)),
+                  GoodsPage(),
+                  Container(child: NewsPage()),
+                  Container(child: Padding(padding: EdgeInsets.all(8)), color: Colors.black,)
+                ],
+              )),
+              ),
       // CustomScrollView(slivers: <Widget>[
       //   SliverAppBar(
       //     floating: false,
@@ -132,33 +193,81 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       //       controller: _tabController,
       //       children: tabs.map((e) => Text(e)).toList())
       // ]),
-      floatingActionButton: OpenContainer(
-        //transitionDuration: const Duration(milliseconds: 2000),
-        closedColor: Theme.of(context).primaryColorDark,
-        transitionType: ContainerTransitionType.fade,
-        closedBuilder: (BuildContext context, VoidCallback _) {
-          return FloatingActionButton(onPressed: null, backgroundColor: Theme.of(context).primaryColorDark,child: Icon(Icons.add, size: 30,),);
-        },
-        openBuilder: (BuildContext context, VoidCallback _) {
-          return newTaskPage();
-        },
-        closedElevation: 6.0,
-        closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(56 / 2),
+      floatingActionButton: 
+      // _showFab
+      //     ? OpenContainer(
+      //         //transitionDuration: const Duration(milliseconds: 2000),
+      //         closedColor: Theme.of(context).primaryColorDark,
+      //         transitionType: ContainerTransitionType.fade,
+      //         closedBuilder: (BuildContext context, VoidCallback _) {
+      //           return FloatingActionButton(
+      //             onPressed: null,
+      //             backgroundColor: Theme.of(context).primaryColorDark,
+      //             child: Icon(
+      //               Icons.add,
+      //               size: 30,
+      //             ),
+      //           );
+      //         },
+      //         tappable: _fabTappable,
+      //         openBuilder: (BuildContext context, VoidCallback _) {
+      //           switch (_tabController.index) {
+      //             case 0:
+      //               return newTaskPage();
+      //             case 1:
+      //               return newGoodsPage();
+      //             default:
+      //               return newTaskPage();
+      //           }
+      //         },
+      //         closedElevation: 6.0,
+      //         closedShape: const RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.all(
+      //             Radius.circular(56 / 2),
+      //           ),
+      //         ),
+      //       )
+      //     : null,
+      ScaleTransition(
+        alignment: Alignment.center,
+        scale: Tween(begin: 1.0, end: 0.0).animate(_fabController),
+        child: OpenContainer(
+          //transitionDuration: const Duration(milliseconds: 2000),
+          closedColor: Theme.of(context).primaryColorDark,
+          transitionType: ContainerTransitionType.fade,
+          closedBuilder: (BuildContext context, VoidCallback _) {
+            return FloatingActionButton(
+              onPressed: null,
+              backgroundColor: Theme.of(context).primaryColorDark,
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+            );
+          },
+          openBuilder: (BuildContext context, VoidCallback _) {
+            switch (_tabController.index) {
+              case 0:
+                return newTaskPage();
+              case 1:
+                return newGoodsPage();
+              default:
+                return newTaskPage();
+            }
+          },
+          closedElevation: 6.0,
+          closedShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(56 / 2),
+            ),
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation
           .centerDocked, // This trailing comma makes auto-formatting nicer for build methods.
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
+        shape: _showFab ? CircularNotchedRectangle() : null,
         child: Row(
           children: [
             IconButton(
@@ -176,16 +285,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-class CraneAppBar extends StatefulWidget implements PreferredSizeWidget {
+class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(int) tabHandler;
   final TabController tabController;
   final List tabs;
 
-  const CraneAppBar({Key key, this.tabHandler, this.tabController, this.tabs})
+  const HomeAppBar({Key key, this.tabHandler, this.tabController, this.tabs})
       : super(key: key);
 
   @override
-  _CraneAppBarState createState() => _CraneAppBarState();
+  _HomeAppBarState createState() => _HomeAppBarState();
 
   @override
   Size get preferredSize {
@@ -200,7 +309,7 @@ class CraneAppBar extends StatefulWidget implements PreferredSizeWidget {
   }
 }
 
-class _CraneAppBarState extends State<CraneAppBar> {
+class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     //final isDesktop = isDisplayDesktop(context);
@@ -251,10 +360,14 @@ class _CraneAppBarState extends State<CraneAppBar> {
                     labelStyle: Theme.of(context).textTheme.button,
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.white.withOpacity(.6),
-                    onTap: (index) => widget.tabController.animateTo(
-                      index,
-                      duration: const Duration(milliseconds: 300),
-                    ),
+                    onTap: (index) {
+                      // widget.tabController.animateTo(
+                      //   index,
+                      //   duration: const Duration(milliseconds: 300),
+                      // );
+                      //widget.tabHandler(index);
+                    },
+
                     tabs: widget.tabs
                         .map((e) => Tab(
                               text: e,
