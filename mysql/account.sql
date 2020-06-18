@@ -25,4 +25,4 @@ INSERT INTO follow VALUES("zxj","gac");
 
 SELECT * FROM account;
 
-SELECT * FROM account JOIN follow ON account.username=follow.following;
+SELECT * FROM account JOIN follow ON account.username=follow.username;
