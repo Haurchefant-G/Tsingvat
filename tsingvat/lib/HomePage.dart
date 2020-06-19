@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   //         onRefresh: _refresh)),
                   GoodsPage(),
                   Container(child: NewsPage()),
-                  Container(child: Padding(padding: EdgeInsets.all(8)), color: Colors.black,)
+                  Container()
                 ],
               )),
               ),

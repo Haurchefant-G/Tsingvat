@@ -1,5 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:tsingvat/signupPage.dart';
+import 'package:tsingvat/util/httpUtil.dart';
+import 'package:tsingvat/const/code.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -12,17 +15,72 @@ class _Login extends State<Login> {
   String userName;
   String password;
   bool isShowPassWord = false;
+  HttpUtil http;
 
-  void login() {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    http = HttpUtil();
+  }
+
+  Future<void> login() async {
     //读取当前的Form状态
     var loginForm = loginKey.currentState;
     //验证Form表单
     if (loginForm.validate()) {
       loginForm.save();
       print('userName: ' + userName + ' password: ' + password);
+      var data;
+      try {
+        data = await http
+            .post('/account/login', {"username": userName, "password": password});
+      } catch (e) {
+        print(e);
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  "登陆失败",
+                  textAlign: TextAlign.center,
+                ),
+                content:
+                    //Text("登陆失败",textAlign: TextAlign.center,),
+                    Text(
+                  "连接错误",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
+            });
+        return;
+      }
+      print(data);
+      if (data['code'] == ResultCode.SUCCESS) {
+        Navigator.pushReplacementNamed(context, "homePage");
+      } else {
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  "登陆失败",
+                  textAlign: TextAlign.center,
+                ),
+                content:
+                    //Text("登陆失败",textAlign: TextAlign.center,),
+                    Text(
+                  "用户名或密码错误",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
+            });
+      }
     }
-    //Navigator.pushNamed(context, "homepage");
-    Navigator.pushReplacementNamed(context, "homePage");
   }
 
   void showPassWord() {
@@ -133,14 +191,14 @@ class _Login extends State<Login> {
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(40)),
-                                      color: Theme.of(context).primaryColorDark),
+                                      color:
+                                          Theme.of(context).primaryColorDark),
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_forward),
                                     iconSize: 40,
                                     onPressed: login,
                                   )),
                             ),
-                                
                           ),
                         ),
                       ),

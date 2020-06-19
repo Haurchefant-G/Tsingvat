@@ -22,6 +22,7 @@ public class AccountController extends CommonController {
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
     public ResponseEntity<ResultModel> login(@RequestBody Account account) {
         List<Account> login = null;
+        System.out.print("login");
         if(account.getUsername() != null && account.getPassword() != null)
             login = accountDao.login(account.getUsername(), account.getPassword()); // 前端应保证传来的都不为null
         else{
@@ -32,6 +33,7 @@ public class AccountController extends CommonController {
         }
         Account data = login.get(0);
         data.setPassword(null);// 将密码处理为空
+        //System.out.print("login");
         return wrapperOKResp(data);
     }
 
