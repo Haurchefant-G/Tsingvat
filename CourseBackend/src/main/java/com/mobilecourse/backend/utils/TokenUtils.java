@@ -64,6 +64,8 @@ public class TokenUtils {
                 .parseClaimsJws(jwt).getBody();
         return claims;
     }
+    
+
     public static void main(String[] args){
         String token = TokenUtils.createJwtToken("liao180@vip.qq.com");
         System.out.println(TokenUtils.createJwtToken("liao180@vip.qq.com"));

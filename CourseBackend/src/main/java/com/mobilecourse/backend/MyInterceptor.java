@@ -7,8 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-
+@Component
 public class MyInterceptor implements HandlerInterceptor {
 
     @Override
@@ -16,10 +17,12 @@ public class MyInterceptor implements HandlerInterceptor {
         //1. 登录时添加session，然后之后所有的request都要加入session
         // 2. 然后之后都要检测session
         // 检测session是否合理
-
-
+        HttpSession session = request.getSession();
+        if(session!=null && session.getAttribute("token") != null){
+            return true;
+        }
         System.out.println("preHandle");
-        return true;
+        return false;
     }
 
     @Override

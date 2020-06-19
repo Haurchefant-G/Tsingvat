@@ -2,6 +2,7 @@ package com.mobilecourse.backend.controllers;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mobilecourse.backend.utils.ResultModel;
+import com.mobilecourse.backend.utils.TokenUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -31,7 +32,6 @@ public class CommonController {
      * @return
      */
     ResponseEntity<ResultModel> wrapperOKResp(Object data){
-
         return ResponseEntity.ok(ResultModel.ok(data));
     }
 
@@ -71,5 +71,12 @@ public class CommonController {
         HttpSession session = request.getSession();
         // 删除session里面存储的信息，一般在登出的时候使用
         session.removeAttribute(keyName);
+    }
+
+    public boolean checkRequest(HttpServletRequest request, String compare){
+        String token = (String)request.getSession().getAttribute("token");
+        String username = (String) TokenUtils.parseJWT(token).get("username");
+        if(username.equals(compare)) return true;
+        return false;
     }
 }

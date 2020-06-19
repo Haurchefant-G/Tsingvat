@@ -4,6 +4,7 @@ public class ResultModel {
 
     public static int SUCCESS = 10;
 
+    public static int TOKEN_WRONG = 11;
 
     // 每个dao对应一个范围内的error_code
     public static int ACCOUNT_NOT_FOUND = 21;
@@ -28,8 +29,6 @@ public class ResultModel {
      * 返回数据
      */
     private Object data;
-
-    private String token;
 
     public ResultModel(int code, String message) {
         this.code = code;

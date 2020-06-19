@@ -3,11 +3,14 @@ package com.mobilecourse.backend.controllers;
 import com.mobilecourse.backend.dao.AccountDao;
 import com.mobilecourse.backend.entity.Account;
 import com.mobilecourse.backend.utils.ResultModel;
+import com.mobilecourse.backend.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -20,7 +23,11 @@ public class AccountController extends CommonController {
     private AccountDao accountDao;
 
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
-    public ResponseEntity<ResultModel> login(@RequestBody Account account) {
+    public ResponseEntity<ResultModel> login(@RequestBody Account account, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        putInfoToSession(request, "token", TokenUtils.createJwtToken(account.getUsername()));
+        // 保存session
+        session = request.getSession();
         List<Account> login = null;
         if(account.getUsername() != null && account.getPassword() != null)
             login = accountDao.login(account.getUsername(), account.getPassword()); // 前端应保证传来的都不为null
@@ -33,6 +40,12 @@ public class AccountController extends CommonController {
         Account data = login.get(0);
         data.setPassword(null);// 将密码处理为空
         return wrapperOKResp(data);
+    }
+
+    @RequestMapping(value = "/logout", method = {RequestMethod.DELETE})
+    public ResponseEntity<ResultModel> logout(HttpServletRequest request) {
+        removeInfoFromSession(request, "token");
+        return wrapperOKResp(null);
     }
 
     @RequestMapping(value = "/register", method = { RequestMethod.POST })
