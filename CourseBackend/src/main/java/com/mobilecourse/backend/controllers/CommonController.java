@@ -2,6 +2,7 @@ package com.mobilecourse.backend.controllers;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mobilecourse.backend.utils.ResultModel;
+import com.mobilecourse.backend.utils.TokenUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -65,11 +66,17 @@ public class CommonController {
         session.setAttribute(keyName, info);
     }
 
-    // 添加信息到session之中，此部分用途很广泛，比如可以通过session获取到对应的用户名或者用户ID，避免繁冗操作
     public void removeInfoFromSession(HttpServletRequest request, String keyName)
     {
         HttpSession session = request.getSession();
         // 删除session里面存储的信息，一般在登出的时候使用
         session.removeAttribute(keyName);
+    }
+
+    public boolean checkRequest(HttpServletRequest request, String compare){
+        String token = (String)request.getSession().getAttribute("token");
+        String username = (String) TokenUtils.parseJWT(token).get("username");
+        if(username.equals(compare)) return true;
+        return false;
     }
 }

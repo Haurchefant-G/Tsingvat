@@ -11,4 +11,9 @@
         errand(uuid,username,created,content,parent)
         VALUES(#{uuid},#{username},#{created},#{content},#{parent});
     </insert>
+
+    <delete id="deleteReply" parameterType="java.lang.String">
+        DELETE FROM reply
+        WHERE uuid=#{uuid}
+    </delete>
 </mapper>

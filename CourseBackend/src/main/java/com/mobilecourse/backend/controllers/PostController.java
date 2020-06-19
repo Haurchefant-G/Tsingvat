@@ -2,12 +2,16 @@ package com.mobilecourse.backend.controllers;
 
 import com.mobilecourse.backend.dao.PostDao;
 import com.mobilecourse.backend.entity.Post;
+import com.mobilecourse.backend.utils.FastDFSClient;
+import com.mobilecourse.backend.utils.FileUtils;
 import com.mobilecourse.backend.utils.ResultModel;
+import com.mobilecourse.backend.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -20,8 +24,9 @@ public class PostController extends CommonController {
     private PostDao postDao;
 
     // 创建post
-    @RequestMapping(value="", method = {RequestMethod.POST})
-    public ResponseEntity<ResultModel> createPost(@RequestBody Post post){
+    @RequestMapping(value="/create", method = {RequestMethod.POST})
+    public ResponseEntity<ResultModel> createPost(@RequestBody Post post, HttpServletRequest request){
+//        if (!checkRequest(request, post.getUsername())) return wrapperErrorResp(ResultModel.TOKEN_WRONG, "未登录");
         Timestamp time = this.getCurrentTime();
         String uuid = this.getUuid();
         post.setCreated(time);
@@ -30,15 +35,15 @@ public class PostController extends CommonController {
         return wrapperOKResp(post);
     }
 
-    @RequestMapping(value="", method = {RequestMethod.PUT})
-    public ResponseEntity<ResultModel> modifyPost(@RequestBody Post post){
+    @RequestMapping(value="/modify", method = {RequestMethod.PUT})
+    public ResponseEntity<ResultModel> modifyPost(@RequestBody Post post, HttpServletRequest request){
         Timestamp time = this.getCurrentTime();
         post.setCreated(time);
         postDao.modifyPost(post);
         return wrapperOKResp(post);
     }
 
-    @RequestMapping(value="", method = {RequestMethod.DELETE})
+    @RequestMapping(value="/delete", method = {RequestMethod.DELETE})
     public ResponseEntity<ResultModel> deletePost(@RequestParam String uuid){
         postDao.deletePost(uuid);
         return wrapperOKResp(null);
@@ -46,10 +51,9 @@ public class PostController extends CommonController {
 
     // 获取当前用户的所有post
     @RequestMapping(value="/{username}", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getPosts(@PathVariable("username") String username){
+    public ResponseEntity<ResultModel> getPosts(@PathVariable("username") String username, HttpServletRequest request){
         List<Post> posts =  postDao.getPosts(username);
         return wrapperOKResp(posts);
     }
-
 
 }

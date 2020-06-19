@@ -12,4 +12,6 @@ public interface ReplyDao {
 
     // 发布评论
     void createReply(Reply reply);
+
+    void deleteReply(String uuid);
 }

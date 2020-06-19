@@ -34,11 +34,16 @@ public class ReplyController extends CommonController {
         return wrapperOKResp(replies);
     }
 
-    @RequestMapping(value = "", method = {RequestMethod.POST})
+    @RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> createReply(@RequestBody Reply reply){
         reply.setCreated(this.getCurrentTime());
         reply.setUuid(this.getUuid());
         replyDao.createReply(reply);
         return wrapperOKResp(reply);
+    }
+    @RequestMapping(value = "delete", method = {RequestMethod.DELETE})
+    public ResponseEntity<ResultModel> deleteReply(@RequestParam String uuid){
+        replyDao.deleteReply(uuid);
+        return wrapperOKResp(null);
     }
 }

@@ -1,5 +1,7 @@
 package com.mobilecourse.backend;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -8,7 +10,8 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Hashtable;
 
-@ServerEndpoint("/websocket/{sid}")
+// websocket用于在线聊天
+@ServerEndpoint(value = "/websocket/{sid}")
 @Component
 public class WebSocketServer {
 
@@ -41,13 +44,34 @@ public class WebSocketServer {
     // 在关闭连接时移除对应连接
     @OnClose
     public void onClose() {
+        System.out.printf(this.sid+" close");
         webSocketTable.remove(this.sid);
     }
 
     // 收到消息时候的处理
     @OnMessage
-    public void onMessage(String message, Session session) {
-
+    public void onMessage(String request, Session session) {
+        //将message进行json化，然后获取发送方等
+        JSONObject json = JSON.parseObject(request);
+        String sender = json.getString("sender");
+        String receiver = json.getString("receiver");
+        String msg = json.getString("msg");
+        WebSocketServer server =  webSocketTable.get(receiver);
+        if(server == null) {
+            try {
+                sendMessage(receiver + " 未登录");
+            }catch (Exception e){
+                e.printStackTrace();
+            } finally {
+                return;
+            }
+        }
+        try {
+            server.sendMessage(request);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.printf("message:"+msg);
     }
 
     @OnError
