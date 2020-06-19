@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 指定了mapper对应的dao -->
+<mapper namespace="com.mobilecourse.backend.dao.DealDao">
+
+    <insert id="createDeal" parameterType="com.mobilecourse.backend.entity.Deal">
+        INSERT INTO
+        errand(uuid,username,created,content,bonus)
+        VALUES(#{uuid},#{username},#{created},#{content},#{bonus});
+    </insert>
+
+    <select id="getDeals" resultType="com.mobilecourse.backend.entity.Deal">
+        SELECT * FROM deal
+        WHERE username=#{username}
+    </select>
+
+    <select id="getTakeDeals" resultType="com.mobilecourse.backend.entity.Deal">
+        SELECT * FROM deal
+        WHERE taker=#{taker}
+    </select>
+
+    <update id="modifyDeal" parameterType="com.mobilecourse.backend.entity.Deal">
+        UPDATE deal
+        SET created=#{created},bonus=#{bonus}
+        where uuid=#{uuid}
+    </update>
+
+    <update id="takeDeal" parameterType="com.mobilecourse.backend.entity.Deal">
+        UPDATE deal
+        SET taker=#{taker},takeTime=#{takeTime}
+        WHERE uuid=#{uuid}
+    </update>
+
+    <delete id="deleteDeal" parameterType="java.lang.String">
+        DELETE FROM deal
+        WHERE uuid=#{uuid}
+    </delete>
+
+</mapper>
