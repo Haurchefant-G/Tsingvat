@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsingvat/util/httpUtil.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -11,14 +12,25 @@ class _Login extends State<Login> {
   String userName;
   String password;
   bool isShowPassWord = false;
+  HttpUtil http;
 
-  void login(){
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    http = HttpUtil();
+  }
+
+  Future<void> login() async {
     //读取当前的Form状态
     var loginForm = loginKey.currentState;
     //验证Form表单
-    if(loginForm.validate()){
+    if (loginForm.validate()) {
       loginForm.save();
       print('userName: ' + userName + ' password: ' + password);
+      var data = await http
+          .get('/login', {"username": userName, "password": password});
+      print(data);
     }
   }
 
@@ -27,8 +39,9 @@ class _Login extends State<Login> {
       isShowPassWord = !isShowPassWord;
     });
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Form表单示例',
       home: new Scaffold(
@@ -41,11 +54,8 @@ class _Login extends State<Login> {
                 child: new Text(
                   'TsingVat',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 53, 53, 53),
-                      fontSize: 50.0
-                  ),
-                )
-            ),
+                      color: Color.fromARGB(255, 53, 53, 53), fontSize: 50.0),
+                )),
             new Container(
               // 左右的边距
               padding: const EdgeInsets.all(30.0),
@@ -59,14 +69,13 @@ class _Login extends State<Login> {
                           border: new Border(
                               bottom: BorderSide(
                                   color: Color.fromARGB(255, 240, 240, 240),
-                                  width: 1.0
-                              )
-                          )
-                      ),
+                                  width: 1.0))),
                       child: new TextFormField(
                         decoration: new InputDecoration(
                           labelText: '请输入用户名',
-                          labelStyle: new TextStyle( fontSize: 15.0, color: Color.fromARGB(255, 93, 93, 93)),
+                          labelStyle: new TextStyle(
+                              fontSize: 15.0,
+                              color: Color.fromARGB(255, 93, 93, 93)),
                           border: InputBorder.none,
                           // suffixIcon: new IconButton(
                           //   icon: new Icon(
@@ -84,14 +93,12 @@ class _Login extends State<Login> {
                           userName = value;
                         },
                         validator: (username) {
-                           if(username.length == 0){
-                             // TODO showToast
-                             print('请输入用户名');
-                           }
+                          if (username.length == 0) {
+                            // TODO showToast
+                            print('请输入用户名');
+                          }
                         },
-                        onFieldSubmitted: (value) {
-
-                        },
+                        onFieldSubmitted: (value) {},
                       ),
                     ),
                     new Container(
@@ -99,23 +106,23 @@ class _Login extends State<Login> {
                           border: new Border(
                               bottom: BorderSide(
                                   color: Color.fromARGB(255, 240, 240, 240),
-                                  width: 1.0
-                              )
-                          )
-                      ),
+                                  width: 1.0))),
                       child: new TextFormField(
-                        decoration:  new InputDecoration(
+                        decoration: new InputDecoration(
                             labelText: '请输入密码',
-                            labelStyle: new TextStyle( fontSize: 15.0, color: Color.fromARGB(255, 93, 93, 93)),
+                            labelStyle: new TextStyle(
+                                fontSize: 15.0,
+                                color: Color.fromARGB(255, 93, 93, 93)),
                             border: InputBorder.none,
                             suffixIcon: new IconButton(
                               icon: new Icon(
-                                isShowPassWord ? Icons.visibility : Icons.visibility_off,
+                                isShowPassWord
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 color: Color.fromARGB(255, 126, 126, 126),
                               ),
                               onPressed: showPassWord,
-                            )
-                        ),
+                            )),
                         obscureText: !isShowPassWord,
                         onSaved: (value) {
                           password = value;
@@ -133,10 +140,10 @@ class _Login extends State<Login> {
                             '登录',
                             style: TextStyle(
                                 fontSize: 14.0,
-                                color: Color.fromARGB(255, 255, 255, 255)
-                            ),
+                                color: Color.fromARGB(255, 255, 255, 255)),
                           ),
-                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(45.0)),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(45.0)),
                         ),
                       ),
                     ),
@@ -148,23 +155,21 @@ class _Login extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           new Container(
-                            child:  Text(
+                            child: Text(
                               '注册账号',
                               style: TextStyle(
                                   fontSize: 13.0,
-                                  color: Color.fromARGB(255, 53, 53, 53)
-                              ),
+                                  color: Color.fromARGB(255, 53, 53, 53)),
                             ),
                           ),
                           Text(
-                              '忘记密码？',
-                              style: TextStyle(
-                                  fontSize: 13.0,
-                                  color: Color.fromARGB(255, 53, 53, 53)
-                              ),
+                            '忘记密码？',
+                            style: TextStyle(
+                                fontSize: 13.0,
+                                color: Color.fromARGB(255, 53, 53, 53)),
                           ),
                         ],
-                      ) ,
+                      ),
                     ),
                   ],
                 ),

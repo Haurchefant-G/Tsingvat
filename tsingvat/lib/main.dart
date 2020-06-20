@@ -62,7 +62,9 @@ class MyApp extends StatelessWidget {
         // primaryIconTheme:
         //     Theme.of(context).accentIconTheme.copyWith(color: Colors.white)
       ),
-      initialRoute: 'homePage',//'startPage',
+      initialRoute: 
+      //'homePage',
+      'startPage',
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
