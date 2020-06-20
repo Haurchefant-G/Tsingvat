@@ -24,6 +24,16 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 @Component
 public class QRCodeUtils {
 
+    public static void createQRCode(String username){
+        String filePath=Global.BASE_FILE_PATH + Global.ACCOUNT_DIR + "/" + username;
+        File file = new File(filePath);
+        if(!file.exists() && !file.isDirectory()){
+            file.mkdir();
+        }
+        createQRCode(filePath + "/qrcode.png", username);
+    }
+
+
     public static void createQRCode(String filePath, String content) {
         //图片的宽度
         int width=300;

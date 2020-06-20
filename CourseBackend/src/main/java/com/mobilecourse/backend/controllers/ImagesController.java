@@ -2,6 +2,7 @@ package com.mobilecourse.backend.controllers;
 
 
 import com.mobilecourse.backend.utils.FileUtils;
+import com.mobilecourse.backend.utils.Global;
 import com.mobilecourse.backend.utils.ResultModel;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +20,15 @@ public class ImagesController extends CommonController{
     @RequestMapping(value="/{uuid}", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> uploadImages(
             @RequestParam("images") MultipartFile[] multipartFiles, @PathVariable("uuid") String uuid) throws IOException {
-        FileUtils.saveFiles(multipartFiles, "/image/"+uuid);
-        return wrapperOKResp(null);
-    }
-
-    @RequestMapping(value="/{uuid}", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getImages(@PathVariable("uuid") String uuid) throws IOException {
+        FileUtils.saveFiles(multipartFiles, Global.POST_DIR+"/"+uuid);
         return wrapperOKResp(null);
     }
 
     // 存储用户的头像
     @RequestMapping(value="/avatar/{username}", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> uploadAvatar(
-            @RequestParam("image") MultipartFile multipartFile, @PathVariable("username") String uuid) throws IOException {
-        FileUtils.saveFile(multipartFile, "/avatar/"+uuid, "avatar.png");
+            @RequestParam("image") MultipartFile multipartFile, @PathVariable("username") String username) throws IOException {
+        FileUtils.saveFile(multipartFile, Global.ACCOUNT_DIR+ "/"+username, "avatar.png");
         return wrapperOKResp(null);
     }
 

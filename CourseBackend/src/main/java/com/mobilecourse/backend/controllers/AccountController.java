@@ -2,6 +2,7 @@ package com.mobilecourse.backend.controllers;
 
 import com.mobilecourse.backend.dao.AccountDao;
 import com.mobilecourse.backend.entity.Account;
+import com.mobilecourse.backend.utils.QRCodeUtils;
 import com.mobilecourse.backend.utils.ResultModel;
 import com.mobilecourse.backend.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class AccountController extends CommonController {
             if(accounts!= null && accounts.size() >= 1){
                 return wrapperErrorResp(ResultModel.ACCOUNT_ALREADY_EXISTS, account.getUsername() + " already exists.");
             }
+            QRCodeUtils.createQRCode(account.getUsername());
             accountDao.register(account);
         } catch (Exception e){
             return wrapperErrorResp(ResultModel.REGISTER_FAIL, e.getMessage());
