@@ -1,4 +1,6 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
 
 class TaskCard extends StatefulWidget {
   @override
@@ -57,9 +59,12 @@ class _TaskCardState extends State<TaskCard>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   //ExpansionPanel
-                  IconButton(
-                      icon: Icon(Icons.location_on, color: Colors.purple[200])),
-                  //Icon(Icons.location_on, color: Colors.purple),
+                  // IconButton(
+                  //     icon: Icon(Icons.location_on, color: Colors.purple[200])),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.location_on, color: Colors.purple[200]),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: DefaultTextStyle(
@@ -91,7 +96,33 @@ class _TaskCardState extends State<TaskCard>
                                   color:
                                       Colors.purple[200], //Color(0xFFBB86FC),
                                   textColor: Colors.white,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showModal(
+                                        context: context,
+                                        configuration:
+                                            FadeScaleTransitionConfiguration(),
+                                        builder: (BuildContext context) {
+                                          return CustomDialog(
+                                            title: Text(
+                                              "确认接取吗",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            content:
+                                                //Text("登陆失败",textAlign: TextAlign.center,),
+                                                Text(
+                                              "连接错误",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                  onPressed: () {},
+                                                  child: Text("确认")),
+                                              FlatButton(
+                                                  onPressed: () {}, child: Text("取消"))
+                                            ],
+                                          );
+                                        });
+                                  },
                                   icon: Icon(Icons.done),
                                   label: Text("接取"))
                             ],

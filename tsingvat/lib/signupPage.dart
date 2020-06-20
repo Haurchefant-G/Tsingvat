@@ -68,9 +68,12 @@ class _Login extends State<SignupPage> {
       //     context: context,
       //     configuration: FadeScaleTransitionConfiguration(),
       //     builder: (BuildContext context) {
-      //       return SnackBar(content: Text("注册成功"));
+      //       return SnackBar(content: Text("注册成功"), animation: FadeScaleTransitionConfiguration(),);
       //     });
-      Navigator.pushReplacementNamed(context, "loginPage");
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text("注册成功", ), behavior: SnackBarBehavior.floating,));
+      Future.delayed(Duration(milliseconds: 1500), (){
+        Navigator.pushReplacementNamed(context, "loginPage");
+      });
     } else if (data['code'] == ResultCode.ACCOUNT_ALREADY_EXISTS) {
       showModal(
           context: context,
