@@ -2,13 +2,14 @@ package com.mobilecourse.backend.controllers;
 
 import com.mobilecourse.backend.dao.DealDao;
 import com.mobilecourse.backend.entity.Deal;
-import com.mobilecourse.backend.entity.Errand;
+import com.mobilecourse.backend.utils.Global;
 import com.mobilecourse.backend.utils.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -51,14 +52,25 @@ public class DealController extends CommonController {
     // 获取自己发布的任务
     @RequestMapping(value="/{username}", method = {RequestMethod.GET})
     public ResponseEntity<ResultModel> getDeals(@PathVariable("username") String username){
-        List<Errand> errands = dealDao.getDeals(username);
-        return wrapperOKResp(errands);
+        List<Deal> deals = dealDao.getDeals(username);
+        return wrapperOKResp(deals);
+    }
+
+    @RequestMapping(value="", method = {RequestMethod.GET})
+    public ResponseEntity<ResultModel> getIndexDeals(@RequestParam(required = false) Timestamp time, @RequestParam(required = false) String num){
+        if(time == null) time = this.getCurrentTime();
+        int limit = 0;
+        if(num == null) limit = Global.LIMIT_NUM;
+        else limit = Integer.parseInt(num);
+
+        List<Deal> deals = dealDao.getIndexDeals(time, limit);
+        return wrapperOKResp(deals);
     }
 
     // 获取当前自己的接单的
     @RequestMapping(value = "/{username}/take", method = {RequestMethod.GET})
     public ResponseEntity<ResultModel> getTakeDeals(@PathVariable("username") String username){
-        List<Errand> errands = dealDao.getTakeDeals(username);
-        return wrapperOKResp(errands);
+        List<Deal> deals = dealDao.getTakeDeals(username);
+        return wrapperOKResp(deals);
     }
 }

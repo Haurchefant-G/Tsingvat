@@ -3,11 +3,14 @@ package com.mobilecourse.backend.dao;
 import com.mobilecourse.backend.entity.Errand;
 import org.mockito.internal.verification.Times;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
 public interface ErrandDao {
     void createErrand(Errand errand);
+
+    List<Errand> getIndexErrands(Timestamp time, int num);
 
     // 获取自己发布的跑腿信息
     List<Errand> getErrands(String username);
