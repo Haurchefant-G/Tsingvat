@@ -5,8 +5,8 @@
 
     <insert id="createErrand" parameterType="com.mobilecourse.backend.entity.Errand">
         INSERT INTO
-        errand(uuid,username,created,content,fromAddr,toAddr,sfromAddr,stoAddr,ddlTime,bonus)
-        VALUES(#{uuid},#{username},#{created},#{content},#{fromAddr},#{toAddr},#{sfromAddr},#{stoAddr},#{ddlTime},#{bonus});
+        errand(uuid,username,created,content,fromAddr,toAddr,sfromAddr,stoAddr,ddlTime,bonus,phone,details)
+        VALUES(#{uuid},#{username},#{created},#{content},#{fromAddr},#{toAddr},#{sfromAddr},#{stoAddr},#{ddlTime},#{bonus},#{phone},#{details});
     </insert>
 
     <select id="getErrands" resultType="com.mobilecourse.backend.entity.Errand">
@@ -21,7 +21,7 @@
 
     <update id="modifyErrand" parameterType="com.mobilecourse.backend.entity.Errand">
         UPDATE errand
-        SET created=#{created},fromAddr=#{fromAddr},toAddr=#{toAddr},sfromAddr=#{sfromAddr},stoAddr=#{stoAddr},ddlTime=#{ddlTime}
+        SET created=#{created},fromAddr=#{fromAddr},toAddr=#{toAddr},sfromAddr=#{sfromAddr},stoAddr=#{stoAddr},ddlTime=#{ddlTime},phone=#{phone},details=#{details}
         where uuid=#{uuid}
     </update>
 

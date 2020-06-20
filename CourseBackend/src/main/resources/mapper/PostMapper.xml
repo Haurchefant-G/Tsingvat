@@ -3,7 +3,7 @@
 <!-- 指定了mapper对应的dao -->
 <mapper namespace="com.mobilecourse.backend.dao.PostDao">
     <select id="getIndexPosts" parameterType="java.sql.Timestamp" resultType="com.mobilecourse.backend.entity.Post">
-        select * from post where created &lt;= #{time} LIMIT 5
+        select * from post where created &lt;= #{time}
     </select>
     
     <select id="getPosts" parameterType="java.lang.String" resultType="com.mobilecourse.backend.entity.Post">
