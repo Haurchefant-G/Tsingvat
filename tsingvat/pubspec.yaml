@@ -33,6 +33,7 @@ dependencies:
   json_annotation: ^3.0.1
   flutter_staggered_grid_view: "^0.3.0"
   cached_network_image: ^2.2.0+1
+  flutter_screenutil: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,23 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/montserrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/montserrat/Montserrat-Medium.ttf
+          weight : 400
+        - asset: assets/fonts/montserrat/Montserrat-Italic.ttf
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-Light.ttf
+          weight: 200
+        - asset: assets/fonts/montserrat/Montserrat-SemiBold.ttf
+          weight: 500
+        - asset: assets/fonts/montserrat/Montserrat-Bold.ttf
+          weight: 700
+    - family: Icons
+      fonts:
+        - asset: assets/fonts/icons.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

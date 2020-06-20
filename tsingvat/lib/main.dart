@@ -11,7 +11,7 @@ import 'package:tsingvat/page/newTaskPage.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
 import 'loginPage.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 Dio dio = Dio();
 
 void main() {
@@ -29,9 +29,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(width: 750, height: 1334, allowFontScaling: true);
     return MaterialApp(
       title: 'Tsingvat',
       theme: ThemeData(
+        fontFamily: "Montserrat",
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -63,8 +65,8 @@ class MyApp extends StatelessWidget {
         //     Theme.of(context).accentIconTheme.copyWith(color: Colors.white)
       ),
       initialRoute: 
-      //'homePage',
-      'startPage',
+      'homePage',
+      //'startPage',
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
