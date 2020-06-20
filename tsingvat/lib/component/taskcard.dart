@@ -13,6 +13,12 @@ class _TaskCardState extends State<TaskCard>
   Animation<double> _heightFactor;
   Animation<double> _opacity;
   bool expanded = false;
+  String fromAddr;
+  String toAddr;
+  String sfromAddr;
+  String stoAddr;
+  String ddlTime;
+  double bonus;
 
   @override
   void initState() {
@@ -39,6 +45,7 @@ class _TaskCardState extends State<TaskCard>
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,10 +122,13 @@ class _TaskCardState extends State<TaskCard>
                                             ),
                                             actions: <Widget>[
                                               FlatButton(
-                                                  onPressed: () {},
-                                                  child: Text("确认")),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("取消")),
                                               FlatButton(
-                                                  onPressed: () {}, child: Text("取消"))
+                                                  onPressed: () {},
+                                                  child: Text("确认"))
                                             ],
                                           );
                                         });
