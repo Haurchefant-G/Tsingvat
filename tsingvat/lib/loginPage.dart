@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tsingvat/signupPage.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 import 'package:tsingvat/const/code.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -15,6 +16,9 @@ class _Login extends State<Login> {
   String userName;
   String password;
   bool isShowPassWord = false;
+  bool validU = false;
+  bool validP = false;
+  bool valid = false;
   HttpUtil http;
 
   @override
@@ -26,60 +30,61 @@ class _Login extends State<Login> {
 
   Future<void> login() async {
     //读取当前的Form状态
+  
     var loginForm = loginKey.currentState;
     //验证Form表单
-    if (loginForm.validate()) {
-      loginForm.save();
-      print('userName: ' + userName + ' password: ' + password);
-      var data;
-      try {
-        data = await http
-            .post('/account/login', {"username": userName, "password": password});
-      } catch (e) {
-        print(e);
-        showModal(
-            context: context,
-            configuration: FadeScaleTransitionConfiguration(),
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  "登陆失败",
-                  textAlign: TextAlign.center,
-                ),
-                content:
-                    //Text("登陆失败",textAlign: TextAlign.center,),
-                    Text(
-                  "连接错误",
-                  textAlign: TextAlign.center,
-                ),
-                actions: <Widget>[],
-              );
-            });
-        return;
-      }
-      print(data);
-      if (data['code'] == ResultCode.SUCCESS) {
-        Navigator.pushReplacementNamed(context, "homePage");
-      } else {
-        showModal(
-            context: context,
-            configuration: FadeScaleTransitionConfiguration(),
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  "登陆失败",
-                  textAlign: TextAlign.center,
-                ),
-                content:
-                    //Text("登陆失败",textAlign: TextAlign.center,),
-                    Text(
-                  "用户名或密码错误",
-                  textAlign: TextAlign.center,
-                ),
-                actions: <Widget>[],
-              );
-            });
-      }
+    //if (loginForm.validate()) {
+    loginForm.save();
+    print('userName: ' + userName + ' password: ' + password);
+    var data;
+    try {
+      data = await http
+          .post('/account/login', {"username": userName, "password": password});
+    } catch (e) {
+      print(e);
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "登陆失败",
+                textAlign: TextAlign.center,
+              ),
+              content:
+                  //Text("登陆失败",textAlign: TextAlign.center,),
+                  Text(
+                "连接错误",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      return;
+    }
+    print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      Navigator.pushReplacementNamed(context, "homePage");
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "登陆失败",
+                textAlign: TextAlign.center,
+              ),
+              content:
+                  //Text("登陆失败",textAlign: TextAlign.center,),
+                  Text(
+                "用户名或密码错误",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      //}
     }
   }
 
@@ -116,7 +121,7 @@ class _Login extends State<Login> {
               padding: const EdgeInsets.all(30.0),
               child: Form(
                 key: loginKey,
-                autovalidate: true,
+                //autovalidate: true,
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.subtitle1,
                   child: Column(
@@ -127,18 +132,35 @@ class _Login extends State<Login> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
+                          //autovalidate: true,
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
-                            hintText: '用户名',
-                            border: InputBorder.none,
-                          ),
+                              hintText: '用户名',
+                              // filled: true,
+                              // fillColor: Theme.of(context).dialogBackgroundColor,
+                              border: InputBorder.none
+                              // OutlineInputBorder(
+                              //   gapPadding: 100,
+                              //   borderRadius: BorderRadius.all(Radius.circular(100)),
+                              //   borderSide: BorderSide.none,
+                              //   //color: Theme.of(context).dialogBackgroundColor,
+                              // ),
+                              //InputBorder.none,
+                              ),
                           keyboardType: TextInputType.text,
                           onSaved: (value) {
                             userName = value;
                           },
-                          validator: (username) {
-                            if (username.length == 0) {
+                          onChanged: (value) {
+                            if (value.length == 0) {
                               print('请输入用户名');
+                              setState(() {
+                                validU = false;
+                              });
+                            } else {
+                              setState(() {
+                                validU = true;
+                              });
                             }
                           },
                           onFieldSubmitted: (value) {},
@@ -157,14 +179,29 @@ class _Login extends State<Login> {
                               color: Theme.of(context).dialogBackgroundColor,
                             ),
                             child: TextFormField(
+                              //autovalidate: true,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 hintText: '输入密码',
                                 border: InputBorder.none,
+                                //errorMaxLines: 0
                               ),
                               obscureText: !isShowPassWord,
                               onSaved: (value) {
                                 password = value;
+                              },
+
+                              onChanged: (value) {
+                                if (value.length == 0) {
+                                  print('请输入密码');
+                                  setState(() {
+                                    validP = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    validP = true;
+                                  });
+                                }
                               },
                             ),
                           ),
@@ -196,7 +233,7 @@ class _Login extends State<Login> {
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_forward),
                                     iconSize: 40,
-                                    onPressed: login,
+                                    onPressed: validP && validU ? login : null,
                                   )),
                             ),
                           ),

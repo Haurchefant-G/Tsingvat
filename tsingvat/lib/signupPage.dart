@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
+import 'package:tsingvat/util/httpUtil.dart';
+import 'package:tsingvat/const/code.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -7,22 +11,106 @@ class SignupPage extends StatefulWidget {
 
 class _Login extends State<SignupPage> {
   //获取Key用来获取Form表单组件
-  GlobalKey<FormState> loginKey = GlobalKey<FormState>();
+  GlobalKey<FormState> signupKey = GlobalKey<FormState>();
   String userName;
+  String email;
   String password;
   String repeatPassword;
   bool isShowPassWord = false;
+  HttpUtil http;
 
-  void login() {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    http = HttpUtil();
+  }
+
+  void signup() async {
     //读取当前的Form状态
-    var loginForm = loginKey.currentState;
+    var signupForm = signupKey.currentState;
     //验证Form表单
-    if (loginForm.validate()) {
-      loginForm.save();
+    if (signupForm.validate()) {
+      signupForm.save();
       print('userName: ' + userName + ' password: ' + password);
     }
     //Navigator.pushNamed(context, "homepage");
-    Navigator.pushReplacementNamed(context, "homepage");
+    //Navigator.pushReplacementNamed(context, "homepage");
+    var data;
+    try {
+      data = await http.post('/account/register',
+          {"username": userName, "password": password, "email": email});
+    } catch (e) {
+      print(e);
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "注册失败",
+                textAlign: TextAlign.center,
+              ),
+              content:
+                  //Text("登陆失败",textAlign: TextAlign.center,),
+                  Text(
+                "连接错误",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      return;
+    }
+    print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      // showModal(
+      //     context: context,
+      //     configuration: FadeScaleTransitionConfiguration(),
+      //     builder: (BuildContext context) {
+      //       return SnackBar(content: Text("注册成功"));
+      //     });
+      Navigator.pushReplacementNamed(context, "loginPage");
+    } else if (data['code'] == ResultCode.ACCOUNT_ALREADY_EXISTS) {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "注册失败",
+                textAlign: TextAlign.center,
+              ),
+              content:
+                  //Text("登陆失败",textAlign: TextAlign.center,),
+                  Text(
+                "该用户名已被注册",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "注册失败",
+                textAlign: TextAlign.center,
+              ),
+              content:
+                  //Text("登陆失败",textAlign: TextAlign.center,),
+                  Text(
+                "未能完成注册",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+    }
   }
 
   void showPassWord() {
@@ -58,7 +146,7 @@ class _Login extends State<SignupPage> {
               // 左右的边距
               padding: const EdgeInsets.all(30.0),
               child: Form(
-                key: loginKey,
+                key: signupKey,
                 autovalidate: true,
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.subtitle1,
@@ -70,15 +158,43 @@ class _Login extends State<SignupPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
-                        
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
-                            hintText: '清华邮箱',
+                            hintText: '用户名',
                             border: InputBorder.none,
+                            //suffixText: "@mails.tinghua.edu.cn",
                           ),
                           keyboardType: TextInputType.text,
                           onSaved: (value) {
                             userName = value;
+                          },
+                          validator: (username) {
+                            if (username.length == 0) {
+                              print('请输入用户名');
+                            }
+                          },
+                          onFieldSubmitted: (value) {},
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                          color: Theme.of(context).dialogBackgroundColor,
+                        ),
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: '清华邮箱',
+                            border: InputBorder.none,
+                            //suffixText: "@mails.tinghua.edu.cn",
+                            //suffixStyle: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.black54)
+                          ),
+                          keyboardType: TextInputType.text,
+                          onSaved: (value) {
+                            email = value;
                           },
                           validator: (username) {
                             if (username.length == 0) {
@@ -193,12 +309,12 @@ class _Login extends State<SignupPage> {
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(40)),
-                                          color:
-                                              Theme.of(context).primaryColorDark),
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
                                       child: IconButton(
                                         icon: Icon(Icons.done),
                                         iconSize: 40,
-                                        onPressed: () {},
+                                        onPressed: signup,
                                       )),
                                 ))),
                       ),

@@ -11,9 +11,9 @@ class HttpUtil {
   HttpUtil._internal() {
     if (_client == null) {
       BaseOptions options = new BaseOptions();
-      options.baseUrl =
-          //'http://192.168.1.7:8089'; //"http://www.wanandroid.com";
-          'http://10.0.2.2:8089';
+      options.baseUrl = 'http://121.199.66.17:8080';
+      //'http://192.168.1.7:8089'; //"http://www.wanandroid.com";
+      //'http://10.0.2.2:8089';
       //options.contentType = "Headers.formUrlEncodedContentType";
       options.receiveTimeout = 1000 * 10; //10秒
       options.connectTimeout = 2000; //5秒
