@@ -299,14 +299,14 @@ public class RSACoder {
         return keyMap;
     }
 
-    public static Map<String, Key> loadKey() throws NoSuchAlgorithmException {
-        // TODO 从文件里获取密钥
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-        keyPairGen.initialize(1024);
-        KeyPair keyPair = keyPairGen.generateKeyPair();
-        Map<String, Key> keyMap = new HashMap<>(2);
-        keyMap.put(PUBLIC_KEY, keyPair.getPublic());// 公钥
-        keyMap.put(PRIVATE_KEY, keyPair.getPrivate());// 私钥
-        return keyMap;
-    }
+//    public static Map<String, Key> loadKey() throws NoSuchAlgorithmException {
+//        // TODO 从文件里获取密钥
+//        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+//        keyPairGen.initialize(1024);
+//        KeyPair keyPair = keyPairGen.generateKeyPair();
+//        Map<String, Key> keyMap = new HashMap<>(2);
+//        keyMap.put(PUBLIC_KEY, keyPair.getPublic());// 公钥
+//        keyMap.put(PRIVATE_KEY, keyPair.getPrivate());// 私钥
+//        return keyMap;
+//    }
 }

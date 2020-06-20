@@ -31,7 +31,7 @@ public class AccountController extends CommonController {
         session = request.getSession();
         List<Account> login = null;
         System.out.print("login");
-        if(account.getUsername() != null && account.getPassword() != null)
+        if(checkString(account.getUsername()) && checkString(account.getPassword()))
             login = accountDao.login(account.getUsername(), account.getPassword()); // 前端应保证传来的都不为null
         else{
             return wrapperErrorResp(ResultModel.LOGIN_FAIL, "username or password can't be null!");
@@ -55,8 +55,9 @@ public class AccountController extends CommonController {
     public ResponseEntity<ResultModel> register(@RequestBody Account account) {
         // 如果对应参数没有传的话，则会默认为null
         // TODO 发送邮箱验证码验证
-        if(account.getUsername()==null || account.getPassword() == null || account.getEmail() == null)
+        if(!checkString(account.getUsername()) || !checkString(account.getPassword()) || !checkString(account.getEmail()))
             return wrapperErrorResp(ResultModel.REGISTER_FAIL, "username or password or email can't be null!");
+        // 判断长度为空
         try {
             List<Account> accounts = accountDao.getUser(account.getUsername());
             if(accounts!= null && accounts.size() >= 1){
@@ -94,4 +95,11 @@ public class AccountController extends CommonController {
         return wrapperOKResp(accounts);
     }
     // TODO 用户修改用户名、密码、之类的。
+
+
+    public static boolean checkString(String s){
+        if(s == null) return false;
+        if(s.length() == 0) return false;
+        return true;
+    }
 }

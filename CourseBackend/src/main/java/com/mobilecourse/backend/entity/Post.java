@@ -1,7 +1,6 @@
 package com.mobilecourse.backend.entity;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 public class Post {
     // 暂时先做没有图片的

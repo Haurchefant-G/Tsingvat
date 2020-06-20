@@ -1,7 +1,9 @@
 package com.mobilecourse.backend.dao;
 
 import com.mobilecourse.backend.entity.Errand;
+import org.mockito.internal.verification.Times;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface ErrandDao {
@@ -15,6 +17,8 @@ public interface ErrandDao {
 
     // taker接单,应当记录更新的接单时间和接单人
     void takeErrand(Errand errand);
+
+    void finishErrand(Errand errand);
 
     void modifyErrand(Errand errand);
 

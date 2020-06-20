@@ -28,16 +28,19 @@ CREATE TABLE errand(
   bonus double NOT NULL,
   fromAddr varchar(100),
   toAddr varchar(100),
-  ddl timestamp,
+  sfromAddr varchar(2000),
+  stoAddr varchar(2000),
+  ddlTime timestamp,
   taker varchar(30),
-  takeTime timestamp
+  takeTime timestamp,
+  finishTime timestamp
 );
 
 INSERT INTO post VALUES("5ad6e47a-02b7-4cb4-b7d6-cd13a2e783e6","admin","2020-06-01 10:36:20","I am a post");
 INSERT INTO post VALUES("7fc417d3-352a-4a4d-9f55-803c667e18d8","zxj","2020-06-16 13:52:36","FisrtPost");
 INSERT INTO post VALUES("ed39849c-c7b1-47f0-883f-d9a927aba409","zxj","2020-06-16 14:05:06","SecondPost");
 select * from post;
-INSERT INTO errand values("aff5e132-e232-44e3-8d19-f1094776af3b","zxj","2020-06-16 14:05:06","first errand",12,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO errand(uuid,username,created,content,bonus) values("aff5e132-e232-44e3-8d19-f1094776af3b","zxj","2020-06-16 14:05:06","first errand",12);
 
 DROP TABLE IF EXISTS deal;
 CREATE TABLE deal(
@@ -45,7 +48,7 @@ CREATE TABLE deal(
 	username varchar(30) NOT NULL ,
   created timestamp NOT NULL,
   content tinytext,
-  ddl timestamp,
+  ddlTime timestamp,
   taker varchar(30),
   takeTime timestamp,
   price double

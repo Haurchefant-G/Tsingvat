@@ -9,4 +9,5 @@ public class Global {
     public static String ACCOUNT_DIR = "/account";
 
     public static String POST_DIR = "/post";
+
 }

@@ -40,10 +40,20 @@ public class ErrandController extends CommonController {
 
     @RequestMapping(value = "/take", method = {RequestMethod.PUT})
     public ResponseEntity<ResultModel> takeErrand(@RequestBody Errand errand){
-        if(errand.getTaker() == null)
+        if(errand.getUuid() == null || errand.getTaker() == null)
             return wrapperErrorResp(ResultModel.ERRAND_TAKE_FAIL, "should specify taker!");
         errand.setTakeTime(this.getCurrentTime());
         errandDao.takeErrand(errand);
+        return wrapperOKResp(errand);
+    }
+
+    // Errand参数实际上只需要errand的uuid，但是传输进入uuid也会直接
+    @RequestMapping(value = "/finish", method = {RequestMethod.PUT})
+    public ResponseEntity<ResultModel> finishErrand(@RequestBody Errand errand){
+        if(errand.getUuid() == null)
+            return wrapperErrorResp(ResultModel.ERRAND_TAKE_FAIL, "should specify taker!");
+        errand.setFinishTime(this.getCurrentTime());
+        errandDao.finishErrand(errand);
         return wrapperOKResp(errand);
     }
 

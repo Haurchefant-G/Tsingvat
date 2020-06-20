@@ -31,5 +31,4 @@ public class ImagesController extends CommonController{
         FileUtils.saveFile(multipartFile, Global.ACCOUNT_DIR+ "/"+username, "avatar.png");
         return wrapperOKResp(null);
     }
-
 }

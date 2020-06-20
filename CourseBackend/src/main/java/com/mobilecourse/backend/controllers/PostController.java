@@ -51,9 +51,14 @@ public class PostController extends CommonController {
 
     // 获取当前用户的所有post
     @RequestMapping(value="/{username}", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getPosts(@PathVariable("username") String username, HttpServletRequest request){
+    public ResponseEntity<ResultModel> getPosts(@PathVariable("username") String username){
         List<Post> posts =  postDao.getPosts(username);
         return wrapperOKResp(posts);
     }
 
+    @RequestMapping(value="", method={RequestMethod.GET})
+    public ResponseEntity<ResultModel> getIndexPosts(@RequestParam Timestamp time){
+        List<Post> posts = postDao.getIndexPosts(time);
+        return wrapperOKResp(posts);
+    }
 }
