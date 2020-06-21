@@ -7,6 +7,9 @@ import 'package:tsingvat/component/taskcard.dart';
 import 'package:tsingvat/tabPage/GoodsPage.dart';
 import 'package:tsingvat/tabPage/NewsPage.dart';
 import 'package:tsingvat/tabPage/InfoPage.dart';
+import 'package:tsingvat/tabPage/TaskPage.dart';
+import 'package:tsingvat/util/GradientUtil.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -29,7 +32,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _counter = 0;
   TabController _tabController;
-  List tabs = ["跑腿", "交易", "资讯", "我的"];
+  List tabs = [" 跑腿 ", " 交易 ", " 资讯 ", " 我的 "];
   AnimationController _fabController;
   Animation<double> _expandAnimation;
   bool _showFab = true;
@@ -62,14 +65,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _tabController.dispose();
     _fabController.dispose();
+    super.dispose();
   }
 
   void _handleTabs(int tabindex) {
-    _tabController.animateTo(tabindex,
-        duration: const Duration(milliseconds: 200));
+    // _tabController.animateTo(tabindex,
+    //     duration: const Duration(milliseconds: 300));
     print(_tabController.index);
     if (_tabController.index == 3) {
       setState(() {
@@ -125,38 +128,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               //physics: NeverScrollableScrollPhysics(),
               controller: _tabController,
               children: <Widget>[
-                Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    //padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        color:
-                            Colors.white70, //Theme.of(context).backgroundColor,
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(15))),
-                    child: RefreshIndicator(
-                        child: ListView.builder(itemBuilder: (context, i) {
-                          // if (i.isOdd) return new Divider();
-                          // final index = i ~/ 2;
-                          // return ListTile(
-                          //   title: Text(i.toString()),
-                          // );
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: TaskCard(),
-                          );
-                        }),
-                        // SliverFixedExtentList(
-                        //   itemExtent: 50.0,
-                        //   delegate: SliverChildBuilderDelegate(
-                        //     (context, index) => ListTile(
-                        //       title: Text("Item $index"),
-                        //     ),
-                        //     childCount: 30,
-                        //   ),
-                        // ),
-                        //Text(e),
-                        onRefresh: _refresh)),
+                TaskPage(),
                 // Container(
                 //     padding: EdgeInsets.only(left: 10, right: 10),
                 //     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -275,6 +247,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             IconButton(
                 icon: Icon(Icons.home),
                 onPressed: () {
+                  SharedPreferenceUtil.remove('password');
                   Navigator.pushReplacementNamed(context, "loginPage");
                 }),
             SizedBox(),
@@ -343,30 +316,42 @@ class _HomeAppBarState extends State<HomeAppBar> {
             // ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 24),
+                padding: const EdgeInsetsDirectional.only(start: 24, end: 24),
                 child: Theme(
                   data: Theme.of(context).copyWith(
                     splashColor: Colors.transparent,
                   ),
                   child: TabBar(
-                    // indicator: BorderTabIndicator(
-                    //   indicatorHeight: isDesktop ? 28 : 32,
-                    //   textScaleFactor: textScaleFactor,
-                    // ),
+                    indicator:
+                        // BoxDecoration(
+                        //   border: Border.all(width:2),
+                        //   borderRadius: BorderRadius.circular(100),
+                        //   gradient: GradientUtil.warmFlame()
+
+                        // )
+                        // ,
+                        // indicatorSize: TabBarIndicatorSize.label,
+                        BorderTabIndicator(
+                      indicatorHeight: 32,
+                      textScaleFactor: 1,
+                    ),
                     controller: widget.tabController,
-                    labelPadding:
-                        // isDesktop ?
-                        const EdgeInsets.symmetric(horizontal: 32),
+                    // labelPadding:
+                    //     // isDesktop ?
+                    //     const EdgeInsets.symmetric(horizontal: 20),
                     // : EdgeInsets.zero,
                     isScrollable: false, // left-align tabs on desktop
-                    labelStyle: Theme.of(context).textTheme.button,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.white.withOpacity(.6),
+                    labelStyle: Theme.of(context).primaryTextTheme.headline6,
+                    labelColor: Theme.of(context).accentColor,
+                    unselectedLabelStyle:
+                        Theme.of(context).primaryTextTheme.button,
+                    unselectedLabelColor: Theme.of(context).hintColor,
                     onTap: (index) {
                       // widget.tabController.animateTo(
                       //   index,
                       //   duration: const Duration(milliseconds: 300),
                       // );
+                      //widget.tabHandler(index);
                       //widget.tabHandler(index);
                     },
 
@@ -382,6 +367,51 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class BorderTabIndicator extends Decoration {
+  BorderTabIndicator({this.indicatorHeight, this.textScaleFactor}) : super();
+
+  final double indicatorHeight;
+  final double textScaleFactor;
+
+  @override
+  _BorderPainter createBoxPainter([VoidCallback onChanged]) {
+    return _BorderPainter(this, indicatorHeight, textScaleFactor, onChanged);
+  }
+}
+
+class _BorderPainter extends BoxPainter {
+  _BorderPainter(
+    this.decoration,
+    this.indicatorHeight,
+    this.textScaleFactor,
+    VoidCallback onChanged,
+  )   : assert(decoration != null),
+        assert(indicatorHeight >= 0),
+        super(onChanged);
+
+  final BorderTabIndicator decoration;
+  final double indicatorHeight;
+  final double textScaleFactor;
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    assert(configuration != null);
+    assert(configuration.size != null);
+    final horizontalInset = 16 - 4 * textScaleFactor;
+    final rect = Offset(offset.dx + horizontalInset,
+            (configuration.size.height / 2) - indicatorHeight / 2 - 1) &
+        Size(configuration.size.width - 2 * horizontalInset, indicatorHeight);
+    final paint = Paint();
+    paint.color = Colors.white;
+    paint.style = PaintingStyle.stroke;
+    paint.strokeWidth = 2;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(56)),
+      paint,
     );
   }
 }

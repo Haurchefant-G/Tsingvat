@@ -171,37 +171,38 @@ class _newTaskPageState extends State<newTaskPage> {
                           ),
                           Padding(padding: EdgeInsets.all(8)),
                           Expanded(
-                              flex: 1,
-                              child: Container(
-                                  padding: EdgeInsets.only(right: 8),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(100)),
-                                    color:
-                                        Theme.of(context).dialogBackgroundColor,
-                                  ),
-                                  child: FormField(
-                                      builder: (FormFieldState<String> field) {
-                                    return FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {
-                                          Future<TimeOfDay> p = showTimePicker(
-                                            context: context,
-                                            initialTime: TimeOfDay.now(),
-                                          );
-                                          p.then((value) => {
-                                                setState(() {
-                                                  startTime =
-                                                      "${value.hour}:${value.minute}";
-                                                })
-                                              });
-                                        },
-                                        child: Text(startTime,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle1));
-                                  }))),
+                            flex: 1,
+                            child: Container(
+                              // padding: EdgeInsets.only(right: 8),
+                              // decoration: BoxDecoration(
+                              //   borderRadius:
+                              //       BorderRadius.all(Radius.circular(100)),
+                              //   color: Theme.of(context).dialogBackgroundColor,
+                              // ),
+                              // child: FormField(
+                              //     builder: (FormFieldState<String> field) {
+                              //   return FlatButton(
+                              //       highlightColor: Colors.transparent,
+                              //       splashColor: Colors.transparent,
+                              //       onPressed: () {
+                              //         Future<TimeOfDay> p = showTimePicker(
+                              //           context: context,
+                              //           initialTime: TimeOfDay.now(),
+                              //         );
+                              //         p.then((value) => {
+                              //               setState(() {
+                              //                 startTime =
+                              //                     "${value.hour}:${value.minute}";
+                              //               })
+                              //             });
+                              //       },
+                              //       child: Text(startTime,
+                              //           style: Theme.of(context)
+                              //               .textTheme
+                              //               .subtitle1));
+                              // }),
+                            ),
+                          ),
                         ],
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -283,14 +284,22 @@ class _newTaskPageState extends State<newTaskPage> {
                                           Future<TimeOfDay> p = showTimePicker(
                                             context: context,
                                             initialTime: TimeOfDay.now(),
+                                            builder: (BuildContext context,
+                                                Widget child) {
+                                              return MediaQuery(
+                                                data: MediaQuery.of(context)
+                                                    .copyWith(
+                                                        alwaysUse24HourFormat:
+                                                            true),
+                                                child: child,
+                                              );
+                                            },
                                           );
                                           p.then((value) => {
                                                 setState(() {
-                                                  // if (value.hour != null) {
-                                                  //   print('123');
-                                                  //   print(value);
                                                   endTime =
                                                       "${value.hour}:${value.minute}";
+                                                  //endTime = value.toString();
                                                   // }
                                                 })
                                               });
@@ -369,7 +378,10 @@ class _newTaskPageState extends State<newTaskPage> {
                           // inputFormatters: [
                           //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
                           // ],
-                          style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(height: 1.8),
+                          style: Theme.of(context)
+                              .primaryTextTheme
+                              .subtitle1
+                              .copyWith(height: 1.8),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
                           onSaved: (v) {},

@@ -12,6 +12,8 @@ import 'startPage.dart';
 import 'HomePage.dart';
 import 'loginPage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
+
 Dio dio = Dio();
 
 void main() {
@@ -64,9 +66,9 @@ class MyApp extends StatelessWidget {
         // primaryIconTheme:
         //     Theme.of(context).accentIconTheme.copyWith(color: Colors.white)
       ),
-      initialRoute: 
-      'homePage',
-      //'startPage',
+      initialRoute:
+          //'homePage',
+          'startPage',
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),

@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:tsingvat/model/user.dart';
 import 'package:tsingvat/signupPage.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
@@ -13,6 +15,7 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = GlobalKey<FormState>();
+  User user;
   String userName;
   String password;
   bool isShowPassWord = false;
@@ -30,7 +33,7 @@ class _Login extends State<Login> {
 
   Future<void> login() async {
     //读取当前的Form状态
-  
+
     var loginForm = loginKey.currentState;
     //验证Form表单
     //if (loginForm.validate()) {
@@ -64,6 +67,15 @@ class _Login extends State<Login> {
     }
     print(data);
     if (data['code'] == ResultCode.SUCCESS) {
+      User user = User.fromJson(data['data']);
+      print(user);
+      SharedPreferenceUtil.setString('username', user.username);
+      SharedPreferenceUtil.setString('password', password);
+      SharedPreferenceUtil.setString('email', user.email);
+      SharedPreferenceUtil.setInt('phone', user.phone);
+      SharedPreferenceUtil.setString('nickname', user.nickname);
+      SharedPreferenceUtil.setString('signature', user.signature);
+      SharedPreferenceUtil.setString('avatar', user.avatar);
       Navigator.pushReplacementNamed(context, "homePage");
     } else {
       showModal(
@@ -180,6 +192,8 @@ class _Login extends State<Login> {
                             ),
                             child: TextFormField(
                               //autovalidate: true,
+                              //toolbarOptions: ToolbarOptions(),
+                              enableInteractiveSelection: false,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 hintText: '输入密码',
