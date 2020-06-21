@@ -58,21 +58,21 @@ class IndexPage extends StatelessWidget {
 
   
   /// 单击提示退出
-  Future<bool> _dialogExitApp(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-      content: new Text('确定要退出应用?'),
-      actions: <Widget>[
-        new FlatButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: new Text('取消', style: TextStyle(color: Colors.black54))),
-        new FlatButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: new Text('确定', style: TextStyle(color: Colors.black54)))
-      ],
-    ));
-  }
+//  Future<bool> _dialogExitApp(BuildContext context) {
+//    return showDialog(
+//      context: context,
+//      builder: (context) => new AlertDialog(
+//      content: new Text('确定要退出应用?'),
+//      actions: <Widget>[
+//        new FlatButton(
+//          onPressed: () => Navigator.of(context).pop(false),
+//          child: new Text('取消', style: TextStyle(color: Colors.black54))),
+//        new FlatButton(
+//          onPressed: () => Navigator.of(context).pop(true),
+//          child: new Text('确定', style: TextStyle(color: Colors.black54)))
+//      ],
+//    ));
+//  }
   @override
   Widget build(BuildContext context) {
     final _pageController = PageController(initialPage: Provide.value<CurrentIndexProvide>(context).currentIndex);
@@ -148,19 +148,19 @@ class IndexPage extends StatelessWidget {
             //   index: currentIndex,
             //   children: tabBodies,
             // ),
-            body: PageView.builder(
-              itemBuilder: (BuildContext context, int index){
-                return tabBodies[index];
-              },
-              controller: _pageController,
-              itemCount: tabBodies.length,
-              onPageChanged: (int index){
-                Provide.value<CurrentIndexProvide>(context).changeIndex(index);
-              },
-            ),
+//            body: PageView.builder(
+//              itemBuilder: (BuildContext context, int index){
+//                return tabBodies[index];
+//              },
+//              controller: _pageController,
+//              itemCount: tabBodies.length,
+//              onPageChanged: (int index){
+//                Provide.value<CurrentIndexProvide>(context).changeIndex(index);
+//              },
+//            ),
           ),
           onWillPop: (){
-            return _dialogExitApp(context);
+//            return _dialogExitApp(context);
           },
         );
       },
