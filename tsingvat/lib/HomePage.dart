@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:tsingvat/component/infocard.dart';
+import 'package:tsingvat/page/chatPage.dart';
 import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newErrandPage.dart';
 import 'package:tsingvat/page/newDealPage.dart';
@@ -255,7 +256,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Navigator.pushReplacementNamed(context, "loginPage");
                 }),
             SizedBox(),
-            IconButton(icon: Icon(Icons.bubble_chart), onPressed: null)
+            IconButton(
+                icon: Icon(Icons.chat),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ChatPage('test');
+                  }));
+                })
           ],
           mainAxisAlignment: MainAxisAlignment.spaceAround,
         ),
