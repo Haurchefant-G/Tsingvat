@@ -3,7 +3,6 @@ package com.mobilecourse.backend;
 import java.io.File;
 
 import com.mobilecourse.backend.utils.Global;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
