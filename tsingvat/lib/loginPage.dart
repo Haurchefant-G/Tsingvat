@@ -26,7 +26,6 @@ class _Login extends State<Login> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     http = HttpUtil();
   }
@@ -41,6 +40,7 @@ class _Login extends State<Login> {
     print('userName: ' + userName + ' password: ' + password);
     var data;
     try {
+      Map<String, dynamic> a = {"username": userName, "password": password};
       data = await http
           .post('/account/login', {"username": userName, "password": password});
     } catch (e) {

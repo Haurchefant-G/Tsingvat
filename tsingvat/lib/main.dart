@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newTaskPage.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
@@ -72,8 +73,9 @@ class MyApp extends StatelessWidget {
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
-        'homePage': (context) => HomePage(title: 'Flutter Demo Home Page'),
-        'newTaskPage': (context) => newTaskPage()
+        'homePage': (context) => HomePage(title: 'Home Page'),
+        'newTaskPage': (context) => newTaskPage(),
+        'newPostPage': (context) => newPostPage()
       },
       //home: Login(),
     );

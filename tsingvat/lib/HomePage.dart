@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newTaskPage.dart';
 import 'package:tsingvat/page/newGoodsPage.dart';
 import 'package:tsingvat/component/taskcard.dart';
@@ -224,6 +225,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 return newTaskPage();
               case 1:
                 return newGoodsPage();
+              case 2:
+                return newPostPage();
               default:
                 return newTaskPage();
             }
