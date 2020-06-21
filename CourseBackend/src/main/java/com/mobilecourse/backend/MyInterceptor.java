@@ -19,11 +19,12 @@ public class MyInterceptor implements HandlerInterceptor {
         // 检测session是否合理
         HttpSession session = request.getSession();
         if(session!=null && session.getAttribute("token") != null){
-//            return true;
+            String path = request.getContextPath();
+            return true;
         }
         System.out.println("preHandle");
-//        return false;
-        return true;
+        return false;
+//        return true;
     }
 
     @Override

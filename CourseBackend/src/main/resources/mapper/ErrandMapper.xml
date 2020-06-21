@@ -14,6 +14,13 @@
         WHERE username=#{username}
     </select>
 
+    <select id="getIndexErrands" resultType="com.mobilecourse.backend.entity.Errand">
+        SELECT * FROM errand
+        WHERE created &lt; #{time}
+        order by created desc
+        limit #{num};
+    </select>
+
     <select id="getTakeErrands" resultType="com.mobilecourse.backend.entity.Errand">
         SELECT * FROM errand
         WHERE taker=#{taker}

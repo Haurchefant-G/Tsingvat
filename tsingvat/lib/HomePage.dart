@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:tsingvat/component/infocard.dart';
 import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newErrandPage.dart';
 import 'package:tsingvat/page/newDealPage.dart';

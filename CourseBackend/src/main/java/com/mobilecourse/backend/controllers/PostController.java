@@ -2,10 +2,7 @@ package com.mobilecourse.backend.controllers;
 
 import com.mobilecourse.backend.dao.PostDao;
 import com.mobilecourse.backend.entity.Post;
-import com.mobilecourse.backend.utils.FastDFSClient;
-import com.mobilecourse.backend.utils.FileUtils;
-import com.mobilecourse.backend.utils.ResultModel;
-import com.mobilecourse.backend.utils.TokenUtils;
+import com.mobilecourse.backend.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -57,8 +54,14 @@ public class PostController extends CommonController {
     }
 
     @RequestMapping(value="", method={RequestMethod.GET})
-    public ResponseEntity<ResultModel> getIndexPosts(@RequestParam Timestamp time){
-        List<Post> posts = postDao.getIndexPosts(time);
+    public ResponseEntity<ResultModel> getIndexPosts(@RequestParam(required = false) Long time, @RequestParam(required = false) String num){
+        Timestamp timestamp = null;
+        if(time == null) timestamp = this.getCurrentTime();
+        else timestamp = new Timestamp(time);
+        int limit = 0;
+        if(num == null) limit = Global.LIMIT_NUM;
+        else limit = Integer.parseInt(num);
+        List<Post> posts = postDao.getIndexPosts(timestamp, limit);
         return wrapperOKResp(posts);
     }
 }

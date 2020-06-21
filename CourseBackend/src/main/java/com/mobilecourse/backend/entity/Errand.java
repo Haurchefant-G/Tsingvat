@@ -19,6 +19,22 @@ public class Errand extends Post {
     private Timestamp takeTime;
     private Timestamp finishTime;
 
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
 
     public String getSfromAddr() {
         return sfromAddr;

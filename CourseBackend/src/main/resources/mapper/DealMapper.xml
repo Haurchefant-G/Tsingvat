@@ -9,6 +9,13 @@
         VALUES(#{uuid},#{username},#{created},#{content},#{bonus});
     </insert>
 
+    <select id="getIndexDeals" resultType="com.mobilecourse.backend.entity.Deal">
+        SELECT * FROM deal
+        WHERE created &lt; #{time}
+        order by created desc
+        limit #{num};
+    </select>
+
     <select id="getDeals" resultType="com.mobilecourse.backend.entity.Deal">
         SELECT * FROM deal
         WHERE username=#{username}

@@ -33,7 +33,9 @@ CREATE TABLE errand(
   ddlTime timestamp,
   taker varchar(30),
   takeTime timestamp,
-  finishTime timestamp
+  finishTime timestamp,
+  phone varchar(13),
+  details varchar(2000)
 );
 
 INSERT INTO post VALUES("5ad6e47a-02b7-4cb4-b7d6-cd13a2e783e6","admin","2020-06-01 10:36:20","I am a post");

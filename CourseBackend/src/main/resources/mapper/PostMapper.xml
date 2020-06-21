@@ -2,8 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!-- 指定了mapper对应的dao -->
 <mapper namespace="com.mobilecourse.backend.dao.PostDao">
-    <select id="getIndexPosts" parameterType="java.sql.Timestamp" resultType="com.mobilecourse.backend.entity.Post">
-        select * from post where created &lt;= #{time}
+    <select id="getIndexPosts" resultType="com.mobilecourse.backend.entity.Post">
+        select * from post
+        where created &lt;= #{time}
+        order by created desc
+        limit #{num};
     </select>
     
     <select id="getPosts" parameterType="java.lang.String" resultType="com.mobilecourse.backend.entity.Post">
