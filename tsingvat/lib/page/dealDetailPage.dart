@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tsingvat/const/const_url.dart';
+import 'package:tsingvat/model/deal.dart';
 
 class DealDetail extends StatefulWidget {
+  Deal deal;
+
+  DealDetail(Deal deal) {
+    this.deal = deal;
+  }
+
   @override
   _DealDetailState createState() => _DealDetailState();
 }
@@ -22,18 +31,29 @@ class _DealDetailState extends State<DealDetail> {
         preferredSize: Size.fromHeight(350),
         child: AppBar(
           //backgroundColor: Colors.transparent,
-          flexibleSpace: Image(
-            image: AssetImage(
-              "assets/placeholder_image.png",
-            ),
+          flexibleSpace: 
+          Container(
+            height: 400,
+            child: CachedNetworkImage(imageUrl: '${ConstUrl.dealimageurl}/${widget.deal.uuid}/0.png',
             fit: BoxFit.cover,
+
+            placeholder: (context, url) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SpinKitThreeBounce(color: Colors.blueAccent, size: 10,),
+            )),
           ),
+          // Image(
+          //   image: NetworkImage(
+          //       '${ConstUrl.dealimageurl}/${widget.deal.uuid}/0.png'),
+          //   fit: BoxFit.cover,
+          // ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
+        backgroundColor: Theme.of(context).primaryColorDark,
         child: Icon(
-          Icons.star_border,
+          Icons.chat,
           size: 30,
         ),
       ),
@@ -42,25 +62,25 @@ class _DealDetailState extends State<DealDetail> {
         SliverToBoxAdapter(
           child: Column(
             children: <Widget>[
-              CachedNetworkImage(imageUrl: 'img'),
+              //CachedNetworkImage(imageUrl: 'img'),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      name,
+                      '${widget.deal.content}',
                       style: Theme.of(context).primaryTextTheme.headline4,
                     ),
                     Text(
-                      "￥" + price.toString(),
+                      "￥${widget.deal.price.toString()}",
                       style: Theme.of(context)
                           .primaryTextTheme
                           .headline5
                           .copyWith(color: Colors.red[400]),
                     ),
                     Text(
-                      detail,
+                      '${widget.deal.details}',
                       style: Theme.of(context).primaryTextTheme.headline6,
                     ),
                     Divider(),
@@ -69,14 +89,49 @@ class _DealDetailState extends State<DealDetail> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                          child: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            radius: 12,
-                          ),
+                          child:
+                              // CircleAvatar(
+                              //   backgroundColor:
+                              //       Theme.of(context).primaryColorLight,
+                              //   radius: 12,
+                              // ),
+                              ClipOval(
+                                  child: Container(
+                            height: 36,
+                            width: 36,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColorLight,
+                            ),
+                            child: Image.network(
+                              "${ConstUrl.avatarimageurl}/${widget.deal.username}/avatar.png",
+                              fit: BoxFit.cover,
+                            ),
+                          )),
                         ),
                         Text(
-                          "用户名",
+                          '${widget.deal.username}',
+                          style: Theme.of(context)
+                              .primaryTextTheme
+                              .bodyText1
+                              .copyWith(color: Colors.grey),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+                          child:
+                              // CircleAvatar(
+                              //   backgroundColor:
+                              //       Theme.of(context).primaryColorLight,
+                              //   radius: 12,
+                              // ),
+                          Icon(Icons.phone, size: 36,)
+                        ),
+                        Text(
+                          '${widget.deal.phone}',
                           style: Theme.of(context)
                               .primaryTextTheme
                               .bodyText1

@@ -1,7 +1,10 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
+import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/model/errand.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
+import 'package:tsingvat/util/httpUtil.dart';
 
 class ErrandCard extends StatefulWidget {
   String fromAddr;
@@ -12,10 +15,13 @@ class ErrandCard extends StatefulWidget {
   double bonus;
   String uuid;
   String content;
+  bool take = false;
+  Future<void> Function() refresh;
 
-  ErrandCard(Errand e) {
+  ErrandCard(Errand e, Future<void> Function() refresh) {
     var time = DateTime.fromMillisecondsSinceEpoch(e.ddlTime ?? 1592316306000);
     ddlTime = "${time.hour}:${time.minute}";
+
     fromAddr = e.fromAddr;
     sfromAddr = e.sfromAddr;
     toAddr = e.toAddr;
@@ -23,6 +29,10 @@ class ErrandCard extends StatefulWidget {
     bonus = e.bonus;
     uuid = e.uuid;
     content = e.content;
+    if (e.taker != null) {
+      take = true;
+    }
+    this.refresh = refresh;
   }
   @override
   _ErrandCardState createState() => _ErrandCardState();
@@ -34,12 +44,7 @@ class _ErrandCardState extends State<ErrandCard>
   Animation<double> _heightFactor;
   Animation<double> _opacity;
   bool expanded = false;
-  String fromAddr;
-  String toAddr;
-  String sfromAddr;
-  String stoAddr;
-  String ddlTime;
-  double bonus;
+  bool take;
 
   @override
   void initState() {
@@ -48,6 +53,7 @@ class _ErrandCardState extends State<ErrandCard>
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _heightFactor = _controller.drive(CurveTween(curve: Curves.easeInOut));
     _opacity = _controller.drive(CurveTween(curve: Curves.easeInOut));
+    take = widget.take;
   }
 
   @override
@@ -65,6 +71,34 @@ class _ErrandCardState extends State<ErrandCard>
         _controller.reverse();
       }
     });
+  }
+
+  Future<void> _take() async {
+    var data;
+    String taker;
+    try {
+      //print(DateTime.now().toIso8601String());
+      print(DateTime.now().millisecondsSinceEpoch);
+      taker = await SharedPreferenceUtil.getString('username');
+      data = await HttpUtil()
+          .put("/errand/take", {"uuid": widget.uuid, "taker": taker});
+      await Future.delayed(Duration(milliseconds: 500));
+      //{"time": DateTime.now().millisecondsSinceEpoch});
+    } catch (e) {
+      print(e);
+      return;
+    }
+    //print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      Navigator.of(context).pop();
+      setState(() {
+        take = true;
+        _controller.reverse();
+      });
+      widget.refresh();
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -99,12 +133,24 @@ class _ErrandCardState extends State<ErrandCard>
                             .primaryTextTheme
                             .headline6
                             .copyWith(color: Colors.grey[700]),
-                        child: Row(
+                        child: Flex(
+                          direction: Axis.horizontal,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(widget.ddlTime ?? "时间"),
-                            Text(widget.fromAddr ?? "起始点"),
-                            Text(widget.bonus == null ? "￥${widget.bonus?.toString()}" : "报酬")
+                            Expanded(child: Text(widget.ddlTime ?? "时间")),
+                            Expanded(
+                                child: Center(
+                                    child: Text(
+                              widget.fromAddr ?? "起始点",
+                              textAlign: TextAlign.center,
+                            ))),
+                            Expanded(
+                                child: Text(
+                              widget.bonus != null
+                                  ? "￥${widget.bonus?.toString()}"
+                                  : "报酬",
+                              textDirection: TextDirection.rtl,
+                            ))
                           ],
                         )),
                   ),
@@ -158,7 +204,7 @@ class _ErrandCardState extends State<ErrandCard>
                                                   },
                                                   child: Text("取消")),
                                               FlatButton(
-                                                  onPressed: () {},
+                                                  onPressed: _take,
                                                   child: Text("确认"))
                                             ],
                                           );

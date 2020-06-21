@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:tsingvat/chat/message_page.dart';
 import 'package:tsingvat/page/newPostPage.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
@@ -69,12 +70,13 @@ class MyApp extends StatelessWidget {
       initialRoute:
           //'homePage',
           'startPage',
+          //'messagePage',
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
         'homePage': (context) => HomePage(title: 'Home Page'),
         //'newTaskPage': (context) => newTaskPage(),
-        'newPostPage': (context) => newPostPage()
+        //'messagePage': (context) => MessagePage()
       },
       //home: Login(),
     );

@@ -16,6 +16,7 @@ class Errand {
     String stoAddr;
     num ddlTime;
     num takeTime;
+    String taker;
     num finishTime;
     String phone;
     String details;

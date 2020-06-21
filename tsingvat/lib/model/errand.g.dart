@@ -19,6 +19,7 @@ Errand _$ErrandFromJson(Map<String, dynamic> json) {
     ..stoAddr = json['stoAddr'] as String
     ..ddlTime = json['ddlTime'] as num
     ..takeTime = json['takeTime'] as num
+    ..taker = json['taker'] as String
     ..finishTime = json['finishTime'] as num
     ..phone = json['phone'] as String
     ..details = json['details'] as String;
@@ -36,6 +37,7 @@ Map<String, dynamic> _$ErrandToJson(Errand instance) => <String, dynamic>{
       'stoAddr': instance.stoAddr,
       'ddlTime': instance.ddlTime,
       'takeTime': instance.takeTime,
+      'taker': instance.taker,
       'finishTime': instance.finishTime,
       'phone': instance.phone,
       'details': instance.details,
