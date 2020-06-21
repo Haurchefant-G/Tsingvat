@@ -76,6 +76,7 @@ class _Login extends State<Login> {
       SharedPreferenceUtil.setString('nickname', user.nickname);
       SharedPreferenceUtil.setString('signature', user.signature);
       SharedPreferenceUtil.setString('avatar', user.avatar);
+      
       Navigator.pushReplacementNamed(context, "homePage");
     } else {
       showModal(

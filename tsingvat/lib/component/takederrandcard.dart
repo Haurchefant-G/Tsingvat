@@ -3,6 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 
 class TakedErrandCard extends StatefulWidget {
+  String username;
+  TakedErrandCard(String userName) {
+    this.username = userName;
+  }
+
   @override
   _TakedErrandCardState createState() => _TakedErrandCardState();
 }

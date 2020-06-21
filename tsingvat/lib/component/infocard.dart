@@ -1,19 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tsingvat/component/takederrandcard.dart';
+import 'package:tsingvat/page/TakedErrandsPage.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/loginPage.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
-class InfoCard extends StatelessWidget {
+class InfoCard extends StatefulWidget {
+  @override
+  _InfoCardState createState() => _InfoCardState();
+}
+
+class _InfoCardState extends State<InfoCard> {
   static const double IMAGE_ICON_WIDTH = 30.0;
   static const double ARROW_ICON_WIDTH = 16.0;
 
-  var userAvatar;
-  var userName;
+  String userAvatar;
+  String userName;
   var titles = ["资讯", "跑腿", "交易", "问答"];
 
   var titleTextStyle = new TextStyle(fontSize: 16.0);
   var rightArrowIcon = new Icon(Icons.arrow_forward_ios);
+
+  info() async {
+    var avatar = await SharedPreferenceUtil.getString('avatar');
+    var name = await SharedPreferenceUtil.getString('username');
+    setState(() {
+      userAvatar =
+          "http://121.199.66.17:8800/images/account/${name}/avatar.png"; //avatar;
+      userName = name;
+    });
+    print(userAvatar);
+    print(userName);
+  }
+
+  logout() {
+    SharedPreferenceUtil.clear();
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('startPage', (route) => false);
+  }
+
+  @override
+  initState() {
+    info();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +52,55 @@ class InfoCard extends StatelessWidget {
         Widget>[
       new SliverAppBar(
         pinned: false,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
         expandedHeight: 200.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
         flexibleSpace: new InkWell(
             onTap: () {
-              userAvatar == null ? debugPrint('登录') : debugPrint('用户信息');
+              showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 300,
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Container(
+                                      height: 60,
+                                      child: FlatButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {},
+                                          child: Text(
+                                            "修改头像",
+                                            style: Theme.of(context)
+                                                .primaryTextTheme
+                                                .headline5,
+                                          ))))
+                            ],
+                          ),
+                          Divider(height: 1),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Container(
+                                      height: 60,
+                                      child: FlatButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: logout,
+                                          child: Text(
+                                            "退出登录",
+                                            style: Theme.of(context)
+                                                .primaryTextTheme
+                                                .headline5,
+                                          ))))
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  });
             },
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -34,12 +108,12 @@ class InfoCard extends StatelessWidget {
                 userAvatar == null
                     ? new Image.asset(
                         "assets/avatar_logo.png",
-                        width: 60.0,
-                        height: 60.0,
+                        width: 100,
+                        height: 100,
                       )
                     : new Container(
-                        width: 60.0,
-                        height: 60.0,
+                        width: 100,
+                        height: 100,
                         decoration: new BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.transparent,
@@ -52,26 +126,30 @@ class InfoCard extends StatelessWidget {
                 new Container(
                   margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                   child: new Text(
-                    userName == null ? '点击头像登录' : userName,
+                    userName ?? " ",
                     style: new TextStyle(color: Colors.white, fontSize: 16.0),
                   ),
                 )
               ],
             )),
       ),
-      new SliverFixedExtentList(
+      SliverFixedExtentList(
           delegate:
               new SliverChildBuilderDelegate((BuildContext context, int index) {
             String title = titles[index];
-            return new Container(
+            return Container(
                 alignment: Alignment.centerLeft,
-                child: new InkWell(
+                child: InkWell(
                   onTap: () {
                     print("the is the item of $title");
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return TakedErrandsPage(userName);
+                    }));
                   },
-                  child: new Column(
+                  child: Column(
                     children: <Widget>[
-                      new Padding(
+                      Padding(
                         padding:
                             const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
                         child: new Row(
@@ -95,50 +173,4 @@ class InfoCard extends StatelessWidget {
           itemExtent: 50.0),
     ]);
   }
-}
-
-Widget showCustomScrollView() {
-  return new CustomScrollView(
-    slivers: <Widget>[
-      const SliverAppBar(
-        pinned: true,
-        expandedHeight: 250.0,
-        flexibleSpace: const FlexibleSpaceBar(
-          title: const Text('Demo'),
-        ),
-      ),
-      new SliverGrid(
-        gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-          //横轴的最大长度
-          maxCrossAxisExtent: 200.0,
-          //主轴间隔
-          mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,
-          //横轴间隔
-          childAspectRatio: 1.0,
-        ),
-        delegate: new SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return new Container(
-              alignment: Alignment.center,
-              color: Colors.teal[100 * (index % 9)],
-              child: new Text('grid item $index'),
-            );
-          },
-          childCount: 20,
-        ),
-      ),
-      new SliverFixedExtentList(
-        itemExtent: 50.0,
-        delegate:
-            new SliverChildBuilderDelegate((BuildContext context, int index) {
-          return new Container(
-            alignment: Alignment.center,
-            color: Colors.lightBlue[100 * (index % 9)],
-            child: new Text('list item $index'),
-          );
-        }, childCount: 10),
-      ),
-    ],
-  );
 }
