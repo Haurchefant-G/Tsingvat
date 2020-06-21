@@ -29,9 +29,6 @@ class ErrandCard extends StatefulWidget {
     bonus = e.bonus;
     uuid = e.uuid;
     content = e.content;
-    if (e.taker != null) {
-      take = true;
-    }
     this.refresh = refresh;
   }
   @override
@@ -44,7 +41,6 @@ class _ErrandCardState extends State<ErrandCard>
   Animation<double> _heightFactor;
   Animation<double> _opacity;
   bool expanded = false;
-  bool take;
 
   @override
   void initState() {
@@ -53,7 +49,6 @@ class _ErrandCardState extends State<ErrandCard>
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _heightFactor = _controller.drive(CurveTween(curve: Curves.easeInOut));
     _opacity = _controller.drive(CurveTween(curve: Curves.easeInOut));
-    take = widget.take;
   }
 
   @override
@@ -91,10 +86,7 @@ class _ErrandCardState extends State<ErrandCard>
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       Navigator.of(context).pop();
-      setState(() {
-        take = true;
-        _controller.reverse();
-      });
+      handleTap();
       widget.refresh();
     } else {
       Navigator.of(context).pop();

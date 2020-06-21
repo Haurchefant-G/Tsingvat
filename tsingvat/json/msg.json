@@ -3,7 +3,7 @@
 	"sender":"zxj",
 	"receiver":"gac",
 	"created":1592721817000,
-	"content":"",
-	"type":1,
+	"content":"1234",
+	"type": 1,
 	"sent":false
 }
