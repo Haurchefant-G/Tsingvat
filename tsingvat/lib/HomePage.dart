@@ -9,6 +9,7 @@ import 'package:tsingvat/tabPage/NewsPage.dart';
 import 'package:tsingvat/tabPage/InfoPage.dart';
 import 'package:tsingvat/tabPage/TaskPage.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -246,6 +247,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             IconButton(
                 icon: Icon(Icons.home),
                 onPressed: () {
+                  SharedPreferenceUtil.remove('password');
                   Navigator.pushReplacementNamed(context, "loginPage");
                 }),
             SizedBox(),

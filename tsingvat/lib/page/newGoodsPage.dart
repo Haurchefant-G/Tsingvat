@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class newGoodsPage extends StatefulWidget {
   @override
@@ -17,6 +20,8 @@ class _newGoodsPageState extends State<newGoodsPage> {
   String endDetail;
   String endTime = '送达时间';
   String phone = '';
+  final picker = ImagePicker();
+  File _image;
 
   List<DropdownMenuItem<String>> locationItems = [
     '第六教学楼',
@@ -31,6 +36,16 @@ class _newGoodsPageState extends State<newGoodsPage> {
       child: Text(v),
     );
   }).toList();
+
+  Future pickImage() async {
+    try {
+      final image = await picker.getImage(source: ImageSource.gallery);
+      setState(() {
+        _image = File(image.path);
+        print(_image);
+      });
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,37 +116,37 @@ class _newGoodsPageState extends State<newGoodsPage> {
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
                       Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                          color: Theme.of(context).dialogBackgroundColor,
-                        ),
-                        child: TextFormField(
-                          //textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                            hintText: '价格',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
-                            prefixIcon:
-                                ImageIcon(AssetImage("assets/icon/RMB.png")),
-                            border: InputBorder.none,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                            color: Theme.of(context).dialogBackgroundColor,
                           ),
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          ],
+                          child: TextFormField(
+                            //textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              hintText: '价格',
+                              //prefixText: '￥  ',
+                              //prefixIcon: Icon(Icons.attach_money),
+                              prefixIcon:
+                                  ImageIcon(AssetImage("assets/icon/RMB.png")),
+                              border: InputBorder.none,
+                            ),
+                            inputFormatters: [
+                              WhitelistingTextInputFormatter(RegExp("[1-9.]"))
+                            ],
 
-                          keyboardType: TextInputType.numberWithOptions(
-                              signed: false, decimal: true),
-                          onSaved: (v) {
-                            pay = double.parse(v);
-                          },
-                          validator: (v) {
-                            if (v.length == 0) {
-                              print('请输入价格');
-                            }
-                          },
-                          onFieldSubmitted: (value) {},
-                        )
-                      ),
+                            keyboardType: TextInputType.numberWithOptions(
+                                signed: false, decimal: true),
+                            onSaved: (v) {
+                              pay = double.parse(v);
+                            },
+                            validator: (v) {
+                              if (v.length == 0) {
+                                print('请输入价格');
+                              }
+                            },
+                            onFieldSubmitted: (value) {},
+                          )),
                       Padding(padding: EdgeInsets.all(8.0)),
                       Container(
                         decoration: BoxDecoration(
@@ -175,13 +190,45 @@ class _newGoodsPageState extends State<newGoodsPage> {
                           // inputFormatters: [
                           //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
                           // ],
-                          style: Theme.of(context).primaryTextTheme.subtitle1.copyWith(height: 1.8),
+                          style: Theme.of(context)
+                              .primaryTextTheme
+                              .subtitle1
+                              .copyWith(height: 1.8),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
                           onSaved: (v) {},
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
+                      ),
+                      Padding(padding: EdgeInsets.all(8.0)),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              width: 220.w,
+                              height: 220.w,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white),
+                              child: _image != null
+                                  ? FlatButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: pickImage,
+                                      child: Container(
+                                          width: 220.w,
+                                          height: 220.w,
+                                          child: Image.file(
+                                            _image,
+                                            fit: BoxFit.cover,
+                                          )))
+                                  : FlatButton(
+                                      onPressed: pickImage,
+                                      child: Icon(
+                                        Icons.image,
+                                        color: Colors.grey,
+                                      ),
+                                    )),
+                        ],
                       ),
                       Padding(padding: EdgeInsets.only(top: 300)),
                     ],
