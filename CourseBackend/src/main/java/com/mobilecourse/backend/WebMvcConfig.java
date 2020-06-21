@@ -32,6 +32,5 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         registry.addInterceptor(new MyInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/account/*");
-
     }
 }

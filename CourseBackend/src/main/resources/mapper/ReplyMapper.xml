@@ -3,7 +3,7 @@
 <!-- 指定了mapper对应的dao -->
 <mapper namespace="com.mobilecourse.backend.dao.ReplyDao">
     <select id="getReplies" resultType="com.mobilecourse.backend.entity.Reply">
-        SELECT * FROM reply WHERE parent=#{parent}
+        SELECT * FROM reply WHERE parent=#{parent} order by created desc
     </select>
 
     <insert id="createReply" parameterType="com.mobilecourse.backend.entity.Reply">

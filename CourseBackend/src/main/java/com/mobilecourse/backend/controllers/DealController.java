@@ -57,13 +57,15 @@ public class DealController extends CommonController {
     }
 
     @RequestMapping(value="", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getIndexDeals(@RequestParam(required = false) Timestamp time, @RequestParam(required = false) String num){
-        if(time == null) time = this.getCurrentTime();
+    public ResponseEntity<ResultModel> getIndexDeals(@RequestParam(required = false) Long time, @RequestParam(required = false) String num){
+        Timestamp timestamp = null;
+        if(time == null) timestamp = this.getCurrentTime();
+        else timestamp = new Timestamp(time);
         int limit = 0;
         if(num == null) limit = Global.LIMIT_NUM;
         else limit = Integer.parseInt(num);
 
-        List<Deal> deals = dealDao.getIndexDeals(time, limit);
+        List<Deal> deals = dealDao.getIndexDeals(timestamp, limit);
         return wrapperOKResp(deals);
     }
 

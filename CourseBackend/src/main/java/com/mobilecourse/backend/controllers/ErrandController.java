@@ -67,13 +67,15 @@ public class ErrandController extends CommonController {
     }
 
     @RequestMapping(value="", method = {RequestMethod.GET})
-    public ResponseEntity<ResultModel> getIndexErrands(@RequestParam(required = false) Timestamp time, @RequestParam(required = false) String num){
-        if(time == null) time = this.getCurrentTime();
+    public ResponseEntity<ResultModel> getIndexErrands(@RequestParam(required = false) Long time, @RequestParam(required = false) String num){
+        Timestamp timestamp = null;
+        if(time == null) timestamp = this.getCurrentTime();
+        else timestamp = new Timestamp(time);
         int limit = 0;
         if(num == null) limit = Global.LIMIT_NUM;
         else limit = Integer.parseInt(num);
 
-        List<Errand> errands = errandDao.getIndexErrands(time, limit);
+        List<Errand> errands = errandDao.getIndexErrands(timestamp, limit);
         return wrapperOKResp(errands);
     }
 

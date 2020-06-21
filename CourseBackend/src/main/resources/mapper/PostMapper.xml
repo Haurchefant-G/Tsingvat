@@ -3,7 +3,10 @@
 <!-- 指定了mapper对应的dao -->
 <mapper namespace="com.mobilecourse.backend.dao.PostDao">
     <select id="getIndexPosts" resultType="com.mobilecourse.backend.entity.Post">
-        select * from post where created &lt;= #{time} limit #{num};
+        select * from post
+        where created &lt;= #{time}
+        order by created desc
+        limit #{num};
     </select>
     
     <select id="getPosts" parameterType="java.lang.String" resultType="com.mobilecourse.backend.entity.Post">
