@@ -9,8 +9,10 @@ class PostCard extends StatelessWidget {
   String time;
   String news;
   String imageurl;
+  int imagenum;
 
-  PostCard(Post post) {
+  PostCard(Post post, {int num = 0}) {
+    imagenum = num;
     username = post.username;
     time = DateTime.fromMillisecondsSinceEpoch(post.created).toString();
     news = post.content;
@@ -76,25 +78,27 @@ class PostCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-                child: CachedNetworkImage(
-                  imageUrl: imageurl,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SpinKitThreeBounce(
-                      color: Colors.blueAccent,
-                      size: 10,
+              Container(
+                child: imagenum > 0 ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+                  child: CachedNetworkImage(
+                    imageUrl: imageurl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SpinKitThreeBounce(
+                        color: Colors.blueAccent,
+                        size: 10,
+                      ),
                     ),
                   ),
-                ),
-                //     Image.asset(
-                //   'assets/placeholder_image.png',
-                //   color: Colors.grey,
-                //   colorBlendMode: BlendMode.color,
-                //   fit: BoxFit.fitWidth,
-                // )
+                  //     Image.asset(
+                  //   'assets/placeholder_image.png',
+                  //   color: Colors.grey,
+                  //   colorBlendMode: BlendMode.color,
+                  //   fit: BoxFit.fitWidth,
+                  // )
+                ) : null,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
