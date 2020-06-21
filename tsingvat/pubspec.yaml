@@ -39,6 +39,10 @@ dependencies:
   web_socket_channel: ^1.1.0
   flutter_spinkit: ^4.1.2+1
 
+  flutter_easyrefresh: ^1.2.7
+  provide: ^1.0.2
+  fluro: ^1.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

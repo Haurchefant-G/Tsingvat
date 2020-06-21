@@ -5,8 +5,8 @@
 
     <insert id="createDeal" parameterType="com.mobilecourse.backend.entity.Deal">
         INSERT INTO
-        errand(uuid,username,created,content,bonus)
-        VALUES(#{uuid},#{username},#{created},#{content},#{bonus});
+        deal(uuid,username,created,content,price,details,phone)
+        VALUES(#{uuid},#{username},#{created},#{content},#{price},#{details},#{phone});
     </insert>
 
     <select id="getIndexDeals" resultType="com.mobilecourse.backend.entity.Deal">

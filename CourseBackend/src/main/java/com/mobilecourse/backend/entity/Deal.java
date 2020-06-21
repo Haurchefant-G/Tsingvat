@@ -3,11 +3,27 @@ package com.mobilecourse.backend.entity;
 import java.sql.Timestamp;
 
 public class Deal extends Post {
-    // 交易最晚接受时间
-    private Timestamp ddl;
     private double price;
     private String taker;
     private Timestamp takeTime;
+    private String details;
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
     public Timestamp getTakeTime() {
         return takeTime;
@@ -23,14 +39,6 @@ public class Deal extends Post {
 
     public void setTaker(String taker) {
         this.taker = taker;
-    }
-
-    public Timestamp getDdl() {
-        return ddl;
-    }
-
-    public void setDdl(Timestamp ddl) {
-        this.ddl = ddl;
     }
 
     public double getPrice() {
