@@ -55,6 +55,11 @@ class _newErrandPageState extends State<newErrandPage> {
   }
 
   Future<void> createPost() async {
+    contentFocus.unfocus();
+    bonusFocus.unfocus();
+    sfromFocus.unfocus();
+    stoFocus.unfocus();
+    phoneFocus.unfocus();
     detailFocus.unfocus();
     var errandForm = errandKey.currentState;
     //验证Form表单

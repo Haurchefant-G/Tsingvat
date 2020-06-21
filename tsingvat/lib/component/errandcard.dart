@@ -104,7 +104,7 @@ class _ErrandCardState extends State<ErrandCard>
                           children: <Widget>[
                             Text(widget.ddlTime ?? "时间"),
                             Text(widget.fromAddr ?? "起始点"),
-                            Text(widget.bonus?.toString() ?? "报酬")
+                            Text(widget.bonus == null ? "￥${widget.bonus?.toString()}" : "报酬")
                           ],
                         )),
                   ),
