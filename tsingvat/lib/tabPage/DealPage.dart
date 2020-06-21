@@ -18,10 +18,12 @@ class _DealPageState extends State<DealPage> {
   List<Deal> deals = [];
   ScrollController _scrollController;
   bool more = false;
+  bool current;
 
   @override
   void initState() {
     super.initState();
+    current = true;
     http = HttpUtil();
     _scrollController = ScrollController()
       ..addListener(() {
@@ -52,8 +54,11 @@ class _DealPageState extends State<DealPage> {
     if (data['code'] == ResultCode.SUCCESS) {
       deals.clear();
       for (var json in data['data']) {
-          deals.add(Deal.fromJson(json));
+        deals.add(Deal.fromJson(json));
       }
+    }
+    if (current == true) {
+      setState(() {});
     }
   }
 
@@ -61,7 +66,9 @@ class _DealPageState extends State<DealPage> {
     print(1);
     var data;
 
+    setState(() {
       more = true;
+    });
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
@@ -75,13 +82,22 @@ class _DealPageState extends State<DealPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
-          deals.add(Deal.fromJson(json));
+        deals.add(Deal.fromJson(json));
       }
     }
-    more = false;
-    // setState(() {
-    //   more = false;
-    // });
+    if (current == true) {
+      setState(() {
+        more = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
+    current = false;
   }
 
   @override

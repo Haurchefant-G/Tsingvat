@@ -15,10 +15,12 @@ class _ErrandPageState extends State<ErrandPage> {
   List<Errand> errands = [];
   ScrollController _scrollController;
   bool more = false;
+  bool current;
 
   @override
   void initState() {
     super.initState();
+    current = true;
     http = HttpUtil();
     _scrollController = ScrollController()
       ..addListener(() {
@@ -52,6 +54,9 @@ class _ErrandPageState extends State<ErrandPage> {
           errands.add(Errand.fromJson(json));
       }
     }
+    if (current == true) {
+      setState(() {});
+    }
   }
 
   Future<void> _getMore() async {
@@ -76,9 +81,18 @@ class _ErrandPageState extends State<ErrandPage> {
           errands.add(Errand.fromJson(json));
       }
     }
-    setState(() {
-      more = false;
-    });
+    if (current == true) {
+      setState(() {
+        more = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    current = false;
   }
 
   @override

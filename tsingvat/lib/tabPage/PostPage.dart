@@ -16,10 +16,12 @@ class _PostPageState extends State<PostPage> {
   List<Post> posts = [];
   ScrollController _scrollController;
   bool more = false;
+  bool current;
 
   @override
   void initState() {
     super.initState();
+    current = true;
     http = HttpUtil();
     _scrollController = ScrollController()
       ..addListener(() {
@@ -33,10 +35,6 @@ class _PostPageState extends State<PostPage> {
 
   Future<void> _refresh() async {
     var data;
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   print("刷新结束");
-    // });
-
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
@@ -49,38 +47,46 @@ class _PostPageState extends State<PostPage> {
     }
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
-      var datas = data['data'];
+      posts.clear();
       for (var json in data['data']) {
         posts.add(Post.fromJson(json));
       }
     }
+    if (current == true) {
+      setState(() {});
+    }
   }
 
   Future<void> _getMore() async {
-    print(1);
     var data;
     setState(() {
       more = true;
     });
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/post", null);
       Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
     }
-    //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
         posts.add(Post.fromJson(json));
       }
     }
-    setState(() {
-      more = false;
-    });
+    if (current == true) {
+      setState(() {
+        more = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    current = false;
   }
 
   @override
