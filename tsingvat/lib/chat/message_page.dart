@@ -11,18 +11,21 @@ class MessagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provide<WebSocketProvide>(
       builder: (context,child,val){
-        var messageList = Provide.value<WebSocketProvide>(context).messageList;
-        var length = Conversation.mockConversations.length + 1 + messageList.length;
+        //  参与聊天的用户
+        var users = Provide.value<WebSocketProvide>(context).users;
+        // 需要加入之前已存在的用户
+        var length = Conversation.mockConversations.length + 1;
         print(length);
         return Container(
           child: ListView.builder(
             itemBuilder:  (BuildContext context, int index){
               if (index < Conversation.mockConversations.length + 1){
-                return ConversationItem(Conversation.mockConversations[index - 1],index-1,0);
-              }else {
-                var inde = index - 1 - Conversation.mockConversations.length;
-                return ConversationItem(messageList[inde],inde,1);
+                return ConversationItem(Conversation.mockConversations[index - 1],Conversation.mockConversations[index - 1].title,0);
               }
+//              else {
+//                var inde = index - 1 - Conversation.mockConversations.length;
+//                return ConversationItem(,inde,1);
+//              }
             },
             itemCount: length ,
           )

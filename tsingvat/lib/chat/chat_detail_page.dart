@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
+import 'package:tsingvat/const/const_url.dart';
 import '../provide/websocket.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/style/style.dart';
 import './chat_detail/chat_content_view.dart';
 import '../model/conversation.dart';
+import 'package:tsingvat/model/msg.dart';
 
 
 class ChatDetailPage extends StatefulWidget {
-  int type;
+  int type = 1;
   int index;
-  ChatDetailPage(this.index,this.type);
+  String username;
+  ChatDetailPage(this.username);
   @override
-  _ChatDetailPageState createState() => _ChatDetailPageState(type,index);
+  _ChatDetailPageState createState() => _ChatDetailPageState(username);
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   ScrollController _scrollController;
   bool hasText = false;
-  int type;
+  // 现在的情况只支持type=1，即type表示私聊，而非群聊
+  int type = 1;
   int index;
+  String username;
   Conversation data;
-  _ChatDetailPageState(this.type,this.index);
+  _ChatDetailPageState(this.username);
   var messageList = [
     {'type':0,'text':'hello',},
     {'type':1,'text':'hello',},
@@ -38,9 +43,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   void _handleSubmitted(String text) {
       if (controller.text.length > 0) {
         print('发送${text}');
-        if(type == 1){
-          Provide.value<WebSocketProvide>(context).sendMessage(2,text,index);
-        }
+        Provide.value<WebSocketProvide>(context).sendMessage(index,text,1);
         setState(() {
           hasText = false;
           messageList.add({'type':1,'text':text,});
@@ -60,15 +63,18 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
   @override
   Widget build(BuildContext context) {
-    if(type ==1){
-      data = Provide.value<WebSocketProvide>(context).messageList[index];
-    }else{
-      data = Conversation.mockConversations[index];
-    }
+    String receiver = Provide.value<WebSocketProvide>(context).users[index];
+//    if(type ==1){
+//      data = Provide.value<WebSocketProvide>(context).messageList[index];
+//    }else{
+//      data = Conversation.mockConversations[index];
+//    }
+
+    index = Provide.value<WebSocketProvide>(context).users.indexOf(username);
     return Scaffold(
       appBar: AppBar(
         centerTitle:false,
-        title: Text(data.title,style: TextStyle(fontSize: ScreenUtil().setSp(30.0),color: Color(AppColors.APPBarTextColor),),),
+        title: Text(receiver, style: TextStyle(fontSize: ScreenUtil().setSp(30.0),color: Color(AppColors.APPBarTextColor),),),
         iconTheme: IconThemeData(
           color: Color(AppColors.APPBarTextColor)
         ),
@@ -93,40 +99,44 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
             Provide<WebSocketProvide>(
               builder: (context,child,val){
                 List<Map<String, Object>>list = [];
-                if(type == 1){
-                  messageList = [];
-                  var historyMessage = Provide.value<WebSocketProvide>(context).historyMessage;
-                  for(var i = 0; i< historyMessage.length; i++){
-                    if(data.userId != null){
-                      if(historyMessage[i]['bridge'].contains(data.userId)){
-                        if(historyMessage[i]['uid'] == data.userId){
-                          list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-                        }else{
-                          list.add({'type':1,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-                        }
-                      }
-                    }else if(data.groupId != null && data.groupId == historyMessage[i]['groupId'] && historyMessage[i]['bridge'].length==0){
-                      var uid = Provide.value<WebSocketProvide>(context).username;
-                      if(historyMessage[i]['uid'] != uid ){
-                        list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-                      }else{
-                        list.add({'type':1,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-                      }
-                    }
+                List<Msg> msgs = Provide.value<WebSocketProvide>(context).messageList[index];
+                for(Msg msg in msgs){
+                  // 判断必然相等
+                  if(msg.receiver ==  receiver){
+                      String avatar = ConstUrl.avatarimageurl + "/" + receiver +"/avatar.png";
+                      list.add({'type':0,'content':msg.content,'nickname':receiver,'avatar':avatar});
                   }
                 }
+//                if(type == 1){
+//                  messageList = [];
+//                  var historyMessage = Provide.value<WebSocketProvide>(context).historyMessage;
+//                  for(var i = 0; i< historyMessage.length; i++){
+//                    if(data.userId != null){
+//                      if(historyMessage[i]['bridge'].contains(data.userId)){
+//                        if(historyMessage[i]['uid'] == data.userId){
+//                          list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
+//                        }else{
+//                          list.add({'type':1,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
+//                        }
+//                      }
+//                    }else if(data.groupId != null && data.groupId == historyMessage[i]['groupId'] && historyMessage[i]['bridge'].length==0){
+//                      var uid = Provide.value<WebSocketProvide>(context).username;
+//                      if(historyMessage[i]['uid'] != uid ){
+//                        list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
+//                      }else{
+//                        list.add({'type':1,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
+//                      }
+//                    }
+//                  }
+//                }
                 return Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
                     physics: ClampingScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
-                    if(type == 1){
-                      return ChatContentView(type:list[index]['type'],text:list[index]['text'],avatar:list[index]['type'] == 0 ? data.avatar: '',isNetwork: list[index]['type'] == 0 ? data.isAvatarFromNet() : false,username:list[index]['nickname'],userType:data.type);
-                    }else{
-                      return ChatContentView(type:messageList[index]['type'],text:messageList[index]['text'],avatar:messageList[index]['type'] == 0 ? data.avatar: '',isNetwork: messageList[index]['type'] == 0 ? data.isAvatarFromNet() : false,username:data.title,userType:data.type);
-                    }
+                      return ChatContentView(type:list[index]['type'], content:list[index]['content'], avatar:list[index]['avatar'] , isNetwork: true, sender:list[index]['nickname'], userType:0);
                   },
-                  itemCount:type == 1 ? list.length : messageList.length ,
+                  itemCount: list.length
                   )
                 );
             }),

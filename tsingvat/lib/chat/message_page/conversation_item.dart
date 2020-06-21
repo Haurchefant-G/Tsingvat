@@ -3,11 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/style/style.dart' show AppColors,Constants,ICons;
 import 'package:tsingvat/model/conversation.dart';
 import 'package:tsingvat/routers/application.dart';
+
+import '../chat_detail_page.dart';
 class ConversationItem extends StatelessWidget {
 
-  ConversationItem(this.conversationItemData,this.index,this.type)
+  ConversationItem(this.conversationItemData,this.username,this.type)
   :assert(conversationItemData != null);
-  int index;
+  String username;
   int type;
   final Conversation conversationItemData;
   var tapPos;
@@ -18,8 +20,12 @@ class ConversationItem extends StatelessWidget {
       child: InkWell(
         onTap: (){
           print('打开会话:${conversationItemData.title}');
-          Application.router.navigateTo(context, '/chatdetail?index=${index}&type=${type}');
-          
+//          Application.router.navigateTo(context, '/chatdetail?index=${username}');
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context){
+                return ChatDetailPage(username);
+              })
+          );
         },
         onTapDown: (TapDownDetails details) {
           tapPos = details.globalPosition;

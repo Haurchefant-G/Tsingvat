@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/loginPage.dart';
 import 'package:tsingvat/util/httpUtil.dart';
+import 'package:tsingvat/chat/message_page.dart';
 
 class InfoCard extends StatelessWidget {
   static const double IMAGE_ICON_WIDTH = 30.0;
@@ -10,7 +11,7 @@ class InfoCard extends StatelessWidget {
 
   var userAvatar;
   var userName;
-  var titles = ["资讯", "跑腿", "交易", "问答"];
+  var titles = ["资讯", "跑腿", "交易", "问答","聊天"];
 
   var titleTextStyle = new TextStyle(fontSize: 16.0);
   var rightArrowIcon = new Icon(Icons.arrow_forward_ios);
@@ -68,6 +69,11 @@ class InfoCard extends StatelessWidget {
                 child: new InkWell(
                   onTap: () {
                     print("the is the item of $title");
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context){
+                        return MessagePage();
+                      })
+                    );
                   },
                   child: new Column(
                     children: <Widget>[

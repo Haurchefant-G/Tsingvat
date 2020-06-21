@@ -5,12 +5,12 @@ import '../component/user_avatat.dart';
 
 class ChatContentView extends StatelessWidget {
   int type; //0 代表对方 ， 1代表自己
-  String text;//聊天内容
+  String content;//聊天内容
   String avatar;//头像url
-  String username;//昵称
+  String sender;//昵称
   int userType;//聊天类型 2群组  1单聊
   bool isNetwork;
-  ChatContentView({Key key, this.type, this.text,this.avatar,this.isNetwork,this.username,this.userType})
+  ChatContentView({Key key, this.type, this.content,this.avatar,this.isNetwork,this.sender,this.userType})
       : super(key: key);
 
   @override
@@ -25,14 +25,14 @@ class ChatContentView extends StatelessWidget {
       ),
       width: ScreenUtil().setWidth(80),
       height: ScreenUtil().setWidth(80),
-      image: avatar!='' ? avatar: 'assets/images/ic_public_account.png',
+      image: avatar!='' ? avatar: 'assets/avatar_logo.png',
       isNetwork: isNetwork,
       onPressed: () {print('点击头像');}
     );
     
     Widget userNameWidget =   Container(
         margin: EdgeInsets.only(left: type == 0 ? ScreenUtil().setWidth(20) : 0,bottom: ScreenUtil().setHeight(10),right: type == 0 ? 0: ScreenUtil().setWidth(20)),
-        child: Text(username,style: TextStyle(color: Color(AppColors.ChatTime),fontSize: ScreenUtil().setSp(23.0)),),
+        child: Text(sender,style: TextStyle(color: Color(AppColors.ChatTime),fontSize: ScreenUtil().setSp(23.0)),),
       );
     _showMenu(BuildContext context,Offset tapPos){
       final RenderBox overlay =Overlay.of(context).context.findRenderObject();
@@ -91,7 +91,7 @@ class ChatContentView extends StatelessWidget {
       },
       child: Container(
         margin: type == 0 ? EdgeInsets.only(left:ScreenUtil().setWidth(20),right: ScreenUtil().setWidth(115)) :EdgeInsets.only(left:ScreenUtil().setWidth(115),right: ScreenUtil().setWidth(20)),
-        child: Text(text,
+        child: Text(content,
           style: TextStyle(fontSize: ScreenUtil().setSp(30.0),color: Color(AppColors.TextBobule),height: 1.3),
         ),
         padding: EdgeInsets.only(left:ScreenUtil().setWidth(15),right:ScreenUtil().setWidth(15),bottom:ScreenUtil().setHeight(15),top:ScreenUtil().setHeight(15)),

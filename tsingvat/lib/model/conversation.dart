@@ -1,6 +1,7 @@
 import '../style/style.dart';
 
 class Conversation {
+  // Conversation表示主页面下的聊天框，点击后即可进入详细界面
   String avatar;
   String title;
   int titleColor;
@@ -39,7 +40,7 @@ class Conversation {
   static  List<Conversation> mockConversations  = [
     new Conversation(
         avatar: 'assets/avatar_logo.png',
-        title: '[模拟数据]文件传输助手',
+        title: 'gac',
         des: '[模拟数据]',
         updateAt: '19:56',
         unreadMsgCount: 0,
