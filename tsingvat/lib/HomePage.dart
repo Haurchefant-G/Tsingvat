@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation
-          .centerDocked, // This trailing comma makes auto-formatting nicer for build methods.
+          .endFloat, // This trailing comma makes auto-formatting nicer for build methods.
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).primaryColor,
         shape: null,
