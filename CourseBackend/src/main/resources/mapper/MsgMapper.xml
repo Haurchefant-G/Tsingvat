@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 指定了mapper对应的dao -->
+<mapper namespace="com.mobilecourse.backend.dao.MsgDao">
+
+    <insert id="addMsg" parameterType="com.mobilecourse.backend.entity.Msg">
+        INSERT INTO
+        msg(uuid,sender,receiver,created,content,`type`,sent)
+        VALUES(#{uuid},#{sender},#{receiver},#{created},#{content},#{type},#{sent});
+    </insert>
+
+    <update id="sendMsg" parameterType="java.lang.String">
+        UPDATE msg
+        SET sent=1
+        WHERE uuid=#{uuid}
+    </update>
+
+    <select id="getUnsendMsg" resultType="com.mobilecourse.backend.entity.Msg">
+        SELECT * FROM msg
+        WHERE receiver=#{receiver} and sent=0;
+    </select>
+</mapper>

@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/errand")
 public class ErrandController extends CommonController {
     @Autowired
-    ErrandDao errandDao;
+    private ErrandDao errandDao;
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> createErrand(@RequestBody Errand errand){

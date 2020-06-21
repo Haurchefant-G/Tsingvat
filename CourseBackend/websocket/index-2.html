@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>HanppyRoom</title>
     <script>
-        var url = "ws://121.199.66.17:8080/websocket/";
+        // var url = "ws://121.199.66.17:8080/websocket/";
+        var url = "ws://localhost:8800/websocket/";
         var ws = null;
         //加入聊天室
         function joinRoom() {
@@ -48,9 +49,10 @@
             var sender = '"sender":'+ document.getElementById("user").value;
             var receiver = '"receiver":"zxj"';
             var json = {
-                "msg": document.getElementById("sendMsg").value,
+                "content": document.getElementById("sendMsg").value,
                 "sender": document.getElementById("user").value,
-                "receiver":document.getElementById("receiver").value
+                "receiver":document.getElementById("receiver").value,
+                "type":1
             }
             ws.send(JSON.stringify(json));
             document.getElementById("sendMsg").value = "";
