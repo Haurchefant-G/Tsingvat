@@ -7,8 +7,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:provide/provide.dart';
 import 'package:tsingvat/chat/message_page.dart';
 import 'package:tsingvat/page/newPostPage.dart';
+import 'package:tsingvat/provide/currentIndex.dart';
+import 'package:tsingvat/provide/websocket.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
 import 'loginPage.dart';
@@ -18,7 +21,13 @@ import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 Dio dio = Dio();
 
 void main() {
-  runApp(MyApp());
+  var providers = Providers();
+  var currentIndexProvide = CurrentIndexProvide();
+  var websocketProvide = WebSocketProvide();
+  providers
+    ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
+    ..provide(Provider<WebSocketProvide>.value(websocketProvide));
+  runApp(ProviderNode(child:MyApp(),providers: providers));
 
   if (Platform.isAndroid) {
     // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。

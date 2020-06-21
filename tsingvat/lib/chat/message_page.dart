@@ -20,7 +20,7 @@ class MessagePage extends StatelessWidget {
           child: ListView.builder(
             itemBuilder:  (BuildContext context, int index){
               if (index < Conversation.mockConversations.length + 1){
-                return ConversationItem(Conversation.mockConversations[index - 1],Conversation.mockConversations[index - 1].title,0);
+                return ConversationItem(Conversation.mockConversations[index],Conversation.mockConversations[index].title,0);
               }
 //              else {
 //                var inde = index - 1 - Conversation.mockConversations.length;

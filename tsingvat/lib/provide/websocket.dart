@@ -34,7 +34,8 @@ class WebSocketProvide with ChangeNotifier{
     // monitorMessage();
   }
   createWebsocket() async {//创建连接并且发送鉴别身份信息
-    channel = await new IOWebSocketChannel.connect('ws://121.199.66.17:8080/websocket/'+username);
+    channel = await new IOWebSocketChannel.connect('ws://121.199.66.17:8800/websocket/'+username);
+    print("连接成功");
     channel.stream.listen((data) => listenMessage(data),onError: onError,onDone: onDone);
   }
     
