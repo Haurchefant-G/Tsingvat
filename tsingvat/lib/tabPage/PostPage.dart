@@ -52,7 +52,7 @@ class _PostPageState extends State<PostPage> {
       imagenum.clear();
       for (var json in data['data']) {
         var p = Post.fromJson(json);
-        int num = (await http.get("/num/${p.uuid}", null))['data']['num'];
+        int num = (await http.get("/images/num/${p.uuid}", null))['data'];
         print(num);
         posts.add(p);
         imagenum.add(num);
@@ -79,7 +79,7 @@ class _PostPageState extends State<PostPage> {
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
         var p = Post.fromJson(json);
-        int num = (await http.get("/num/${p.uuid}", null))['data']['num'];
+        int num = (await http.get("/images/num/${p.uuid}", null))['data'];
         print(num);
         posts.add(p);
         imagenum.add(num);
