@@ -1,13 +1,34 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
+import 'package:tsingvat/model/errand.dart';
 
-class TaskCard extends StatefulWidget {
+class ErrandCard extends StatefulWidget {
+  String fromAddr;
+  String toAddr;
+  String sfromAddr;
+  String stoAddr;
+  String ddlTime;
+  double bonus;
+  String uuid;
+  String content;
+
+  ErrandCard(Errand e) {
+    var time = DateTime.fromMillisecondsSinceEpoch(e.ddlTime ?? 1592316306000);
+    ddlTime = "${time.hour}:${time.minute}";
+    fromAddr = e.fromAddr;
+    sfromAddr = e.sfromAddr;
+    toAddr = e.toAddr;
+    stoAddr = e.stoAddr;
+    bonus = e.bonus;
+    uuid = e.uuid;
+    content = e.content;
+  }
   @override
-  _TaskCardState createState() => _TaskCardState();
+  _ErrandCardState createState() => _ErrandCardState();
 }
 
-class _TaskCardState extends State<TaskCard>
+class _ErrandCardState extends State<ErrandCard>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _heightFactor;
@@ -46,7 +67,6 @@ class _TaskCardState extends State<TaskCard>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -82,9 +102,9 @@ class _TaskCardState extends State<TaskCard>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text("时间"),
-                            Text("地点"),
-                            Text("报酬")
+                            Text(widget.ddlTime ?? "时间"),
+                            Text(widget.fromAddr ?? "起始点"),
+                            Text(widget.bonus?.toString() ?? "报酬")
                           ],
                         )),
                   ),
@@ -95,7 +115,18 @@ class _TaskCardState extends State<TaskCard>
                       opacity: _opacity.value,
                       child: Column(
                         children: <Widget>[
-                          Text("具体任务描述"),
+                          DefaultTextStyle(
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .headline6
+                                .copyWith(color: Colors.grey[700]),
+                            child: Column(children: <Widget>[
+                              Text(widget.content),
+                              Text(
+                                  "任务点 : ${widget.fromAddr} ${widget.sfromAddr}"),
+                              Text("完成点 : ${widget.toAddr} ${widget.stoAddr}")
+                            ]),
+                          ),
                           ButtonBar(
                             alignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -111,13 +142,13 @@ class _TaskCardState extends State<TaskCard>
                                         builder: (BuildContext context) {
                                           return CustomDialog(
                                             title: Text(
-                                              "确认接取吗",
+                                              "确认接取",
                                               textAlign: TextAlign.center,
                                             ),
                                             content:
                                                 //Text("登陆失败",textAlign: TextAlign.center,),
                                                 Text(
-                                              "连接错误",
+                                              "请确认",
                                               textAlign: TextAlign.center,
                                             ),
                                             actions: <Widget>[

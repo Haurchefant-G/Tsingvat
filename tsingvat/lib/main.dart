@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:tsingvat/page/newPostPage.dart';
-import 'package:tsingvat/page/newTaskPage.dart';
 import 'startPage.dart';
 import 'HomePage.dart';
 import 'loginPage.dart';
@@ -74,7 +73,7 @@ class MyApp extends StatelessWidget {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
         'homePage': (context) => HomePage(title: 'Home Page'),
-        'newTaskPage': (context) => newTaskPage(),
+        //'newTaskPage': (context) => newTaskPage(),
         'newPostPage': (context) => newPostPage()
       },
       //home: Login(),

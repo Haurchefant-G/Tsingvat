@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class GoodsDetail extends StatefulWidget {
+class DealDetail extends StatefulWidget {
   @override
-  _GoodsDetailState createState() => _GoodsDetailState();
+  _DealDetailState createState() => _DealDetailState();
 }
 
-class _GoodsDetailState extends State<GoodsDetail> {
+class _DealDetailState extends State<DealDetail> {
   String name;
   double price;
   String detail;

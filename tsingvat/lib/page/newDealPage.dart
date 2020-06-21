@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class newGoodsPage extends StatefulWidget {
+class newDealPage extends StatefulWidget {
   @override
-  _newGoodsPageState createState() => _newGoodsPageState();
+  _newDealPageState createState() => _newDealPageState();
 }
 
-class _newGoodsPageState extends State<newGoodsPage> {
+class _newDealPageState extends State<newDealPage> {
   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
 
   double pay;

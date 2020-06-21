@@ -2,14 +2,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:tsingvat/component/infocard.dart';
+import 'package:tsingvat/page/chatPage.dart';
 import 'package:tsingvat/page/newPostPage.dart';
-import 'package:tsingvat/page/newTaskPage.dart';
-import 'package:tsingvat/page/newGoodsPage.dart';
-import 'package:tsingvat/component/taskcard.dart';
-import 'package:tsingvat/tabPage/GoodsPage.dart';
-import 'package:tsingvat/tabPage/NewsPage.dart';
+import 'package:tsingvat/page/newErrandPage.dart';
+import 'package:tsingvat/page/newDealPage.dart';
+import 'package:tsingvat/component/errandcard.dart';
+import 'package:tsingvat/tabPage/DealPage.dart';
+import 'package:tsingvat/tabPage/PostPage.dart';
 import 'package:tsingvat/tabPage/InfoPage.dart';
-import 'package:tsingvat/tabPage/TaskPage.dart';
+import 'package:tsingvat/tabPage/ErrandPage.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 
@@ -130,7 +131,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               //physics: NeverScrollableScrollPhysics(),
               controller: _tabController,
               children: <Widget>[
-                TaskPage(),
+                ErrandPage(),
                 // Container(
                 //     padding: EdgeInsets.only(left: 10, right: 10),
                 //     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -148,9 +149,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 //           );
                 //         }),
                 //         onRefresh: _refresh)),
-                GoodsPage(),
-                NewsPage(),
-                InfoCard()
+                DealPage(),
+                PostPage(),
+                InfoPage()
               ],
             )),
       ),
@@ -223,13 +224,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           openBuilder: (BuildContext context, VoidCallback _) {
             switch (_tabController.index) {
               case 0:
-                return newTaskPage();
+                return newErrandPage();
               case 1:
-                return newGoodsPage();
+                return newDealPage();
               case 2:
                 return newPostPage();
               default:
-                return newTaskPage();
+                return newErrandPage();
             }
           },
           closedElevation: 6.0,
@@ -255,7 +256,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Navigator.pushReplacementNamed(context, "loginPage");
                 }),
             SizedBox(),
-            IconButton(icon: Icon(Icons.bubble_chart), onPressed: null)
+            IconButton(
+                icon: Icon(Icons.chat),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ChatPage('test');
+                  }));
+                })
           ],
           mainAxisAlignment: MainAxisAlignment.spaceAround,
         ),

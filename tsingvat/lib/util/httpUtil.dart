@@ -37,10 +37,10 @@ class HttpUtil {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> post(url, params) async {
+  Future<Map<String, dynamic>> post(url, data) async {
     Response response;
     try {
-      response = await _client.post(url, data: params);
+      response = await _client.post(url, data: data);
     } on DioError catch (e) {
       print(e);
       return Future.error(e);
