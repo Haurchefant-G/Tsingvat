@@ -15,10 +15,12 @@ class _ErrandPageState extends State<ErrandPage> {
   List<Errand> errands = [];
   ScrollController _scrollController;
   bool more = false;
+  bool current;
 
   @override
   void initState() {
     super.initState();
+    current = true;
     http = HttpUtil();
     _scrollController = ScrollController()
       ..addListener(() {
@@ -27,7 +29,7 @@ class _ErrandPageState extends State<ErrandPage> {
           _getMore();
         }
       });
-    _refresh();
+    _getMore();
   }
 
   Future<void> _refresh() async {
@@ -35,14 +37,11 @@ class _ErrandPageState extends State<ErrandPage> {
     // await Future.delayed(Duration(seconds: 2), () {
     //   print("刷新结束");
     // });
-    setState(() {
-      more = true;
-    });
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand", null);
-      Future.sync(await Future.delayed(Duration(seconds: 1), () {}));
+      Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -52,14 +51,12 @@ class _ErrandPageState extends State<ErrandPage> {
     if (data['code'] == ResultCode.SUCCESS) {
       errands.clear();
       for (var json in data['data']) {
-        setState(() {
           errands.add(Errand.fromJson(json));
-        });
       }
     }
-    setState(() {
-      more = false;
-    });
+    if (current == true) {
+      setState(() {});
+    }
   }
 
   Future<void> _getMore() async {
@@ -72,7 +69,7 @@ class _ErrandPageState extends State<ErrandPage> {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand", null);
-      Future.sync(await Future.delayed(Duration(seconds: 1), () {}));
+      Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -81,14 +78,21 @@ class _ErrandPageState extends State<ErrandPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
-        setState(() {
           errands.add(Errand.fromJson(json));
-        });
       }
     }
-    setState(() {
-      more = false;
-    });
+    if (current == true) {
+      setState(() {
+        more = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    current = false;
   }
 
   @override
@@ -107,10 +111,13 @@ class _ErrandPageState extends State<ErrandPage> {
                 itemBuilder: (context, i) {
                   if (i == errands.length) {
                     return more
-                        ? SpinKitWave(
-                            color: Colors.lightBlueAccent.withOpacity(0.5),
-                            size: 30.0)
-                        : Padding(padding: EdgeInsets.all(2));
+                        ? Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: SpinKitWave(
+                              color: Colors.lightBlueAccent.withOpacity(0.5),
+                              size: 30.0),
+                        )
+                        : Padding(padding: EdgeInsets.all(20));
                   }
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10),

@@ -70,7 +70,7 @@ class _Login extends State<SignupPage> {
       //     builder: (BuildContext context) {
       //       return SnackBar(content: Text("注册成功"), animation: FadeScaleTransitionConfiguration(),);
       //     });
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text("注册成功", ), behavior: SnackBarBehavior.floating,));
+      // Scaffold.of(context).showSnackBar(SnackBar(content: Text("注册成功", ), behavior: SnackBarBehavior.floating,));
       Future.delayed(Duration(milliseconds: 1500), (){
         Navigator.pushReplacementNamed(context, "loginPage");
       });

@@ -9,10 +9,11 @@ class Deal {
     String username;
     num created;
     String content;
-    num ddl;
     num price;
     String taker;
     num takeTime;
+    String details;
+    String phone;
     
     factory Deal.fromJson(Map<String,dynamic> json) => _$DealFromJson(json);
     Map<String, dynamic> toJson() => _$DealToJson(this);

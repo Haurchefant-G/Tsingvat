@@ -1,8 +1,15 @@
 import 'dart:io';
+import 'package:animations/animations.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
+import 'package:tsingvat/const/code.dart';
+import 'package:tsingvat/model/deal.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
+import 'package:tsingvat/util/httpUtil.dart';
 
 class newDealPage extends StatefulWidget {
   @override
@@ -10,7 +17,14 @@ class newDealPage extends StatefulWidget {
 }
 
 class _newDealPageState extends State<newDealPage> {
-  GlobalKey<FormState> taskKey = GlobalKey<FormState>();
+  GlobalKey<FormState> dealKey = GlobalKey<FormState>();
+  FocusNode contentFocus = FocusNode();
+  FocusNode priceFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  FocusNode detailFocus = FocusNode();
+
+  HttpUtil http;
+  Deal deal;
 
   double pay;
   String start;
@@ -37,6 +51,13 @@ class _newDealPageState extends State<newDealPage> {
     );
   }).toList();
 
+  @override
+  void initState() {
+    super.initState();
+    http = HttpUtil();
+    deal = Deal();
+  }
+
   Future pickImage() async {
     try {
       final image = await picker.getImage(source: ImageSource.gallery);
@@ -45,6 +66,91 @@ class _newDealPageState extends State<newDealPage> {
         print(_image);
       });
     } catch (e) {}
+  }
+
+  Future<void> createDeal() async {
+    contentFocus.unfocus();
+    priceFocus.unfocus();
+    phoneFocus.unfocus();
+    detailFocus.unfocus();
+    var DealForm = dealKey.currentState;
+    //验证Form表单
+    //if (loginForm.validate()) {
+    DealForm.save();
+    var data;
+    var data2;
+    try {
+      deal.username = await SharedPreferenceUtil.getString('username');
+      data = await http.post('/deal/create', deal.toJson());
+      deal = Deal.fromJson(data['data']);
+      if (_image != null) {
+        data2 = await http.post(
+            '/images/${deal.uuid}', FormData.fromMap({'images': MultipartFile.fromFileSync(_image.path)}));
+        print("data2-----------");
+        print(data2);
+      }
+    } catch (e) {
+      print(e);
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "上传失败",
+                textAlign: TextAlign.center,
+              ),
+              // content:
+              //     //Text("登陆失败",textAlign: TextAlign.center,),
+              //     Text(
+              //   "",
+              //   textAlign: TextAlign.center,
+              // ),
+              actions: <Widget>[],
+            );
+          });
+      return;
+    }
+    print("data:---------");
+    print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            Future.delayed(Duration(milliseconds: 500), () {
+              Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+            });
+            return CustomDialog(
+              title: Text(
+                "上传成功",
+                textAlign: TextAlign.center,
+              ),
+              // content:
+              //     //Text("登陆失败",textAlign: TextAlign.center,),
+              //     Text(
+              //   "用户名或密码错误",
+              //   textAlign: TextAlign.center,
+              // ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "上传失败",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    }
   }
 
   @override
@@ -62,9 +168,7 @@ class _newDealPageState extends State<newDealPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColorDark,
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: createDeal,
         child: Icon(Icons.done_outline),
       ),
       body: CustomScrollView(slivers: <Widget>[
@@ -88,7 +192,7 @@ class _newDealPageState extends State<newDealPage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-                key: taskKey,
+                key: dealKey,
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.subtitle1,
                   child: Column(
@@ -101,6 +205,7 @@ class _newDealPageState extends State<newDealPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: contentFocus,
                           decoration: InputDecoration(
                             hintText: '出售物品',
                             //prefixText: '￥  ',
@@ -109,7 +214,13 @@ class _newDealPageState extends State<newDealPage> {
                             border: InputBorder.none,
                           ),
                           keyboardType: TextInputType.text,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            contentFocus.unfocus();
+                            priceFocus.requestFocus();
+                          },
+                          onSaved: (v) {
+                            deal.content = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (v) {},
                         ),
@@ -123,6 +234,7 @@ class _newDealPageState extends State<newDealPage> {
                           ),
                           child: TextFormField(
                             //textAlign: TextAlign.center,
+                            focusNode: priceFocus,
                             decoration: InputDecoration(
                               hintText: '价格',
                               //prefixText: '￥  ',
@@ -137,8 +249,12 @@ class _newDealPageState extends State<newDealPage> {
 
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
+                            onEditingComplete: () {
+                              priceFocus.unfocus();
+                              phoneFocus.requestFocus();
+                            },
                             onSaved: (v) {
-                              pay = double.parse(v);
+                              deal.price = double.parse(v);
                             },
                             validator: (v) {
                               if (v.length == 0) {
@@ -155,6 +271,7 @@ class _newDealPageState extends State<newDealPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: phoneFocus,
                           decoration: InputDecoration(
                             hintText: '联系电话',
                             //prefixText: '￥  ',
@@ -166,7 +283,13 @@ class _newDealPageState extends State<newDealPage> {
                             WhitelistingTextInputFormatter(RegExp("[0-9]"))
                           ],
                           keyboardType: TextInputType.phone,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            phoneFocus.unfocus();
+                            detailFocus.requestFocus();
+                          },
+                          onSaved: (v) {
+                            deal.phone = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
@@ -180,6 +303,7 @@ class _newDealPageState extends State<newDealPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: detailFocus,
                           decoration: InputDecoration(
                             hintText: '补充信息(出售物品具体描述)',
                             //prefixText: '￥  ',
@@ -196,7 +320,12 @@ class _newDealPageState extends State<newDealPage> {
                               .copyWith(height: 1.8),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            detailFocus.unfocus();
+                          },
+                          onSaved: (v) {
+                            deal.details = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),

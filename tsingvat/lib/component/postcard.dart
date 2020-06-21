@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/post.dart';
 
@@ -34,10 +35,22 @@ class PostCard extends StatelessWidget {
                   //mainAxisSize: MainAxisSize.min,
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColorLight,
-                      radius: 24,
-                    ),
+                    // CircleAvatar(
+                    //   backgroundColor: Theme.of(context).primaryColorLight,
+                    //   radius: 24,
+                    // ),
+                    ClipOval(
+                        child: Container(
+                      height: 48,
+                      width: 48,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColorLight,
+                      ),
+                      child: Image.network(
+                        "${ConstUrl.avatarimageurl}/${username}/avatar.png",
+                        fit: BoxFit.cover,
+                      ),
+                    )),
                     Padding(padding: const EdgeInsets.all(8.0)),
                     Expanded(
                       child: Column(
@@ -64,16 +77,25 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-                  child:
-                  CachedNetworkImage(imageUrl: imageurl),
-                  //     Image.asset(
-                  //   'assets/placeholder_image.png',
-                  //   color: Colors.grey,
-                  //   colorBlendMode: BlendMode.color,
-                  //   fit: BoxFit.fitWidth,
-                  // )
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+                child: CachedNetworkImage(
+                  imageUrl: imageurl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SpinKitThreeBounce(
+                      color: Colors.blueAccent,
+                      size: 10,
+                    ),
                   ),
+                ),
+                //     Image.asset(
+                //   'assets/placeholder_image.png',
+                //   color: Colors.grey,
+                //   colorBlendMode: BlendMode.color,
+                //   fit: BoxFit.fitWidth,
+                // )
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                 child: Text(
