@@ -6,7 +6,7 @@ import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newErrandPage.dart';
 import 'package:tsingvat/page/newDealPage.dart';
 import 'package:tsingvat/component/errandcard.dart';
-import 'package:tsingvat/tabPage/GoodsPage.dart';
+import 'package:tsingvat/tabPage/DealPage.dart';
 import 'package:tsingvat/tabPage/PostPage.dart';
 import 'package:tsingvat/tabPage/InfoPage.dart';
 import 'package:tsingvat/tabPage/ErrandPage.dart';
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 //           );
                 //         }),
                 //         onRefresh: _refresh)),
-                GoodsPage(),
+                DealPage(),
                 PostPage(),
                 InfoPage()
               ],
