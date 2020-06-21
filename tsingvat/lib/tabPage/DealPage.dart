@@ -45,7 +45,7 @@ class _DealPageState extends State<DealPage> {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/deal", null);
-      Future.sync(await Future.delayed(Duration(seconds: 1), () {}));
+      await Future.delayed(Duration(seconds: 1));
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -121,7 +121,7 @@ class _DealPageState extends State<DealPage> {
                         transitionType: ContainerTransitionType.fade,
                         closedBuilder:
                             (BuildContext _, VoidCallback openContainer) {
-                          return DealCard();
+                          return DealCard(deals[i]);
                         },
                         openBuilder:
                             (BuildContext _, VoidCallback openContainer) {

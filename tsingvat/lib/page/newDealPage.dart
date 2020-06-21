@@ -68,21 +68,25 @@ class _newDealPageState extends State<newDealPage> {
     } catch (e) {}
   }
 
-  Future<void> createPost() async {
+  Future<void> createDeal() async {
     contentFocus.unfocus();
-    var loginForm = dealKey.currentState;
+    priceFocus.unfocus();
+    phoneFocus.unfocus();
+    detailFocus.unfocus();
+    var DealForm = dealKey.currentState;
     //验证Form表单
     //if (loginForm.validate()) {
-    loginForm.save();
+    DealForm.save();
     var data;
     var data2;
     try {
       deal.username = await SharedPreferenceUtil.getString('username');
-      data = await http.post('/post/create', deal.toJson());
+      data = await http.post('/deal/create', deal.toJson());
       deal = Deal.fromJson(data['data']);
       if (_image != null) {
         data2 = await http.post(
             '/images/${deal.uuid}', FormData.fromMap({'images': _image}));
+        print("data2-----------");
         print(data2);
       }
     } catch (e) {
@@ -107,6 +111,7 @@ class _newDealPageState extends State<newDealPage> {
           });
       return;
     }
+    print("data:---------");
     print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       showModal(
@@ -163,9 +168,7 @@ class _newDealPageState extends State<newDealPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColorDark,
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: createDeal,
         child: Icon(Icons.done_outline),
       ),
       body: CustomScrollView(slivers: <Widget>[
@@ -202,6 +205,7 @@ class _newDealPageState extends State<newDealPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: contentFocus,
                           decoration: InputDecoration(
                             hintText: '出售物品',
                             //prefixText: '￥  ',
@@ -210,7 +214,13 @@ class _newDealPageState extends State<newDealPage> {
                             border: InputBorder.none,
                           ),
                           keyboardType: TextInputType.text,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            contentFocus.unfocus();
+                            priceFocus.requestFocus();
+                          },
+                          onSaved: (v) {
+                            deal.content = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (v) {},
                         ),
@@ -224,6 +234,7 @@ class _newDealPageState extends State<newDealPage> {
                           ),
                           child: TextFormField(
                             //textAlign: TextAlign.center,
+                            focusNode: priceFocus,
                             decoration: InputDecoration(
                               hintText: '价格',
                               //prefixText: '￥  ',
@@ -238,8 +249,12 @@ class _newDealPageState extends State<newDealPage> {
 
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
+                            onEditingComplete: () {
+                              priceFocus.unfocus();
+                              phoneFocus.requestFocus();
+                            },
                             onSaved: (v) {
-                              pay = double.parse(v);
+                              deal.price = double.parse(v);
                             },
                             validator: (v) {
                               if (v.length == 0) {
@@ -256,6 +271,7 @@ class _newDealPageState extends State<newDealPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: phoneFocus,
                           decoration: InputDecoration(
                             hintText: '联系电话',
                             //prefixText: '￥  ',
@@ -267,7 +283,13 @@ class _newDealPageState extends State<newDealPage> {
                             WhitelistingTextInputFormatter(RegExp("[0-9]"))
                           ],
                           keyboardType: TextInputType.phone,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            phoneFocus.unfocus();
+                            detailFocus.requestFocus();
+                          },
+                          onSaved: (v) {
+                            deal.phone = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
@@ -281,6 +303,7 @@ class _newDealPageState extends State<newDealPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: detailFocus,
                           decoration: InputDecoration(
                             hintText: '补充信息(出售物品具体描述)',
                             //prefixText: '￥  ',
@@ -297,7 +320,12 @@ class _newDealPageState extends State<newDealPage> {
                               .copyWith(height: 1.8),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            detailFocus.unfocus();
+                          },
+                          onSaved: (v) {
+                            deal.details = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),

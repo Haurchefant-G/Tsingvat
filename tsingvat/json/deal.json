@@ -3,8 +3,9 @@
     "username": "admin",
     "created": 1591007780000,
     "content": "I am a post",
-    "ddl": 1591007780000,
     "price": 3.5,
     "taker": "zxj",
-    "takeTime": 1591007780000
+    "takeTime": 1591007780000,
+    "details": "sss",
+    "phone": "19999999999"
 }
