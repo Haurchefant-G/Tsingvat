@@ -10,17 +10,18 @@ class StartPage extends StatelessWidget {
     print(password);
     if (password != null) {
       Future.delayed(Duration(seconds: 1), () {
-        Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-                pageBuilder: (BuildContext context, Animation animation,
-                    Animation secondaryAnimation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: HomePage(),
-                  );
-                },
-                transitionDuration: Duration(seconds: 1)));
+        Navigator.pushReplacementNamed(context, 'homePage');
+        // Navigator.pushReplacement(
+        //     context,
+        //     PageRouteBuilder(
+        //         pageBuilder: (BuildContext context, Animation animation,
+        //             Animation secondaryAnimation) {
+        //           return FadeTransition(
+        //             opacity: animation,
+        //             child: HomePage(),
+        //           );
+        //         },
+        //         transitionDuration: Duration(seconds: 1)));
       });
     } else {
       Future.delayed(Duration(seconds: 1), () {

@@ -11,7 +11,7 @@ class HttpUtil {
   HttpUtil._internal() {
     if (_client == null) {
       BaseOptions options = new BaseOptions();
-      options.baseUrl = 'http://121.199.66.17:8080';
+      options.baseUrl = 'http://121.199.66.17:8800';
       //'http://192.168.1.7:8089'; //"http://www.wanandroid.com";
       //'http://10.0.2.2:8089';
       //options.contentType = "Headers.formUrlEncodedContentType";
@@ -45,6 +45,7 @@ class HttpUtil {
       print(e);
       return Future.error(e);
     }
+    print(response);
     return response.data;
   }
 }
