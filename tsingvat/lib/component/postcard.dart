@@ -74,7 +74,7 @@ class PostCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    IconButton(icon: Icon(Icons.share), onPressed: () {})
+                    IconButton(icon: Icon(Icons.chat), onPressed: () {})
                   ],
                 ),
               ),

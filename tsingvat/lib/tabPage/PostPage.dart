@@ -71,7 +71,7 @@ class _PostPageState extends State<PostPage> {
     try {
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/post", null);
-      Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
+      await Future.delayed(Duration(milliseconds: 500), () {});
     } catch (e) {
       print(e);
       return;
