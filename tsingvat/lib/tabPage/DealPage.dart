@@ -30,7 +30,7 @@ class _DealPageState extends State<DealPage> {
           _getMore();
         }
       });
-    _refresh();
+    _getMore();
   }
 
   Future<void> _refresh() async {
@@ -38,14 +38,11 @@ class _DealPageState extends State<DealPage> {
     // await Future.delayed(Duration(seconds: 2), () {
     //   print("刷新结束");
     // });
-    setState(() {
-      more = true;
-    });
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/deal", null);
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: 500));
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -55,27 +52,21 @@ class _DealPageState extends State<DealPage> {
     if (data['code'] == ResultCode.SUCCESS) {
       deals.clear();
       for (var json in data['data']) {
-        setState(() {
           deals.add(Deal.fromJson(json));
-        });
       }
     }
-    setState(() {
-      more = false;
-    });
   }
 
   Future<void> _getMore() async {
     print(1);
     var data;
-    setState(() {
+
       more = true;
-    });
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/deal", null);
-      Future.sync(await Future.delayed(Duration(seconds: 1), () {}));
+      Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -84,14 +75,13 @@ class _DealPageState extends State<DealPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
-        setState(() {
           deals.add(Deal.fromJson(json));
-        });
       }
     }
-    setState(() {
-      more = false;
-    });
+    more = false;
+    // setState(() {
+    //   more = false;
+    // });
   }
 
   @override
@@ -100,6 +90,7 @@ class _DealPageState extends State<DealPage> {
       child: RefreshIndicator(
           child: StaggeredGridView.countBuilder(
               itemCount: deals.length + 1,
+              controller: _scrollController,
               crossAxisCount: 2,
               itemBuilder: (BuildContext context, int i) {
                 if (i == deals.length) {
