@@ -1,4 +1,6 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/errand.dart';
@@ -45,6 +47,25 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
     }
     if (current == true) {
       setState(() {});
+    }
+  }
+
+  finish(int i) async {
+    var data;
+    try {
+      //print(DateTime.now().toIso8601String());
+      print(DateTime.now().millisecondsSinceEpoch);
+      data = await http.put("/errand/finish", errands[i].toJson());
+      //await Future.delayed(Duration(milliseconds: 500), () {});
+      //{"time": DateTime.now().millisecondsSinceEpoch});
+    } catch (e) {
+      print(e);
+      return;
+    }
+    //print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      Navigator.of(context).pop();
+      getTaked();
     }
   }
 
@@ -163,7 +184,39 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                           padding: EdgeInsets.zero,
                           height: 50,
                           child: FlatButton(
-                              onPressed: () {}, child: Icon(Icons.done)),
+                              onPressed: () {
+                                showModal(
+                                    context: context,
+                                    configuration:
+                                        FadeScaleTransitionConfiguration(),
+                                    builder: (BuildContext context) {
+                                      return CustomDialog(
+                                        title: Text(
+                                          "确认接取",
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        content:
+                                            //Text("登陆失败",textAlign: TextAlign.center,),
+                                            Text(
+                                          "请确认",
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("取消")),
+                                          FlatButton(
+                                              onPressed: () {
+                                                finish(i);
+                                              },
+                                              child: Text("确认"))
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: Icon(Icons.done)),
                         )),
                       ],
                     )
