@@ -18,6 +18,18 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileUtils {
 
+    public static int fileNum(String dir)
+    {
+        File file = new File(dir);
+        if(file.isDirectory()){
+            return file.listFiles().length;
+        }
+        else {
+            return -1;
+        }
+    }
+
+
     /**
      *
      * @param images

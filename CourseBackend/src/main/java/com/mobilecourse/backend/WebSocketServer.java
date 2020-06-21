@@ -51,6 +51,7 @@ public class WebSocketServer {
     // 收到消息时候的处理
     @OnMessage
     public void onMessage(String request, Session session) {
+        System.out.println("onMessage:"+request);
         //将message进行json化，然后获取发送方等
         JSONObject json = JSON.parseObject(request);
         String sender = json.getString("sender");
@@ -59,6 +60,7 @@ public class WebSocketServer {
         WebSocketServer server =  webSocketTable.get(receiver);
         if(server == null) {
             try {
+                System.out.println(receiver + " 未登录");
                 sendMessage(receiver + " 未登录");
             }catch (Exception e){
                 e.printStackTrace();
@@ -81,6 +83,7 @@ public class WebSocketServer {
     }
 
     public void sendMessage(String message) throws IOException {
+        System.out.println(this.username +" [send]: "+ message);
         this.session.getBasicRemote().sendText(message);
     }
 }

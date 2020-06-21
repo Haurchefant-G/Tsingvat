@@ -11,6 +11,8 @@ public class Global {
 
     public static String ACCOUNT_DIR = "/images/account";
 
+    public static String DEFAULT_AVATAR = "/images/account/default_avatar.png";
+
     public static String POST_DIR = "/images/post";
 
     public static int LIMIT_NUM = 10;

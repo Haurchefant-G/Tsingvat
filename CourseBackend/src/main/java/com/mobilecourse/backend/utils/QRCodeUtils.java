@@ -2,6 +2,10 @@ package com.mobilecourse.backend.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.util.HashMap;
 
@@ -24,6 +28,41 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 @Component
 public class QRCodeUtils {
 
+    public static void createUser(String username){
+        createQRCode(username);
+        createAvatar(username);
+    }
+
+    public static void createAvatar(String username){
+        String defaultAvatarPath = Global.BASE_FILE_PATH+Global.DEFAULT_AVATAR;
+        String dirPath=Global.BASE_FILE_PATH + Global.ACCOUNT_DIR + "/" + username;
+        File file = new File(dirPath);
+        if(!file.exists() && !file.isDirectory()){
+            file.mkdir();
+        }
+        String destPath = dirPath + "/avatar.png";
+        try {
+            copyFileUsingFileChannels(new File(defaultAvatarPath), new File(destPath));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void copyFileUsingFileChannels(File source, File dest) throws IOException {
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+        try {
+            inputChannel = new FileInputStream(source).getChannel();
+            outputChannel = new FileOutputStream(dest).getChannel();
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+        } finally {
+            inputChannel.close();
+            outputChannel.close();
+        }
+    }
+
+
     public static void createQRCode(String username){
         String filePath=Global.BASE_FILE_PATH + Global.ACCOUNT_DIR + "/" + username;
         File file = new File(filePath);
@@ -34,7 +73,7 @@ public class QRCodeUtils {
     }
 
 
-    public static void createQRCode(String filePath, String content) {
+    private static void createQRCode(String filePath, String content) {
         //图片的宽度
         int width=300;
         //图片的高度

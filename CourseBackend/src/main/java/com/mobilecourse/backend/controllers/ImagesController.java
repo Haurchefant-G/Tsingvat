@@ -24,6 +24,12 @@ public class ImagesController extends CommonController{
         return wrapperOKResp(null);
     }
 
+    @RequestMapping(value="/num/{uuid}", method = {RequestMethod.GET})
+    public ResponseEntity<ResultModel> getImagesNum(@PathVariable("uuid") String uuid) {
+        int num = FileUtils.fileNum(Global.BASE_FILE_PATH + Global.POST_DIR + "/" + uuid +"/");
+        return wrapperOKResp(num);
+    }
+
     // 存储用户的头像
     @RequestMapping(value="/avatar/{username}", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> uploadAvatar(

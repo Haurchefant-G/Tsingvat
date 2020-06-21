@@ -63,7 +63,7 @@ public class AccountController extends CommonController {
             if(accounts!= null && accounts.size() >= 1){
                 return wrapperErrorResp(ResultModel.ACCOUNT_ALREADY_EXISTS, account.getUsername() + " already exists.");
             }
-            QRCodeUtils.createQRCode(account.getUsername());
+            QRCodeUtils.createUser(account.getUsername());
             accountDao.register(account);
         } catch (Exception e){
             return wrapperErrorResp(ResultModel.REGISTER_FAIL, e.getMessage());
