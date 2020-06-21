@@ -132,7 +132,7 @@ class _DealPageState extends State<DealPage> {
                         },
                         openBuilder:
                             (BuildContext _, VoidCallback openContainer) {
-                          return DealDetail();
+                          return DealDetail(deals[i]);
                         },
                       ));
                 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/loginPage.dart';
+import 'package:tsingvat/util/httpUtil.dart';
 
 class InfoCard extends StatelessWidget {
   static const double IMAGE_ICON_WIDTH = 30.0;
@@ -32,7 +33,7 @@ class InfoCard extends StatelessWidget {
               children: <Widget>[
                 userAvatar == null
                     ? new Image.asset(
-                      "assets/avatar_logo.png",
+                        "assets/avatar_logo.png",
                         width: 60.0,
                         height: 60.0,
                       )
@@ -117,7 +118,7 @@ Widget showCustomScrollView() {
           childAspectRatio: 1.0,
         ),
         delegate: new SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+          (BuildContext context, int index) {
             return new Container(
               alignment: Alignment.center,
               color: Colors.teal[100 * (index % 9)],
@@ -130,7 +131,7 @@ Widget showCustomScrollView() {
       new SliverFixedExtentList(
         itemExtent: 50.0,
         delegate:
-        new SliverChildBuilderDelegate((BuildContext context, int index) {
+            new SliverChildBuilderDelegate((BuildContext context, int index) {
           return new Container(
             alignment: Alignment.center,
             color: Colors.lightBlue[100 * (index % 9)],

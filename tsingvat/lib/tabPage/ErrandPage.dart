@@ -6,6 +6,9 @@ import 'package:tsingvat/util/httpUtil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ErrandPage extends StatefulWidget {
+  ErrandPage({Key key, bool fresh = false}) : super(key: key) {
+    print(fresh);
+  }
   @override
   _ErrandPageState createState() => _ErrandPageState();
 }
@@ -19,6 +22,7 @@ class _ErrandPageState extends State<ErrandPage> {
 
   @override
   void initState() {
+    print('init');
     super.initState();
     current = true;
     http = HttpUtil();
@@ -41,7 +45,7 @@ class _ErrandPageState extends State<ErrandPage> {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand", null);
-      Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
+      await Future.delayed(Duration(milliseconds: 500), () {});
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -51,7 +55,10 @@ class _ErrandPageState extends State<ErrandPage> {
     if (data['code'] == ResultCode.SUCCESS) {
       errands.clear();
       for (var json in data['data']) {
-          errands.add(Errand.fromJson(json));
+        var e = Errand.fromJson(json);
+        if (e.taker == null) {
+          errands.add(e);
+        }
       }
     }
     if (current == true) {
@@ -68,8 +75,9 @@ class _ErrandPageState extends State<ErrandPage> {
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
-      data = await http.get("/errand", null);
-      Future.sync(await Future.delayed(Duration(milliseconds: 500), () {}));
+      data = await http.get("/errand",
+          errands.length > 0 ? {"time": errands.last.created} : null);
+      await Future.delayed(Duration(milliseconds: 500), () {});
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
@@ -78,7 +86,10 @@ class _ErrandPageState extends State<ErrandPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
-          errands.add(Errand.fromJson(json));
+        var e = Errand.fromJson(json);
+        if (e.taker == null) {
+          errands.add(e);
+        }
       }
     }
     if (current == true) {
@@ -97,6 +108,7 @@ class _ErrandPageState extends State<ErrandPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     return Container(
         padding: EdgeInsets.only(left: 10, right: 10),
         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -112,16 +124,16 @@ class _ErrandPageState extends State<ErrandPage> {
                   if (i == errands.length) {
                     return more
                         ? Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: SpinKitWave(
-                              color: Colors.lightBlueAccent.withOpacity(0.5),
-                              size: 30.0),
-                        )
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: SpinKitWave(
+                                color: Colors.lightBlueAccent.withOpacity(0.5),
+                                size: 30.0),
+                          )
                         : Padding(padding: EdgeInsets.all(20));
                   }
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: ErrandCard(errands[i]),
+                    child: ErrandCard(errands[i], _refresh),
                   );
                 }),
             onRefresh: _refresh));

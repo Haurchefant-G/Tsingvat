@@ -48,4 +48,16 @@ class HttpUtil {
     print(response);
     return response.data;
   }
+
+  Future<Map<String, dynamic>> put(url, data) async {
+    Response response;
+    try {
+      response = await _client.put(url, data: data);
+    } on DioError catch (e) {
+      print(e);
+      return Future.error(e);
+    }
+    print(response);
+    return response.data;
+  }
 }
