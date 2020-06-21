@@ -1,8 +1,15 @@
 import 'dart:io';
+import 'package:animations/animations.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
+import 'package:tsingvat/const/code.dart';
+import 'package:tsingvat/model/deal.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
+import 'package:tsingvat/util/httpUtil.dart';
 
 class newDealPage extends StatefulWidget {
   @override
@@ -10,7 +17,14 @@ class newDealPage extends StatefulWidget {
 }
 
 class _newDealPageState extends State<newDealPage> {
-  GlobalKey<FormState> taskKey = GlobalKey<FormState>();
+  GlobalKey<FormState> dealKey = GlobalKey<FormState>();
+  FocusNode contentFocus = FocusNode();
+  FocusNode priceFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  FocusNode detailFocus = FocusNode();
+
+  HttpUtil http;
+  Deal deal;
 
   double pay;
   String start;
@@ -37,6 +51,13 @@ class _newDealPageState extends State<newDealPage> {
     );
   }).toList();
 
+  @override
+  void initState() {
+    super.initState();
+    http = HttpUtil();
+    deal = Deal();
+  }
+
   Future pickImage() async {
     try {
       final image = await picker.getImage(source: ImageSource.gallery);
@@ -45,6 +66,86 @@ class _newDealPageState extends State<newDealPage> {
         print(_image);
       });
     } catch (e) {}
+  }
+
+  Future<void> createPost() async {
+    contentFocus.unfocus();
+    var loginForm = dealKey.currentState;
+    //验证Form表单
+    //if (loginForm.validate()) {
+    loginForm.save();
+    var data;
+    var data2;
+    try {
+      deal.username = await SharedPreferenceUtil.getString('username');
+      data = await http.post('/post/create', deal.toJson());
+      deal = Deal.fromJson(data['data']);
+      if (_image != null) {
+        data2 = await http.post(
+            '/images/${deal.uuid}', FormData.fromMap({'images': _image}));
+        print(data2);
+      }
+    } catch (e) {
+      print(e);
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "上传失败",
+                textAlign: TextAlign.center,
+              ),
+              // content:
+              //     //Text("登陆失败",textAlign: TextAlign.center,),
+              //     Text(
+              //   "",
+              //   textAlign: TextAlign.center,
+              // ),
+              actions: <Widget>[],
+            );
+          });
+      return;
+    }
+    print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            Future.delayed(Duration(milliseconds: 500), () {
+              Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+            });
+            return CustomDialog(
+              title: Text(
+                "上传成功",
+                textAlign: TextAlign.center,
+              ),
+              // content:
+              //     //Text("登陆失败",textAlign: TextAlign.center,),
+              //     Text(
+              //   "用户名或密码错误",
+              //   textAlign: TextAlign.center,
+              // ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "上传失败",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    }
   }
 
   @override
@@ -88,7 +189,7 @@ class _newDealPageState extends State<newDealPage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-                key: taskKey,
+                key: dealKey,
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.subtitle1,
                   child: Column(

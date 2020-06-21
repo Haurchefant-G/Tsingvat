@@ -243,31 +243,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation
           .endFloat, // This trailing comma makes auto-formatting nicer for build methods.
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        shape: null,
-        //_showFab ? CircularNotchedRectangle() : null,
-        child: Row(
-          children: [
-            IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  SharedPreferenceUtil.remove('password');
-                  Navigator.pushReplacementNamed(context, "loginPage");
-                }),
-            SizedBox(),
-            IconButton(
-                icon: Icon(Icons.chat),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return ChatPage('test');
-                  }));
-                })
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-        ),
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   color: Theme.of(context).primaryColor,
+      //   shape: null,
+      //   //_showFab ? CircularNotchedRectangle() : null,
+      //   child: Row(
+      //     children: [
+      //       IconButton(
+      //           icon: Icon(Icons.home),
+      //           onPressed: () {
+      //             SharedPreferenceUtil.remove('password');
+      //             Navigator.pushReplacementNamed(context, "loginPage");
+      //           }),
+      //       SizedBox(),
+      //       IconButton(
+      //           icon: Icon(Icons.chat),
+      //           onPressed: () {
+      //             Navigator.of(context)
+      //                 .push(MaterialPageRoute(builder: (context) {
+      //               return ChatPage('test');
+      //             }));
+      //           })
+      //     ],
+      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   ),
+      // ),
     );
   }
 }

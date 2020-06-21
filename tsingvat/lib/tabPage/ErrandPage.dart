@@ -107,10 +107,13 @@ class _ErrandPageState extends State<ErrandPage> {
                 itemBuilder: (context, i) {
                   if (i == errands.length) {
                     return more
-                        ? SpinKitWave(
-                            color: Colors.lightBlueAccent.withOpacity(0.5),
-                            size: 30.0)
-                        : Padding(padding: EdgeInsets.all(2));
+                        ? Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: SpinKitWave(
+                              color: Colors.lightBlueAccent.withOpacity(0.5),
+                              size: 30.0),
+                        )
+                        : Padding(padding: EdgeInsets.all(20));
                   }
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10),
