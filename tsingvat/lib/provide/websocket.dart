@@ -4,11 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/io.dart';
 import '../model/conversation.dart';
 class WebSocketProvide with ChangeNotifier{
-  var uid = '';
+  var username = 'zxj';
   var nickname = '';
   var users = [];
   var groups =[];
@@ -27,26 +25,26 @@ class WebSocketProvide with ChangeNotifier{
       var now = new DateTime.now();
       print(now.millisecondsSinceEpoch);//单位毫秒，13位时间戳
       print(now.microsecondsSinceEpoch);//单位微秒,16位时间戳
-      uid = "flutter_${now.microsecondsSinceEpoch}";
+      username = "flutter_${now.microsecondsSinceEpoch}";
       nickname = "flutter_${Random().nextInt(100)}";
       var userInfoData = {
-        "uid" : uid,
+        "username " : username,
         "nickname" : nickname
       };
       var userInfoStr =  json.encode(userInfoData).toString();
       prefs.setString('userInfo', userInfoStr);
     }else{
       var userInfoData = json.decode(userInfo.toString());
-      uid = userInfoData['uid'];
+      username = userInfoData['username '];
       nickname = userInfoData['nickname'];
     }
     return await createWebsocket();
     // monitorMessage();
   }
   createWebsocket() async {//创建连接并且发送鉴别身份信息
-    channel = await new IOWebSocketChannel.connect('ws://111.231.225.178:3001');
+    channel = await new IOWebSocketChannel.connect('ws://localhost:8800/websocket');
     var obj = {
-      "uid": uid,
+      "username ": username ,
       "type": 1,
       "nickname": nickname,
       "msg": "",
@@ -81,7 +79,7 @@ class WebSocketProvide with ChangeNotifier{
         ));
       }
       for(var i = 0; i < users.length; i++){
-        if(users[i]['uid'] != uid){
+        if(users[i]['username '] != username ){
           messageList.add(new Conversation(
             avatar: 'assets/images/ic_group_chat.png',
             title: users[i]['nickname'],
@@ -89,7 +87,7 @@ class WebSocketProvide with ChangeNotifier{
             updateAt: obj['date'].substring(11,16),
             unreadMsgCount: 0,
             displayDot: false,
-            userId:users[i]['uid'],
+            userId:users[i]['username '],
             type: 1
           ));
         }
@@ -101,7 +99,7 @@ class WebSocketProvide with ChangeNotifier{
         if(messageList[i].userId != null){
           var count = 0;
           for(var r = 0; r < historyMessage.length; r++){
-            if(historyMessage[r]['status']==1 &&  historyMessage[r]['bridge'].contains(messageList[i].userId) && historyMessage[r]['uid'] != uid){
+            if(historyMessage[r]['status']==1 &&  historyMessage[r]['bridge'].contains(messageList[i].userId) && historyMessage[r]['username '] != username ){
               count++;
             }
           }
@@ -113,7 +111,7 @@ class WebSocketProvide with ChangeNotifier{
         if(messageList[i].groupId != null){
           var count = 0;
           for(var r = 0; r < historyMessage.length; r++){
-            if(historyMessage[r]['status']==1 &&  historyMessage[r]['groupId']==messageList[i].groupId && historyMessage[r]['uid'] != uid){
+            if(historyMessage[r]['status']==1 &&  historyMessage[r]['groupId']==messageList[i].groupId && historyMessage[r]['username '] != username ){
               count++;
             }
           }
@@ -131,7 +129,7 @@ class WebSocketProvide with ChangeNotifier{
     print(messageList[index].groupId);
     var _bridge = [];
     if(messageList[index].userId != null){
-      _bridge..add(messageList[index].userId)..add(uid);
+      _bridge..add(messageList[index].userId)..add(username );
     }
     int _groupId;
     if(messageList[index].groupId != null){
@@ -139,7 +137,7 @@ class WebSocketProvide with ChangeNotifier{
     }
     print(_bridge);
     var obj = {
-      "uid": uid,
+      "username ": username ,
       "type": 2,
       "nickname": nickname,
       "msg": data,

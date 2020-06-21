@@ -106,7 +106,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         }
                       }
                     }else if(data.groupId != null && data.groupId == historyMessage[i]['groupId'] && historyMessage[i]['bridge'].length==0){
-                      var uid = Provide.value<WebSocketProvide>(context).uid;
+                      var uid = Provide.value<WebSocketProvide>(context).username;
                       if(historyMessage[i]['uid'] != uid ){
                         list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
                       }else{

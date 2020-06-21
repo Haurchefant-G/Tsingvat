@@ -50,8 +50,9 @@ CREATE TABLE deal(
 	username varchar(30) NOT NULL ,
   created timestamp NOT NULL,
   content tinytext,
-  ddlTime timestamp,
   taker varchar(30),
   takeTime timestamp,
-  price double
+  price double,
+  details varchar(2000),
+  phone varchar(13)
 );
