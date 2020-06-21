@@ -11,7 +11,7 @@ public class Errand extends Post {
     private String stoAddr;
     private Timestamp ddlTime;
     private double bonus;
-    private long phone;
+    private String phone;
     private String details;
 
     // 记录taker的username
@@ -27,11 +27,11 @@ public class Errand extends Post {
         this.details = details;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
