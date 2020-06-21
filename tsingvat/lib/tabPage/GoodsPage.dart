@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:tsingvat/component/goodscard.dart';
+import 'package:tsingvat/component/dealcard.dart';
 import 'package:animations/animations.dart';
-import 'package:tsingvat/page/goodsDetailPage.dart';
+import 'package:tsingvat/page/dealDetailPage.dart';
 
 class GoodsPage extends StatefulWidget {
   @override
@@ -32,10 +32,10 @@ class _GoodsPageState extends State<GoodsPage> {
                   transitionType: ContainerTransitionType.fade,
                       closedBuilder:
                           (BuildContext _, VoidCallback openContainer) {
-                        return GoodsCard();
+                        return DealCard();
                       },
                       openBuilder: (BuildContext _, VoidCallback openContainer) {
-                        return GoodsDetail();
+                        return DealDetail();
                       },
                     ),
               ),

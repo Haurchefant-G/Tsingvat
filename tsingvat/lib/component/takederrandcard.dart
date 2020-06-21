@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 
-class TakedTaskCard extends StatefulWidget {
+class TakedErrandCard extends StatefulWidget {
   @override
-  _TakedTaskCardState createState() => _TakedTaskCardState();
+  _TakedErrandCardState createState() => _TakedErrandCardState();
 }
 
-class _TakedTaskCardState extends State<TakedTaskCard> {
+class _TakedErrandCardState extends State<TakedErrandCard> {
   @override
   Widget build(BuildContext context) {
     return Container(

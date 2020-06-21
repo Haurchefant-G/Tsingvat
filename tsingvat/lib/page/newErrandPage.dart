@@ -1,13 +1,28 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tsingvat/component/customDiaglog.dart';
+import 'package:tsingvat/const/code.dart';
+import 'package:tsingvat/model/errand.dart';
+import 'package:tsingvat/util/SharedPreferenceUtil.dart';
+import 'package:tsingvat/util/httpUtil.dart';
 
-class newTaskPage extends StatefulWidget {
+class newErrandPage extends StatefulWidget {
   @override
-  _newTaskPageState createState() => _newTaskPageState();
+  _newErrandPageState createState() => _newErrandPageState();
 }
 
-class _newTaskPageState extends State<newTaskPage> {
-  GlobalKey<FormState> taskKey = GlobalKey<FormState>();
+class _newErrandPageState extends State<newErrandPage> {
+  GlobalKey<FormState> errandKey = GlobalKey<FormState>();
+  FocusNode contentFocus = FocusNode();
+  FocusNode bonusFocus = FocusNode();
+  FocusNode sfromFocus = FocusNode();
+  FocusNode stoFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  FocusNode detailFocus = FocusNode();
+
+  HttpUtil http;
+  Errand errand;
 
   double pay;
   String start;
@@ -33,6 +48,87 @@ class _newTaskPageState extends State<newTaskPage> {
   }).toList();
 
   @override
+  void initState() {
+    super.initState();
+    http = HttpUtil();
+    errand = Errand();
+  }
+
+  Future<void> createPost() async {
+    detailFocus.unfocus();
+    var errandForm = errandKey.currentState;
+    //验证Form表单
+    //if (loginForm.validate()) {
+    errandForm.save();
+    var data;
+    try {
+      errand.username = await SharedPreferenceUtil.getString('username');
+      data = await http.post('/errand/create', errand.toJson());
+      errand = Errand.fromJson(data['data']);
+    } catch (e) {
+      print(e);
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "发布失败",
+                textAlign: TextAlign.center,
+              ),
+              // content:
+              //     //Text("登陆失败",textAlign: TextAlign.center,),
+              //     Text(
+              //   "",
+              //   textAlign: TextAlign.center,
+              // ),
+              actions: <Widget>[],
+            );
+          });
+      return;
+    }
+    print(data);
+    if (data['code'] == ResultCode.SUCCESS) {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            Future.delayed(Duration(milliseconds: 500), () {
+              Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+            });
+            return CustomDialog(
+              title: Text(
+                "发布成功",
+                textAlign: TextAlign.center,
+              ),
+              // content:
+              //     //Text("登陆失败",textAlign: TextAlign.center,),
+              //     Text(
+              //   "用户名或密码错误",
+              //   textAlign: TextAlign.center,
+              // ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "发布失败",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      //}
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
@@ -47,9 +143,7 @@ class _newTaskPageState extends State<newTaskPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColorDark,
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: createPost,
         child: Icon(Icons.done_outline),
       ),
       body: CustomScrollView(slivers: <Widget>[
@@ -73,7 +167,7 @@ class _newTaskPageState extends State<newTaskPage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-                key: taskKey,
+                key: errandKey,
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.subtitle1,
                   child: Column(
@@ -85,18 +179,24 @@ class _newTaskPageState extends State<newTaskPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
+                          focusNode: contentFocus,
                           //textAlign: TextAlign.center,
                           decoration: InputDecoration(
-                            hintText: '须取物品',
+                            hintText: '任务简述',
                             //prefixText: '￥  ',
                             //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon: Icon(Icons.local_offer),
                             border: InputBorder.none,
                           ),
                           // TODO 除了检查邮箱外还应检查清华邮箱，或者只需填写用户名即可
-
+                          onEditingComplete: () {
+                            contentFocus.unfocus();
+                            bonusFocus.requestFocus();
+                          },
                           keyboardType: TextInputType.text,
-                          onSaved: (v) {},
+                          onSaved: (v) {
+                            errand.content = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (v) {},
                         ),
@@ -109,6 +209,7 @@ class _newTaskPageState extends State<newTaskPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: bonusFocus,
                           decoration: InputDecoration(
                             hintText: '报酬',
                             //prefixText: '￥  ',
@@ -123,8 +224,11 @@ class _newTaskPageState extends State<newTaskPage> {
 
                           keyboardType: TextInputType.numberWithOptions(
                               signed: false, decimal: true),
+                          onEditingComplete: () {
+                            bonusFocus.unfocus();
+                          },
                           onSaved: (v) {
-                            pay = double.parse(v);
+                            errand.bonus = double.parse(v);
                           },
                           validator: (username) {
                             if (username.length == 0) {
@@ -163,9 +267,7 @@ class _newTaskPageState extends State<newTaskPage> {
                                   value: start,
                                   items: locationItems,
                                   onChanged: (String v) {
-                                    start = v;
-
-                                    print(start);
+                                    errand.fromAddr = v;
                                   }),
                             ),
                           ),
@@ -173,35 +275,35 @@ class _newTaskPageState extends State<newTaskPage> {
                           Expanded(
                             flex: 1,
                             child: Container(
-                              // padding: EdgeInsets.only(right: 8),
-                              // decoration: BoxDecoration(
-                              //   borderRadius:
-                              //       BorderRadius.all(Radius.circular(100)),
-                              //   color: Theme.of(context).dialogBackgroundColor,
-                              // ),
-                              // child: FormField(
-                              //     builder: (FormFieldState<String> field) {
-                              //   return FlatButton(
-                              //       highlightColor: Colors.transparent,
-                              //       splashColor: Colors.transparent,
-                              //       onPressed: () {
-                              //         Future<TimeOfDay> p = showTimePicker(
-                              //           context: context,
-                              //           initialTime: TimeOfDay.now(),
-                              //         );
-                              //         p.then((value) => {
-                              //               setState(() {
-                              //                 startTime =
-                              //                     "${value.hour}:${value.minute}";
-                              //               })
-                              //             });
-                              //       },
-                              //       child: Text(startTime,
-                              //           style: Theme.of(context)
-                              //               .textTheme
-                              //               .subtitle1));
-                              // }),
-                            ),
+                                // padding: EdgeInsets.only(right: 8),
+                                // decoration: BoxDecoration(
+                                //   borderRadius:
+                                //       BorderRadius.all(Radius.circular(100)),
+                                //   color: Theme.of(context).dialogBackgroundColor,
+                                // ),
+                                // child: FormField(
+                                //     builder: (FormFieldState<String> field) {
+                                //   return FlatButton(
+                                //       highlightColor: Colors.transparent,
+                                //       splashColor: Colors.transparent,
+                                //       onPressed: () {
+                                //         Future<TimeOfDay> p = showTimePicker(
+                                //           context: context,
+                                //           initialTime: TimeOfDay.now(),
+                                //         );
+                                //         p.then((value) => {
+                                //               setState(() {
+                                //                 startTime =
+                                //                     "${value.hour}:${value.minute}";
+                                //               })
+                                //             });
+                                //       },
+                                //       child: Text(startTime,
+                                //           style: Theme.of(context)
+                                //               .textTheme
+                                //               .subtitle1));
+                                // }),
+                                ),
                           ),
                         ],
                       ),
@@ -213,6 +315,7 @@ class _newTaskPageState extends State<newTaskPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: sfromFocus,
                           decoration: InputDecoration(
                             hintText: '具体取物地点',
                             //prefixText: '￥  ',
@@ -224,7 +327,12 @@ class _newTaskPageState extends State<newTaskPage> {
                           //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
                           // ],
                           keyboardType: TextInputType.text,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            sfromFocus.unfocus();
+                          },
+                          onSaved: (v) {
+                            errand.sfromAddr = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
@@ -258,9 +366,7 @@ class _newTaskPageState extends State<newTaskPage> {
                                   value: end,
                                   items: locationItems,
                                   onChanged: (String v) {
-                                    start = v;
-
-                                    print(start);
+                                    errand.toAddr = v;
                                   }),
                             ),
                           ),
@@ -295,14 +401,21 @@ class _newTaskPageState extends State<newTaskPage> {
                                               );
                                             },
                                           );
-                                          p.then((value) => {
-                                                setState(() {
-                                                  endTime =
-                                                      "${value.hour}:${value.minute}";
-                                                  //endTime = value.toString();
-                                                  // }
-                                                })
-                                              });
+                                          p.then((value) {
+                                            setState(() {
+                                              endTime =
+                                                  "${value.hour}:${value.minute}";
+                                              //endTime = value.toString();
+                                              // }
+                                            });
+                                            errand.ddlTime = DateTime(
+                                                    DateTime.now().year,
+                                                    DateTime.now().month,
+                                                    DateTime.now().day,
+                                                    value.hour,
+                                                    value.minute)
+                                                .millisecondsSinceEpoch;
+                                          });
                                         },
                                         child: Text(endTime,
                                             style: Theme.of(context)
@@ -318,6 +431,7 @@ class _newTaskPageState extends State<newTaskPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
+                          focusNode: stoFocus,
                           //textAlign: TextAlign.center,
                           decoration: InputDecoration(
                             hintText: '具体送达地点',
@@ -330,7 +444,13 @@ class _newTaskPageState extends State<newTaskPage> {
                           //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
                           // ],
                           keyboardType: TextInputType.text,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            stoFocus.unfocus();
+                            phoneFocus.requestFocus();
+                          },
+                          onSaved: (v) {
+                            errand.stoAddr = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
@@ -343,6 +463,7 @@ class _newTaskPageState extends State<newTaskPage> {
                         ),
                         child: TextFormField(
                           //textAlign: TextAlign.center,
+                          focusNode: phoneFocus,
                           decoration: InputDecoration(
                             hintText: '联系电话',
                             //prefixText: '￥  ',
@@ -354,7 +475,14 @@ class _newTaskPageState extends State<newTaskPage> {
                           //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
                           // ],
                           keyboardType: TextInputType.phone,
-                          onSaved: (v) {},
+                          onEditingComplete: () {
+                            phoneFocus.unfocus();
+                            detailFocus.requestFocus();
+                          },
+                          onSaved: (v) {
+                            errand.phone = null;
+                            //v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
@@ -367,6 +495,7 @@ class _newTaskPageState extends State<newTaskPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
+                          focusNode: detailFocus,
                           //textAlign: TextAlign.center,
                           decoration: InputDecoration(
                             hintText: '补充信息(如快递单号，快递收件人等)',
@@ -384,7 +513,9 @@ class _newTaskPageState extends State<newTaskPage> {
                               .copyWith(height: 1.8),
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
-                          onSaved: (v) {},
+                          onSaved: (v) {
+                            errand.details = v;
+                          },
                           validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),

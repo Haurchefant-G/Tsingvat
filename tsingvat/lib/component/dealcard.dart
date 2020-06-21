@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class GoodsCard extends StatelessWidget {
+class DealCard extends StatelessWidget {
   String name;
   double price;
   @override

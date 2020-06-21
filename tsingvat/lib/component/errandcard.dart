@@ -2,12 +2,12 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
 
-class TaskCard extends StatefulWidget {
+class ErrandCard extends StatefulWidget {
   @override
-  _TaskCardState createState() => _TaskCardState();
+  _ErrandCardState createState() => _ErrandCardState();
 }
 
-class _TaskCardState extends State<TaskCard>
+class _ErrandCardState extends State<ErrandCard>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _heightFactor;

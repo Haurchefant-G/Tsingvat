@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tsingvat/component/taskcard.dart';
+import 'package:tsingvat/component/errandcard.dart';
 
-class TaskPage extends StatefulWidget {
+class ErrandPage extends StatefulWidget {
   @override
-  _TaskPageState createState() => _TaskPageState();
+  _ErrandPageState createState() => _ErrandPageState();
 }
 
-class _TaskPageState extends State<TaskPage> {
+class _ErrandPageState extends State<ErrandPage> {
   Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 2), () {
       print("刷新结束");
@@ -26,7 +26,7 @@ class _TaskPageState extends State<TaskPage> {
             child: ListView.builder(itemBuilder: (context, i) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: TaskCard(),
+                child: ErrandCard(),
               );
             }),
             onRefresh: _refresh));

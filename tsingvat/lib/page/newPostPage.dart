@@ -52,7 +52,7 @@ class _newPostPageState extends State<newPostPage> {
   void initState() {
     super.initState();
     http = HttpUtil();
-    post = Post()..username;
+    post = Post();
   }
 
   Future pickImage() async {
