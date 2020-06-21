@@ -14,6 +14,7 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   HttpUtil http;
   List<Post> posts = [];
+  List<int> imagenum = [];
   ScrollController _scrollController;
   bool more = false;
   bool current;
@@ -48,8 +49,13 @@ class _PostPageState extends State<PostPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       posts.clear();
+      imagenum.clear();
       for (var json in data['data']) {
-        posts.add(Post.fromJson(json));
+        var p = Post.fromJson(json);
+        int num = (await http.get("/num/${p.uuid}", null))['data']['num'];
+        print(num);
+        posts.add(p);
+        imagenum.add(num);
       }
     }
     if (current == true) {
@@ -72,7 +78,11 @@ class _PostPageState extends State<PostPage> {
     }
     if (data['code'] == ResultCode.SUCCESS) {
       for (var json in data['data']) {
-        posts.add(Post.fromJson(json));
+        var p = Post.fromJson(json);
+        int num = (await http.get("/num/${p.uuid}", null))['data']['num'];
+        print(num);
+        posts.add(p);
+        imagenum.add(num);
       }
     }
     if (current == true) {
@@ -110,7 +120,7 @@ class _PostPageState extends State<PostPage> {
                 } else {
                   return Padding(
                       padding: const EdgeInsets.all(2),
-                      child: PostCard(posts[i]));
+                      child: PostCard(posts[i], num: imagenum[i]));
                 }
               },
               staggeredTileBuilder: (int i) => StaggeredTile.fit(1)),
