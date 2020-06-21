@@ -22,17 +22,13 @@ class _TaskPageState extends State<TaskPage> {
         decoration: BoxDecoration(
             color: Colors.white70, //Theme.of(context).backgroundColor,
             borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-        child:
-            RefreshIndicator(child: ListView.builder(itemBuilder: (context, i) {
-          // if (i.isOdd) return new Divider();
-          // final index = i ~/ 2;
-          // return ListTile(
-          //   title: Text(i.toString()),
-          // );
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: TaskCard(),
-          );
-        })));
+        child: RefreshIndicator(
+            child: ListView.builder(itemBuilder: (context, i) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: TaskCard(),
+              );
+            }),
+            onRefresh: _refresh));
   }
 }
