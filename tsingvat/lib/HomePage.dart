@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:tsingvat/component/infocard.dart';
 import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newTaskPage.dart';
 import 'package:tsingvat/page/newGoodsPage.dart';
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 //         onRefresh: _refresh)),
                 GoodsPage(),
                 NewsPage(),
-                InfoPage()
+                InfoCard()
               ],
             )),
       ),
