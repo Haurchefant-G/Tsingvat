@@ -7,7 +7,9 @@ import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 class StartPage extends StatelessWidget {
   init(BuildContext context) async {
     String password = await SharedPreferenceUtil.getString('password');
+    // String password = null;
     print(password);
+    //await SharedPreferenceUtil.remove('password');
     if (password != null) {
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushReplacementNamed(context, 'homePage');

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/deal.dart';
 
@@ -25,14 +26,23 @@ class DealCard extends StatelessWidget {
       // child: Card(
       child: Column(
         children: <Widget>[
-          CachedNetworkImage(imageUrl: 'img'),
+          CachedNetworkImage(imageUrl: '${ConstUrl.dealimageurl}/${uuid}/0.png',
+          fit: BoxFit.cover,
+
+          placeholder: (context, url) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SpinKitThreeBounce(color: Colors.blueAccent, size: 10,),
+          ),
+          ),
+          // Image.network("${ConstUrl.dealimageurl}/${uuid}/0.png"),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CachedNetworkImage(
-                    imageUrl: "${ConstUrl.dealimageurl}/${uuid}/0.png"),
+                // CachedNetworkImage(
+                //     imageUrl: "${ConstUrl.dealimageurl}/${uuid}/0.png"),
+                // Image.network("${ConstUrl.dealimageurl}/${uuid}/0.png"),
                 Text(
                   content ?? "物品名",
                   style: Theme.of(context).primaryTextTheme.subtitle1,
@@ -49,12 +59,29 @@ class DealCard extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                      child: CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColorLight,
+                      child: 
+                      // CircleAvatar(
+                      //   backgroundColor: Theme.of(context).primaryColorLight,
+                      //   child: Container(
+                      //     height: 80,
+                      //     width: 80,
+                      //     decoration: BoxDecoration(
+                      //       shape: BoxShape.circle,
+                      //       //borderRadius: BorderRadius.circular(12)
+                      //     ),
+                      //     child: Image.network(
+                      //       "${ConstUrl.avatarimageurl}/${name}/avatar.png", fit: BoxFit.cover,)),
+                      //   radius: 40,
+                      // ),
+                      ClipOval(child: Container(
+                        height: 24,
+                        width: 24,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColorLight,
+                        ),
                         child: Image.network(
-                            "${ConstUrl.avatarimageurl}/${name}/avatar.png"),
-                        radius: 12,
-                      ),
+                              "${ConstUrl.avatarimageurl}/${name}/avatar.png", fit: BoxFit.cover,),
+                      )),
                     ),
                     Text(
                       name ?? "用户名",

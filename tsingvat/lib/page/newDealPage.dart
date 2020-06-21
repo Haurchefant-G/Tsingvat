@@ -85,7 +85,7 @@ class _newDealPageState extends State<newDealPage> {
       deal = Deal.fromJson(data['data']);
       if (_image != null) {
         data2 = await http.post(
-            '/images/${deal.uuid}', FormData.fromMap({'images': _image}));
+            '/images/${deal.uuid}', FormData.fromMap({'images': MultipartFile.fromFileSync(_image.path)}));
         print("data2-----------");
         print(data2);
       }
