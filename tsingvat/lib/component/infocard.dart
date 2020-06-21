@@ -19,7 +19,7 @@ class _InfoCardState extends State<InfoCard> {
 
   var userAvatar;
   var userName;
-  var titles = ["资讯", "跑腿", "交易", "问答","聊天"];
+  var titles = ["资讯", "跑腿", "交易", "聊天"];
 
 
 
@@ -148,7 +148,15 @@ class _InfoCardState extends State<InfoCard> {
 
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context){
-                        return MessagePage();
+                        switch(index) {
+                          case 1:
+                            return TakedErrandsPage(userName);
+                            case 3:
+                            return MessagePage();
+                            default:
+                            return TakedErrandsPage(userName);
+
+                        }
                       })
                     );
 
