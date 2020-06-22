@@ -37,6 +37,21 @@ class HttpUtil {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> delete(url, params) async {
+    Response response;
+    try {
+      response = await _client.delete(url, queryParameters: params);
+    } on DioError catch (e) {
+      return Future.error(e);
+    }
+
+    // if (response.data is DioError) {
+    //   return resultError(response.data['code']);
+    // }
+    print(response);
+    return response.data;
+  }
+
   Future<Map<String, dynamic>> post(url, data) async {
     Response response;
     try {

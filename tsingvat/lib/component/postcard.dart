@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tsingvat/chat/chat_detail_page.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/post.dart';
 
@@ -74,31 +75,41 @@ class PostCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    IconButton(icon: Icon(Icons.chat), onPressed: () {})
+                    IconButton(
+                        icon: Icon(Icons.chat),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            //print('username:${widget.deal.username}');
+                            return ChatDetailPage(username);
+                          }));
+                        })
                   ],
                 ),
               ),
               Container(
-                child: imagenum > 0 ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-                  child: CachedNetworkImage(
-                    imageUrl: imageurl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SpinKitThreeBounce(
-                        color: Colors.blueAccent,
-                        size: 10,
-                      ),
-                    ),
-                  ),
-                  //     Image.asset(
-                  //   'assets/placeholder_image.png',
-                  //   color: Colors.grey,
-                  //   colorBlendMode: BlendMode.color,
-                  //   fit: BoxFit.fitWidth,
-                  // )
-                ) : null,
+                child: imagenum > 0
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+                        child: CachedNetworkImage(
+                          imageUrl: imageurl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SpinKitThreeBounce(
+                              color: Colors.blueAccent,
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                        //     Image.asset(
+                        //   'assets/placeholder_image.png',
+                        //   color: Colors.grey,
+                        //   colorBlendMode: BlendMode.color,
+                        //   fit: BoxFit.fitWidth,
+                        // )
+                      )
+                    : null,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),

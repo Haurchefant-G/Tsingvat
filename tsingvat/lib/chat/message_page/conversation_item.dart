@@ -146,9 +146,9 @@ class ConversationItem extends StatelessWidget {
       SizedBox(height: ScreenUtil().setHeight(15.0),)
     ];
     if(conversationItemData.isMute){
-      _rightArea.add(new Icon(ICons.MUTE_ICON,color: Color(AppColors.ConversationMuteIcon),size: ScreenUtil().setSp(30),));
+      _rightArea.add(new Icon(Icons.volume_mute,color: Color(AppColors.ConversationMuteIcon),size: ScreenUtil().setSp(30),));
     }else{
-      _rightArea.add(new Icon(ICons.MUTE_ICON,color: Colors.transparent,size: ScreenUtil().setSp(30),));
+      _rightArea.add(new Icon(Icons.volume_mute,color: Colors.transparent,size: ScreenUtil().setSp(30),));
     }
     return Container(
       width:ScreenUtil().setWidth(80),
@@ -191,6 +191,6 @@ class ConversationItem extends StatelessWidget {
   }
 
   Widget muteIcon(){
-    return new Icon(ICons.MUTE_ICON);
+    return Icon(Icons.volume_mute);
   }
 }

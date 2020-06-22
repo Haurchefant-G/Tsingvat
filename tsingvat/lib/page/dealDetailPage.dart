@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tsingvat/chat/chat_detail_page.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/deal.dart';
 
@@ -50,7 +51,14 @@ class _DealDetailState extends State<DealDetail> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context){
+                print('username:${widget.deal.username}');
+                return ChatDetailPage(widget.deal.username);
+              })
+          );
+        },
         backgroundColor: Theme.of(context).primaryColorDark,
         child: Icon(
           Icons.chat,
