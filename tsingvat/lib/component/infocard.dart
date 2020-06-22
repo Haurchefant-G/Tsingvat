@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tsingvat/component/takederrandcard.dart';
+import 'package:tsingvat/page/MyDealsPage.dart';
+import 'package:tsingvat/page/MyPostsPage.dart';
+import 'package:tsingvat/page/MyWaitErrandsPage.dart';
 import 'package:tsingvat/page/TakedErrandsPage.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/loginPage.dart';
@@ -39,7 +42,7 @@ class _InfoCardState extends State<InfoCard> {
     var avatar = await SharedPreferenceUtil.getString('avatar');
     var name = await SharedPreferenceUtil.getString('username');
     setState(() {
-      userAvatar =
+      userAvatar = avatar ??
           "http://121.199.66.17:8800/images/account/${name}/avatar.png"; //avatar;
       userName = name;
     });
@@ -183,6 +186,12 @@ class _InfoCardState extends State<InfoCard> {
                           switch (index) {
                             case 0:
                               return TakedErrandsPage(userName);
+                            case 1:
+                              return MyWaitErrandsPage(userName);
+                            case 2:
+                              return MyDealsPage(userName);
+                            case 3:
+                              return MyPostsPage(userName);
                             case 4:
                               return MessagePage();
                             default:
@@ -205,12 +214,16 @@ class _InfoCardState extends State<InfoCard> {
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
-                                  child: Icon(icons[index], color: Theme.of(context).primaryColorDark,),
+                                  child: Icon(
+                                    icons[index],
+                                    color: Theme.of(context).primaryColorDark,
+                                  ),
                                 ),
                                 Expanded(
                                     child: Text(
                                   title,
-                                  style: titleTextStyle.copyWith(textBaseline: TextBaseline.ideographic),
+                                  style: titleTextStyle.copyWith(
+                                      textBaseline: TextBaseline.ideographic),
                                 )),
                                 rightArrowIcon
                               ],

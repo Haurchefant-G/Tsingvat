@@ -7,21 +7,21 @@ import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/errand.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
-class TakedErrandsPage extends StatefulWidget {
-  TakedErrandsPage(String username) {
+class MyWaitErrandsPage extends StatefulWidget {
+  MyWaitErrandsPage(String username) {
     this.username = username;
   }
   String username;
   @override
-  _TakedErrandsPageState createState() => _TakedErrandsPageState();
+  _MyWaitErrandsPageState createState() => _MyWaitErrandsPageState();
 }
 
-class _TakedErrandsPageState extends State<TakedErrandsPage> {
+class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
   List<Errand> errands = [];
   HttpUtil http;
   bool current;
 
-  Future<void> getTaked() async {
+  Future<void> getWait() async {
     var data;
     // await Future.delayed(Duration(seconds: 2), () {
     //   print("刷新结束");
@@ -29,7 +29,7 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
-      data = await http.get("/errand/${widget.username}/take", null);
+      data = await http.get("/errand/${widget.username}", null);
       //await Future.delayed(Duration(milliseconds: 500), () {});
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
@@ -41,7 +41,7 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
       errands.clear();
       for (var json in data['data']) {
         var e = Errand.fromJson(json);
-        if (e.finishTime == null) {
+        if (e.taker == null) {
           errands.add(e);
         }
       }
@@ -51,12 +51,12 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
     }
   }
 
-  finish(int i) async {
+  delete(int i) async {
     var data;
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
-      data = await http.put("/errand/finish", errands[i].toJson());
+      data = await http.delete("/errand/delete", {"uuid" : errands[i].uuid});
       //await Future.delayed(Duration(milliseconds: 500), () {});
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
@@ -66,7 +66,7 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       Navigator.of(context).pop();
-      getTaked();
+      getWait();
     }
   }
 
@@ -82,17 +82,17 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
     super.initState();
     http = HttpUtil();
     current = true;
-    getTaked();
+    getWait();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("待完成任务"),
+        title: Text("发布中跑腿"),
       ),
       body: RefreshIndicator(
-        onRefresh: getTaked,
+        onRefresh: getWait,
         child: ListView.builder(
             itemCount: errands.length,
             itemBuilder: (BuildContext context, int i) {
@@ -131,7 +131,7 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                                 ),
                                 Padding(padding: const EdgeInsets.all(1.0)),
                                 Text(
-                                  errands[i].phone ?? "无电话联系方式",
+                                  errands[i].phone??"无电话联系方式",
                                   style: Theme.of(context)
                                       .primaryTextTheme
                                       .subtitle2
@@ -153,11 +153,11 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                         children: <Widget>[
                           Text("${errands[i].content}\n", textAlign: TextAlign.center,),
                           Text(
-                              "起始点:\n${errands[i].fromAddr}\n${errands[i].sfromAddr}\n", textAlign: TextAlign.center,),
+                              "起始点:\n ${errands[i].fromAddr}\n ${errands[i].sfromAddr}\n", textAlign: TextAlign.center,),
                           Text(
-                              "目标点:\n${errands[i].toAddr}\n${errands[i].stoAddr}\n", textAlign: TextAlign.center,),
+                              "目标点:\n ${errands[i].toAddr}\n ${errands[i].stoAddr}\n", textAlign: TextAlign.center,),
                           Text(
-                            "补充信息:\n${errands[i].details}",
+                            "补充信息:\n ${errands[i].details}",
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -171,26 +171,6 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                           padding: EdgeInsets.zero,
                           height: 50,
                           child: FlatButton(
-                              onPressed: () {}, child: Icon(Icons.phone)),
-                        )),
-                        Expanded(
-                            child: Container(
-                          padding: EdgeInsets.zero,
-                          height: 50,
-                          child: FlatButton(
-                              onPressed: () {
-                                 Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            //print('username:${widget.deal.username}');
-                            return ChatDetailPage(errands[i].username);
-                          }));
-                              }, child: Icon(Icons.chat)),
-                        )),
-                        Expanded(
-                            child: Container(
-                          padding: EdgeInsets.zero,
-                          height: 50,
-                          child: FlatButton(
                               onPressed: () {
                                 showModal(
                                     context: context,
@@ -199,13 +179,13 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                                     builder: (BuildContext context) {
                                       return CustomDialog(
                                         title: Text(
-                                          "确认完成",
+                                          "确认删除",
                                           textAlign: TextAlign.center,
                                         ),
                                         content:
                                             //Text("登陆失败",textAlign: TextAlign.center,),
                                             Text(
-                                          "请确认已经完成任务并获得报酬\n(本平台不提供支付途径)",
+                                          "请确认是否删除该任务",
                                           textAlign: TextAlign.center,
                                         ),
                                         actions: <Widget>[
@@ -216,14 +196,14 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                                               child: Text("取消")),
                                           FlatButton(
                                               onPressed: () {
-                                                finish(i);
+                                                delete(i);
                                               },
                                               child: Text("确认"))
                                         ],
                                       );
                                     });
                               },
-                              child: Icon(Icons.done)),
+                              child: Icon(Icons.delete)),
                         )),
                       ],
                     )

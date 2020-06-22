@@ -75,7 +75,7 @@ class _Login extends State<Login> {
       SharedPreferenceUtil.setInt('phone', user.phone);
       SharedPreferenceUtil.setString('nickname', user.nickname);
       SharedPreferenceUtil.setString('signature', user.signature);
-      SharedPreferenceUtil.setString('avatar', user.avatar + "?" +
+      SharedPreferenceUtil.setString('avatar', user.avatar??"http://121.199.66.17:8800/images/account/${user.username}/avatar.png" + "?" +
                   DateTime.now().microsecondsSinceEpoch.toString());
       
       Navigator.pushReplacementNamed(context, "homePage");

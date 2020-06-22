@@ -97,7 +97,7 @@ class ChatContentView extends StatelessWidget {
         padding: EdgeInsets.only(left:ScreenUtil().setWidth(15),right:ScreenUtil().setWidth(15),bottom:ScreenUtil().setHeight(15),top:ScreenUtil().setHeight(15)),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
-          color: type == 0 ? Color(AppColors.TextBobuleLeft) : Color(AppColors.TextBobuleRight),
+          color: type == 0 ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark,
         ),
       ),
     );

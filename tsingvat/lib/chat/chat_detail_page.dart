@@ -70,7 +70,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         ),
         elevation: 0.0,
         brightness: Brightness.light,
-        backgroundColor: Color(AppColors.PrimaryColor),
+        backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           Container(
               child: IconButton(
@@ -132,8 +132,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   Expanded(
                     child: Container(
-                    padding: EdgeInsets.only(top: ScreenUtil().setHeight(0), bottom: ScreenUtil().setHeight(0)),
-                    height: ScreenUtil().setHeight(80.0),
+                    margin: EdgeInsets.only(top: ScreenUtil().setHeight(10), bottom: ScreenUtil().setHeight(10)),
+                    height: ScreenUtil().setHeight(60.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
                       color: Colors.white
@@ -146,8 +146,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       autocorrect: true,
                       autofocus: false,
                       textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black),
-                      cursorColor: Colors.green,
+                      style: Theme.of(context).primaryTextTheme.headline6,
+                      //cursorColor: Colors.green,
                       onChanged: (text) {
                         setState(() {
                             hasText = text.length > 0 ?  true : false; 
