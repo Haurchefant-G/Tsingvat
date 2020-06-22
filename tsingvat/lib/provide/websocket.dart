@@ -35,7 +35,7 @@ class WebSocketProvide with ChangeNotifier{
   }
   createWebsocket() async {//创建连接并且发送鉴别身份信息
     channel = await new IOWebSocketChannel.connect('ws://121.199.66.17:8800/websocket/'+username);
-    print("连接成功");
+    print("连接功");
     channel.stream.listen((data) => listenMessage(data),onError: onError,onDone: onDone);
   }
     
@@ -72,10 +72,10 @@ class WebSocketProvide with ChangeNotifier{
    * index指定是哪个messageList
    * data是消息
    */
-  sendMessage(index, msg, type){//发送消息
+  sendMessage(receiver, msg, type){//发送消息
     var obj = {
       "sender": username,
-      "receiver":users[index],
+      "receiver":receiver,
       "msg": msg,
       "type":type
     };

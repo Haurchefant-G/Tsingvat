@@ -19,12 +19,14 @@ class ChatDetailPage extends StatefulWidget {
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
+
+  List<Map<String, Object>>list = [];
   ScrollController _scrollController;
   bool hasText = false;
   // 现在的情况只支持type=1，即type表示私聊，而非群聊
   int type = 1;
   int index;
-  String username;
+  String username;// username指接收者的
   Conversation data;
   _ChatDetailPageState(this.username);
   var messageList = [
@@ -43,10 +45,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   void _handleSubmitted(String text) {
       if (controller.text.length > 0) {
         print('发送${text}');
-        Provide.value<WebSocketProvide>(context).sendMessage(index,text,1);
+        Provide.value<WebSocketProvide>(context).sendMessage(username,text,1);
         setState(() {
           hasText = false;
-          messageList.add({'type':1,'text':text,});
+          list.add({'type':1,'content':text,'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
         });
         controller.clear(); //清空输入框
         _jumpBottom();
@@ -58,23 +60,35 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
   void initState(){
     super.initState();
+    print("initstate");
     _scrollController = new ScrollController();
     // _jumpBottom();
   }
   @override
   Widget build(BuildContext context) {
-    String receiver = Provide.value<WebSocketProvide>(context).users[index];
+
+    print('build is ${username}');
+    List<String> users = Provide.value<WebSocketProvide>(context).users;
+    print(users);
+    String receiver;
+    if(users.length == 0){
+      index = -1;
+    } else {
+      receiver = users[index];
+      index = 0;
+    }
+
 //    if(type ==1){
 //      data = Provide.value<WebSocketProvide>(context).messageList[index];
 //    }else{
 //      data = Conversation.mockConversations[index];
 //    }
 
-    index = Provide.value<WebSocketProvide>(context).users.indexOf(username);
+//    index = Provide.value<WebSocketProvide>(context).users.indexOf(username);
     return Scaffold(
       appBar: AppBar(
         centerTitle:false,
-        title: Text(receiver, style: TextStyle(fontSize: ScreenUtil().setSp(30.0),color: Color(AppColors.APPBarTextColor),),),
+        title: Text(username, style: TextStyle(fontSize: ScreenUtil().setSp(30.0),color: Color(AppColors.APPBarTextColor),),),
         iconTheme: IconThemeData(
           color: Color(AppColors.APPBarTextColor)
         ),
@@ -98,41 +112,23 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           children: <Widget>[
             Provide<WebSocketProvide>(
               builder: (context,child,val){
-                List<Map<String, Object>>list = [];
-                List<Msg> msgs = Provide.value<WebSocketProvide>(context).messageList[index];
-                for(Msg msg in msgs){
-                  // 判断必然相等
-                  if(msg.receiver ==  receiver){
-                      String avatar = ConstUrl.avatarimageurl + "/" + receiver +"/avatar.png";
-                      list.add({'type':0,'content':msg.content,'nickname':receiver,'avatar':avatar});
+
+                list.add({'type':0,'content':"hello",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/gac/avatar.png"});
+                list.add({'type':1,'content':"hi",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
+                if(index != -1){
+                  List<Msg> msgs = Provide.value<WebSocketProvide>(context).messageList[index];
+                  for(Msg msg in msgs){
+                    // 判断必然相等
+                    if(msg.receiver ==  receiver){
+                        String avatar = ConstUrl.avatarimageurl + "/" + receiver +"/avatar.png";
+                        list.add({'type':0,'content':msg.content,'nickname':receiver,'avatar':avatar});
+                    }
                   }
                 }
-//                if(type == 1){
-//                  messageList = [];
-//                  var historyMessage = Provide.value<WebSocketProvide>(context).historyMessage;
-//                  for(var i = 0; i< historyMessage.length; i++){
-//                    if(data.userId != null){
-//                      if(historyMessage[i]['bridge'].contains(data.userId)){
-//                        if(historyMessage[i]['uid'] == data.userId){
-//                          list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-//                        }else{
-//                          list.add({'type':1,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-//                        }
-//                      }
-//                    }else if(data.groupId != null && data.groupId == historyMessage[i]['groupId'] && historyMessage[i]['bridge'].length==0){
-//                      var uid = Provide.value<WebSocketProvide>(context).username;
-//                      if(historyMessage[i]['uid'] != uid ){
-//                        list.add({'type':0,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-//                      }else{
-//                        list.add({'type':1,'text':historyMessage[i]['msg'],'nickname':historyMessage[i]['nickname']});
-//                      }
-//                    }
-//                  }
-//                }
                 return Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
-                    physics: ClampingScrollPhysics(),
+//                    physics: ClampingScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return ChatContentView(type:list[index]['type'], content:list[index]['content'], avatar:list[index]['avatar'] , isNetwork: true, sender:list[index]['nickname'], userType:0);
                   },
@@ -201,6 +197,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         if(!hasText){
                           print('打开功能面板');
                         }else{
+                          list.add({'type':1,'content':controller.text,'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
                           _handleSubmitted(controller.text);
                         }
                       } 

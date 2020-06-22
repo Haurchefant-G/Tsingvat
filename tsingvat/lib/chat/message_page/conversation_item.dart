@@ -23,6 +23,7 @@ class ConversationItem extends StatelessWidget {
 //          Application.router.navigateTo(context, '/chatdetail?index=${username}');
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context){
+                print('username:${username}');
                 return ChatDetailPage(username);
               })
           );
