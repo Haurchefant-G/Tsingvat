@@ -153,7 +153,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   Expanded(
                     child: Container(
-                    padding: EdgeInsets.only(top: ScreenUtil().setHeight(15.0), bottom: ScreenUtil().setHeight(15.0)),
+                    //padding: EdgeInsets.only(top: ScreenUtil().setHeight(15.0), bottom: ScreenUtil().setHeight(15.0)),
                     height: ScreenUtil().setHeight(60.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -181,7 +181,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   Container(
                     width: ScreenUtil().setWidth(60.0),
                     child:  IconButton(
-                      icon: Icon(ICons.FACES), //发送按钮图标
+                      icon: Icon(Icons.face), //发送按钮图标
                       onPressed: () {
                         print('打开表情面板');
                       } 
@@ -192,7 +192,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     margin: EdgeInsets.only(right: ScreenUtil().setWidth(20.0)),
                     child:  IconButton(
                       //发送按钮或者+按钮
-                      icon: hasText ? Icon(Icons.send) :Icon(ICons.ADD), //发送按钮图标
+                      icon: hasText ? Icon(Icons.send) :Icon(Icons.add), //发送按钮图标
                       onPressed: () {
                         if(!hasText){
                           print('打开功能面板');

@@ -400,8 +400,9 @@ class _newErrandPageState extends State<newErrandPage> {
                                               return MediaQuery(
                                                 data: MediaQuery.of(context)
                                                     .copyWith(
-                                                        alwaysUse24HourFormat:
-                                                            true),
+                                                        // alwaysUse24HourFormat:
+                                                        //     true
+                                                            ),
                                                 child: child,
                                               );
                                             },

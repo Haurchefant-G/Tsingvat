@@ -233,7 +233,7 @@ class _Login extends State<SignupPage> {
                                 //if (v.length == 0) {
                                 print(v);
                                 //}
-                                return v.length > 0 ? null : "密码不能为空";
+                                // return v.length > 0 ? null : "密码不能为空";
                               },
                             ),
                           ),
@@ -285,7 +285,7 @@ class _Login extends State<SignupPage> {
                                 print(password);
                                 print(v);
                                 //}
-                                return v == password ? null : "前后两次密码不一致";
+                                // return v == password ? null : "前后两次密码不一致";
                               },
                             ),
                           ),
