@@ -16,6 +16,7 @@ class WebSocketProvide with ChangeNotifier{
   var historyMessage = [];//接收到的所有的历史消息
   List<List<Msg>> messageList = []; // 所有消息页面人员，包括groups和users
   var currentMessageList = [];//选择进入详情页的消息历史记录
+  Msg currentMessage;
   var connecting = false;//websocket连接状态
   IOWebSocketChannel channel;
 
@@ -82,9 +83,6 @@ class WebSocketProvide with ChangeNotifier{
       }
     }
     print(messageList);
-  for(var i in users){
-    print(i);
-  }
     notifyListeners();
   }
 
@@ -92,16 +90,31 @@ class WebSocketProvide with ChangeNotifier{
    * index指定是哪个messageList
    * data是消息
    */
-  sendMessage(receiver, msg, type){//发送消息
+  sendMessage(receiver, content, type){//发送消息
     var obj = {
       "sender": username,
       "receiver":receiver,
-      "msg": msg,
+      "content": content,
       "type":type
     };
+    
     String text = json.encode(obj).toString();
-    print(text);
+    print("sendMsg ${text}");
+    num index = users.indexOf(receiver);
+    if(index == -1){
+      users.add(receiver);
+      messageList.add([]);
+    }
+    index = users.indexOf(receiver);
+    Msg msg = new Msg();
+    msg.sender = username;
+    msg.receiver = receiver;
+    msg.content = content;
+    msg.type = type;
+    messageList[index].add(msg);
+//    currentMessage = msg;
     channel.sink.add(text);
+    notifyListeners();
   }
   onError(error){
     print('error------------>${error}');

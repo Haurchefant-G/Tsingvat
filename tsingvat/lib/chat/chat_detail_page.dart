@@ -21,6 +21,7 @@ class ChatDetailPage extends StatefulWidget {
 class _ChatDetailPageState extends State<ChatDetailPage> {
 
   List<Map<String, Object>>list = [];
+  List<String> uuids = [];
   ScrollController _scrollController;
   bool hasText = false;
   // 现在的情况只支持type=1，即type表示私聊，而非群聊
@@ -92,15 +93,31 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               var users = websocket.users;
               index = users.indexOf(username);
 //                list.add({'type':0,'content':"hello",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/gac/avatar.png"});
-                list.add({'type':1,'content':"hi",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
+//                list.add({'type':1,'content':"hi",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
                 print("index ${index}, username ${username}");
                 if(index != -1){
                   List<Msg> msgs = websocket.messageList[index];
                   for(Msg msg in msgs){
                     // 判断必然相等
                     if(msg.sender ==  username){
-                        String avatar = ConstUrl.avatarimageurl + "/" + username +"/avatar.png";
-                        list.add({'type':0,'content':msg.content,'nickname':username,'avatar':avatar});
+                      // 对方发出的消息
+//                      if(uuids.indexOf(msg.uuid) == -1) {
+                        String avatar = ConstUrl.avatarimageurl + "/" +
+                            username + "/avatar.png";
+                        list.add({
+                          'type': 0,
+                          'content': msg.content,
+                          'nickname': username,
+                          'avatar': avatar
+                        });
+//                        uuids.add(msg.uuid);
+//                      }
+                    }
+                    else if(msg.receiver == username){
+                      // 自己发出的消息
+                      print("content: ${msg.content}  sender:${msg.sender}");
+                        String avatar = ConstUrl.avatarimageurl + "/" + msg.sender +"/avatar.png";
+                        list.add({'type':1,'content':msg.content,'nickname':msg.sender,'avatar':avatar});
                     }
                   }
                 }
