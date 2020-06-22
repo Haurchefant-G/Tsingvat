@@ -10,7 +10,6 @@ public class Msg {
     private Timestamp created;
     private int type;
     private boolean sent;
-
     public Msg(String uuid, String sender, String receiver, String content, Timestamp created, int type, boolean sent) {
         this.uuid = uuid;
         this.sender = sender;
@@ -63,6 +62,14 @@ public class Msg {
 
     public boolean isSent() {
         return sent;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setSent(boolean sent) {

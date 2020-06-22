@@ -24,6 +24,7 @@ void main() {
   var providers = Providers();
   var currentIndexProvide = CurrentIndexProvide();
   var websocketProvide = WebSocketProvide();
+  print("websocket${websocketProvide}");
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<WebSocketProvide>.value(websocketProvide));

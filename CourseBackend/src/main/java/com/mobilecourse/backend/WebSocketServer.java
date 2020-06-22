@@ -81,7 +81,7 @@ public class WebSocketServer {
         webSocketTable.remove(this.username);
     }
 
-    // 收到消息时候的处理
+    // 收到消息时候的处理x
     @OnMessage
     public void onMessage(String request, Session session)  {
         System.out.println("onMessage:"+request);
@@ -111,7 +111,8 @@ public class WebSocketServer {
             msg.setSent(false);
         }
         else {
-            server.sendMessage(wrapperMessage(RECV_SUCCESS, "发送成功",msg));
+            String messgae = wrapperMessage(RECV_SUCCESS, "发送成功",msg);
+            server.sendMessage(messgae);
         }
         msgDao.addMsg(msg);
         System.out.printf("message:"+msg);

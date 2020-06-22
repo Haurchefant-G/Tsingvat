@@ -61,20 +61,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     List<String> users = Provide.value<WebSocketProvide>(context).users;
     print(users);
     String receiver;
-    if(users.length == 0){
-      index = -1;
-    } else {
-      receiver = users[index];
-      index = 0;
-    }
-
-//    if(type ==1){
-//      data = Provide.value<WebSocketProvide>(context).messageList[index];
-//    }else{
-//      data = Conversation.mockConversations[index];
-//    }
-
-//    index = Provide.value<WebSocketProvide>(context).users.indexOf(username);
     return Scaffold(
       appBar: AppBar(
         centerTitle:false,
@@ -101,17 +87,20 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         child: Column(
           children: <Widget>[
             Provide<WebSocketProvide>(
-              builder: (context,child,val){
-
+              builder: (context,child,websocket){
+                list = [];
+              var users = websocket.users;
+              index = users.indexOf(username);
 //                list.add({'type':0,'content':"hello",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/gac/avatar.png"});
-//                list.add({'type':1,'content':"hi",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
+                list.add({'type':1,'content':"hi",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
+                print("index ${index}, username ${username}");
                 if(index != -1){
-                  List<Msg> msgs = Provide.value<WebSocketProvide>(context).messageList[index];
+                  List<Msg> msgs = websocket.messageList[index];
                   for(Msg msg in msgs){
                     // 判断必然相等
-                    if(msg.receiver ==  receiver){
-                        String avatar = ConstUrl.avatarimageurl + "/" + receiver +"/avatar.png";
-                        list.add({'type':0,'content':msg.content,'nickname':receiver,'avatar':avatar});
+                    if(msg.sender ==  username){
+                        String avatar = ConstUrl.avatarimageurl + "/" + username +"/avatar.png";
+                        list.add({'type':0,'content':msg.content,'nickname':username,'avatar':avatar});
                     }
                   }
                 }
