@@ -97,17 +97,17 @@ class Conversation {
        userId:"000000",
        type: 1
      ),
-    Conversation(
-       avatar: 'https://randomuser.me/api/portraits/women/10.jpg',
-       title: '蜂巢智能柜',
-       titleColor: 0xff586b95,
-       des: '喷一喷，竟比洗牙还神奇！5秒钟还你一个漂亮洁白的口腔。',
-       updateAt: '17:12',
-       groupId: 000000,
-       userId:"000000",
-       type: 1
-     ),
-    Conversation(
+//     new Conversation(
+//       avatar: 'assets/images/ic_fengchao.png',
+//       title: '蜂巢智能柜',
+//       titleColor: 0xff586b95,
+//       des: '喷一喷，竟比洗牙还神奇！5秒钟还你一个漂亮洁白的口腔。',
+//       updateAt: '17:12',
+//       groupId: 000000,
+//       userId:"000000",
+//       type: 1
+//     ),
+     new Conversation(
        avatar: 'https://randomuser.me/api/portraits/women/57.jpg',
        title: 'Lily',
        des: '今天要去运动场锻炼吗？',
