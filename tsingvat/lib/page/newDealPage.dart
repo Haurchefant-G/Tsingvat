@@ -37,19 +37,30 @@ class _newDealPageState extends State<newDealPage> {
   final picker = ImagePicker();
   File _image;
 
-  List<DropdownMenuItem<String>> locationItems = [
-    '第六教学楼',
-    '第三教学楼',
-    '第二教学楼',
-    '第四教学楼',
-    '紫荆宿舍区-桃李园附近',
-    '紫荆宿舍区-紫荆园附近'
-  ].map<DropdownMenuItem<String>>((String v) {
-    return DropdownMenuItem<String>(
-      value: v,
-      child: Text(v),
-    );
-  }).toList();
+  // List<DropdownMenuItem<String>> locationItems = [
+  //   '第六教学楼',
+  //   '第三教学楼',
+  //   '第二教学楼',
+  //   '第四教学楼',
+  //   '桃李园周边',
+  //   '紫荆园周边',
+  //   '清芬园周边',
+  //   '李兆基大楼',
+  //   '东操周边',
+  //   '主楼周边',
+  //   '西操周边',
+  //   '北馆',
+  //   '快递点',
+  //   '北门',
+  //   '东南门',
+  //   '西门',
+  //   '其他'
+  // ].map<DropdownMenuItem<String>>((String v) {
+  //   return DropdownMenuItem<String>(
+  //     value: v,
+  //     child: Text(v),
+  //   );
+  // }).toList();
 
   @override
   void initState() {

@@ -6,6 +6,7 @@ import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/errand.dart';
 import 'package:tsingvat/util/httpUtil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TakedErrandsPage extends StatefulWidget {
   TakedErrandsPage(String username) {
@@ -67,6 +68,31 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
     if (data['code'] == ResultCode.SUCCESS) {
       Navigator.of(context).pop();
       getTaked();
+    }
+  }
+
+  telephone(String phone) async {
+    String url = "tel:${phone}";
+    bool can = await canLaunch(url);
+    print(url);
+    if (can) {
+      launch(url);
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+                title: Text(
+                  "无法拨号",
+                  textAlign: TextAlign.center,
+                ),
+                content:
+                    //Text("登陆失败",textAlign: TextAlign.center,),
+                    Text(
+                  "没有有效的电话号码",
+                ));
+          });
     }
   }
 
@@ -151,11 +177,18 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                       style: Theme.of(context).primaryTextTheme.headline6,
                       child: Column(
                         children: <Widget>[
-                          Text("${errands[i].content}\n", textAlign: TextAlign.center,),
                           Text(
-                              "起始点:\n${errands[i].fromAddr}\n${errands[i].sfromAddr}\n", textAlign: TextAlign.center,),
+                            "${errands[i].content}\n",
+                            textAlign: TextAlign.center,
+                          ),
                           Text(
-                              "目标点:\n${errands[i].toAddr}\n${errands[i].stoAddr}\n", textAlign: TextAlign.center,),
+                            "起始点:\n${errands[i].fromAddr}\n${errands[i].sfromAddr}\n",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "目标点:\n${errands[i].toAddr}\n${errands[i].stoAddr}\n",
+                            textAlign: TextAlign.center,
+                          ),
                           Text(
                             "补充信息:\n${errands[i].details}",
                             textAlign: TextAlign.center,
@@ -171,7 +204,10 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                           padding: EdgeInsets.zero,
                           height: 50,
                           child: FlatButton(
-                              onPressed: () {}, child: Icon(Icons.phone)),
+                              onPressed: () {
+                                telephone(errands[i].phone);
+                              },
+                              child: Icon(Icons.phone)),
                         )),
                         Expanded(
                             child: Container(
@@ -179,12 +215,13 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                           height: 50,
                           child: FlatButton(
                               onPressed: () {
-                                 Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            //print('username:${widget.deal.username}');
-                            return ChatDetailPage(errands[i].username);
-                          }));
-                              }, child: Icon(Icons.chat)),
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  //print('username:${widget.deal.username}');
+                                  return ChatDetailPage(errands[i].username);
+                                }));
+                              },
+                              child: Icon(Icons.chat)),
                         )),
                         Expanded(
                             child: Container(
