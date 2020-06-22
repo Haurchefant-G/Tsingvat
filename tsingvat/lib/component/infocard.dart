@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tsingvat/component/takederrandcard.dart';
 import 'package:tsingvat/page/TakedErrandsPage.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
@@ -19,12 +23,17 @@ class _InfoCardState extends State<InfoCard> {
 
   var userAvatar;
   var userName;
-  var titles = ["资讯", "跑腿", "交易", "聊天"];
+  var titles = ["需完成跑腿", "我的跑腿", "交易", "资讯", "聊天"];
+  var icons = [
+    Icons.event_note,
+    Icons.list,
+    Icons.attach_money,
+    Icons.turned_in_not,
+    Icons.chat_bubble_outline
+  ];
 
-
-
-  var titleTextStyle = new TextStyle(fontSize: 16.0);
-  var rightArrowIcon = new Icon(Icons.arrow_forward_ios);
+  var titleTextStyle = TextStyle(fontSize: 16.0);
+  var rightArrowIcon = Icon(Icons.arrow_forward_ios);
 
   info() async {
     var avatar = await SharedPreferenceUtil.getString('avatar');
@@ -36,6 +45,27 @@ class _InfoCardState extends State<InfoCard> {
     });
     print(userAvatar);
     print(userName);
+  }
+
+  changeAvatar() async {
+    try {
+      var picker = ImagePicker();
+      final image = await picker.getImage(source: ImageSource.gallery);
+      var _image = File(image.path);
+      if (_image != null) {
+        print("changeAvatar");
+        var data = await HttpUtil().post(
+            "/images/avatar/${userName}",
+            FormData.fromMap(
+                {'image': MultipartFile.fromFileSync(_image.path)}));
+        setState(() {
+          userAvatar =
+              "http://121.199.66.17:8800/images/account/${userName}/avatar.png?" +
+                  DateTime.now().microsecondsSinceEpoch.toString();
+        });
+        SharedPreferenceUtil.setString('avatar', userAvatar);
+      }
+    } catch (e) {}
   }
 
   logout() {
@@ -51,145 +81,149 @@ class _InfoCardState extends State<InfoCard> {
 
   @override
   Widget build(BuildContext context) {
-    return new CustomScrollView(reverse: false, shrinkWrap: false, slivers: <
-        Widget>[
-      new SliverAppBar(
-        pinned: false,
-        backgroundColor: Colors.blueAccent,
-        expandedHeight: 200.0,
-        iconTheme: new IconThemeData(color: Colors.transparent),
-        flexibleSpace: new InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: 300,
-                      child: Column(
-                        children: <Widget>[
-                          Row(
+    return new CustomScrollView(
+        reverse: false,
+        shrinkWrap: false,
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: false,
+            //backgroundColor: Colors.blueAccent,
+            expandedHeight: 200.0,
+            iconTheme: new IconThemeData(color: Colors.transparent),
+            flexibleSpace: new InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 300,
+                          child: Column(
                             children: <Widget>[
-                              Expanded(
-                                  child: Container(
-                                      height: 60,
-                                      child: FlatButton(
-                                          padding: EdgeInsets.zero,
-                                          onPressed: () {},
-                                          child: Text(
-                                            "修改头像",
-                                            style: Theme.of(context)
-                                                .primaryTextTheme
-                                                .headline5,
-                                          ))))
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: Container(
+                                          height: 60,
+                                          child: FlatButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: changeAvatar,
+                                              child: Text(
+                                                "修改头像",
+                                                style: Theme.of(context)
+                                                    .primaryTextTheme
+                                                    .headline5,
+                                              ))))
+                                ],
+                              ),
+                              Divider(height: 1),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: Container(
+                                          height: 60,
+                                          child: FlatButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: logout,
+                                              child: Text(
+                                                "退出登录",
+                                                style: Theme.of(context)
+                                                    .primaryTextTheme
+                                                    .headline5,
+                                              ))))
+                                ],
+                              ),
                             ],
                           ),
-                          Divider(height: 1),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                  child: Container(
-                                      height: 60,
-                                      child: FlatButton(
-                                          padding: EdgeInsets.zero,
-                                          onPressed: logout,
-                                          child: Text(
-                                            "退出登录",
-                                            style: Theme.of(context)
-                                                .primaryTextTheme
-                                                .headline5,
-                                          ))))
-                            ],
+                        );
+                      });
+                },
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    userAvatar == null
+                        ? new Image.asset(
+                            "assets/avatar_logo.png",
+                            width: 100,
+                            height: 100,
+                          )
+                        : Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.transparent,
+                                image: DecorationImage(
+                                    image: NetworkImage(userAvatar),
+                                    fit: BoxFit.cover),
+                                border: Border.all(
+                                    color: Colors.white, width: 2.0)),
                           ),
-                        ],
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      child: new Text(
+                        userName ?? " ",
+                        style: Theme.of(context).primaryTextTheme.headline6,
                       ),
-                    );
-                  });
-            },
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                userAvatar == null
-                    ? new Image.asset(
-                        "assets/avatar_logo.png",
-                        width: 100,
-                        height: 100,
-                      )
-                    : new Container(
-                        width: 100,
-                        height: 100,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.transparent,
-                            image: new DecorationImage(
-                                image: new NetworkImage(userAvatar),
-                                fit: BoxFit.cover),
-                            border: new Border.all(
-                                color: Colors.white, width: 2.0)),
-                      ),
-                new Container(
-                  margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                  child: new Text(
-                    userName ?? " ",
-                    style: new TextStyle(color: Colors.white, fontSize: 16.0),
-                  ),
-                )
-              ],
-            )),
-      ),
-      SliverFixedExtentList(
-          delegate:
-              new SliverChildBuilderDelegate((BuildContext context, int index) {
-            String title = titles[index];
-            return Container(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  onTap: () {
-                    print("the is the item of $title");
+                    )
+                  ],
+                )),
+          ),
+          SliverFixedExtentList(
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
+                String title = titles[index];
+                return Container(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () {
+                        print("the is the item of $title");
 
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context){
-                        switch(index) {
-                          case 1:
-                            return TakedErrandsPage(userName);
-                            case 3:
-                            return MessagePage();
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          switch (index) {
+                            case 0:
+                              return TakedErrandsPage(userName);
+                            case 4:
+                              return MessagePage();
                             default:
-                            return TakedErrandsPage(userName);
-
-                        }
-                      })
-                    );
+                              return TakedErrandsPage(userName);
+                          }
+                        }));
 
 //                    Navigator.of(context)
 //                        .push(MaterialPageRoute(builder: (context) {
 //                      return TakedErrandsPage(userName);
 //                    }));
-
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
-                        child: new Row(
-                          children: <Widget>[
-                            new Expanded(
-                                child: new Text(
-                              title,
-                              style: titleTextStyle,
-                            )),
-                            rightArrowIcon
-                          ],
-                        ),
+                      },
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                12.0, 12.0, 12.0, 12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Icon(icons[index], color: Theme.of(context).primaryColorDark,),
+                                ),
+                                Expanded(
+                                    child: Text(
+                                  title,
+                                  style: titleTextStyle.copyWith(textBaseline: TextBaseline.ideographic),
+                                )),
+                                rightArrowIcon
+                              ],
+                            ),
+                          ),
+                          Divider(
+                            height: 1.0,
+                          )
+                        ],
                       ),
-                      new Divider(
-                        height: 1.0,
-                      )
-                    ],
-                  ),
-                ));
-          }, childCount: titles.length),
-          itemExtent: 50.0),
-    ]);
+                    ));
+              }, childCount: titles.length),
+              itemExtent: 50.0),
+        ]);
   }
 }

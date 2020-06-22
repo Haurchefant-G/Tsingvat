@@ -9,6 +9,6 @@ Handler chatDetailHandler = Handler(
     print('message>detail title is ${index}');
     final inde = int.parse(index);
     final type = int.parse(typ);
-    return ChatDetailPage(inde,type);
+    //return ChatDetailPage(inde,type);
   }
 );
