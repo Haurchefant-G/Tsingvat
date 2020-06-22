@@ -131,7 +131,7 @@ class _InfoCardState extends State<InfoCard> {
                                                 "退出登录",
                                                 style: Theme.of(context)
                                                     .primaryTextTheme
-                                                    .headline5,
+                                                    .headline5.copyWith(color:Colors.red),
                                               ))))
                                 ],
                               ),

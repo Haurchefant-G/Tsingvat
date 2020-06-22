@@ -120,7 +120,7 @@ class _DealPageState extends State<DealPage> {
                       : Padding(padding: EdgeInsets.all(20));
                 } else {
                   return Padding(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(5),
                       child:
                           //GoodsCard(),
                           OpenContainer(
