@@ -17,6 +17,7 @@ class MessagePage extends StatelessWidget {
         var length = Conversation.getMockConversations().length + 1;
         print(length);
         return Container(
+          color: Theme.of(context).primaryColor,
           child: ListView.builder(
             itemBuilder:  (BuildContext context, int index){
               if (index < Conversation.getMockConversations().length){
