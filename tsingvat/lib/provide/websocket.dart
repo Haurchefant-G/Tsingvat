@@ -81,7 +81,7 @@ class WebSocketProvide with ChangeNotifier{
     };
     String text = json.encode(obj).toString();
     print(text);
-    channel.sink.add(text);
+//    channel.sink.add(text);
   }
   onError(error){
     print('error------------>${error}');

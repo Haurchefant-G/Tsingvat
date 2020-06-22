@@ -56,20 +56,20 @@ class Conversation {
         type: 1
     ),
 
-    new Conversation(
-        avatar: 'assets/images/ic_tx_news.png',
-        title: '腾讯新闻',
-        des: '豪车与出租车刮擦 俩车主划拳定责',
-        updateAt: '17:20',
-        groupId: 000000,
-        userId:"000000",
-        type: 1
-    ),
+//    new Conversation(
+//        avatar: 'assets/images/ic_tx_news.png',
+//        title: '腾讯新闻',
+//        des: '豪车与出租车刮擦 俩车主划拳定责',
+//        updateAt: '17:20',
+//        groupId: 000000,
+//        userId:"000000",
+//        type: 1
+//    ),
 //    new Conversation(
 //        avatar: 'assets/images/ic_wx_games.png',
-//        title: '[模拟数据]微信游戏',
+//        title: '微信游戏',
 //        titleColor: 0xff586b95,
-//        des: '[模拟数据]25元现金助力开学季！',
+//        des: '25元现金助力开学季！',
 //        updateAt: '17:12',
 //        groupId: 000000,
 //        userId:"000000",
@@ -77,8 +77,8 @@ class Conversation {
 //    ),
     new Conversation(
         avatar: 'https://randomuser.me/api/portraits/men/10.jpg',
-        title: '[模拟数据]汤姆丁',
-        des: '[模拟数据]今晚要一起去吃肯德基吗？',
+        title: '特朗普',
+        des: '今晚要一起去china吗？',
         updateAt: '17:56',
         isMute: true,
         unreadMsgCount: 0,

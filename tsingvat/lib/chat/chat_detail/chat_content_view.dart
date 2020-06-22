@@ -32,7 +32,7 @@ class ChatContentView extends StatelessWidget {
     
     Widget userNameWidget =   Container(
         margin: EdgeInsets.only(left: type == 0 ? ScreenUtil().setWidth(20) : 0,bottom: ScreenUtil().setHeight(10),right: type == 0 ? 0: ScreenUtil().setWidth(20)),
-        child: Text(sender,style: TextStyle(color: Color(AppColors.ChatTime),fontSize: ScreenUtil().setSp(23.0)),),
+        child: Text("zxj", style: TextStyle(color: Color(AppColors.ChatTime),fontSize: ScreenUtil().setSp(23.0)),),
       );
     _showMenu(BuildContext context,Offset tapPos){
       final RenderBox overlay =Overlay.of(context).context.findRenderObject();
