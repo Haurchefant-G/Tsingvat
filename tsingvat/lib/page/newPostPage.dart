@@ -58,6 +58,7 @@ class _newPostPageState extends State<newPostPage> {
   Future pickImage() async {
     try {
       final image = await picker.getImage(source: ImageSource.gallery);
+      //print(image);
       setState(() {
         _image = File(image.path);
         print(_image);
@@ -79,7 +80,9 @@ class _newPostPageState extends State<newPostPage> {
       post = Post.fromJson(data['data']);
       if (_image != null) {
         data2 = await http.post(
-            '/images/${post.uuid}', FormData.fromMap({'images': MultipartFile.fromFileSync(_image.path)}));
+            '/images/${post.uuid}',
+            FormData.fromMap(
+                {'images': MultipartFile.fromFileSync(_image.path)}));
         print(data2);
       }
     } catch (e) {
