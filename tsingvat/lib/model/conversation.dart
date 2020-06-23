@@ -7,9 +7,9 @@ class Conversation {
   String avatar; // 头像
   String nickname; // 昵称
   int titleColor; // 昵称颜色，默认黑色
-  String lastMsg;  // 在用户界面显示的最近一次聊天记录
+  String lastMsg; // 在用户界面显示的最近一次聊天记录
   String updateAt; // 最近一次更新时间
-  bool isMute;  //是否静音
+  bool isMute; //是否静音
   int unreadMsgCount; // 未读消息的数量
   String receiver;
   int type;
@@ -21,17 +21,17 @@ class Conversation {
     return false;
   }
 
-  Conversation({
-    this.avatar,
-    this.nickname,
-    this.titleColor : AppColors.TitleColor,
-    this.lastMsg,
-    this.updateAt,
-    this.isMute : false,
-    this.unreadMsgCount : 0, // 未读的消息数量
-    this.receiver,
-    this.type
-  }) :  assert(avatar != null),
+  Conversation(
+      {this.avatar,
+      this.nickname,
+      this.titleColor: AppColors.TitleColor,
+      this.lastMsg,
+      this.updateAt,
+      this.isMute: false,
+      this.unreadMsgCount: 0, // 未读的消息数量
+      this.receiver,
+      this.type})
+      : assert(avatar != null),
         assert(nickname != null),
         assert(updateAt != null);
 
@@ -44,38 +44,26 @@ class Conversation {
     for (var user in chatlist) {
       mockConversations.add(
         Conversation(
-          avatar: ConstUrl.avatarimageurl + "/gac/avatar.png",
-          nickname: user['username'],
-          // des: '[模拟数据]',
-          // updateAt: '19:56',
-          // unreadMsgCount: 0,
-          // displayDot: true,
-          // groupId: 000000,
-          // userId:"000000",
-          // type: 1
+          avatar: ConstUrl.avatarimageurl + "/${user['nickname']}/avatar.png",
+          nickname: '${user['nickname']}',
+          updateAt: "${user['updateAt']}"
         ),
       );
     }
   }
 
-  static void MockConversationsAdd(String username) {
-      mockConversations.add(
-        Conversation(
-          avatar: ConstUrl.avatarimageurl + "/${username}/avatar.png",
-          nickname: username,
-          // des: '[模拟数据]',
-          // updateAt: '19:56',
-          // unreadMsgCount: 0,
-          // displayDot: true,
-          // groupId: 000000,
-          // userId:"000000",
-          // type: 1
-        ),
-      );
+  static void addMockConversations(String username) {
+    mockConversations.add(
+      Conversation(
+        avatar: ConstUrl.avatarimageurl + "/${username}/avatar.png",
+        nickname: username,
+        updateAt: '',
+        lastMsg: ''
+      ),
+    );
   }
 
-
-  static List<Conversation> mockConversations;
+  static List<Conversation> mockConversations = [];
   // = [
   //   Conversation(
   //     avatar: ConstUrl.avatarimageurl + "/gac/avatar.png",

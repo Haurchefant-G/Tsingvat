@@ -7,6 +7,8 @@ import 'package:tsingvat/util/httpUtil.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
 
+import 'chat/chatglobal.dart';
+
 class Login extends StatefulWidget {
   @override
   _Login createState() => _Login();
@@ -74,6 +76,7 @@ class _Login extends State<Login> {
               "?" +
               DateTime.now().microsecondsSinceEpoch.toString());
       SharedPreferenceUtil.setString('password', password);
+      ChatGlobal.initWhenlogin();
 
       Navigator.pushReplacementNamed(context, "homePage");
     } else {
