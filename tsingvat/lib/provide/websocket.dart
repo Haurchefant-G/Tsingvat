@@ -9,14 +9,11 @@ import 'package:web_socket_channel/io.dart';
 import 'package:flutter/material.dart';
 import '../model/conversation.dart';
 class WebSocketProvide with ChangeNotifier{
+  // username是全局的
   var username = 'zxj';
   var nickname = 'LittleHealth';
   List<String> users = [];  // 用户
-  var groups =[];  // 群聊
-  var historyMessage = [];//接收到的所有的历史消息
-  List<List<Msg>> messageList = []; // 所有消息页面人员，包括groups和users
-  var currentMessageList = [];//选择进入详情页的消息历史记录
-  Msg currentMessage;
+  List<List<Msg>> users_message_list = []; // 所有消息页面人员，包括groups和users
   var connecting = false;//websocket连接状态
   IOWebSocketChannel channel;
 
@@ -27,34 +24,31 @@ class WebSocketProvide with ChangeNotifier{
   
   init() async {
     print("init websocket");
-//    String usrname = await SharedPreferenceUtil.getString("username");
-//    if(usrname == null){
-//      username = "zxj";
-//      nickname = "zxj";
-//    }
-//    else {
-//      username = usrname;
-//    }
+    String usrname = await SharedPreferenceUtil.getString("username");
+    if(usrname == null){
+      username = "zxj";
+      nickname = "zxj";
+    }
+    else {
+      username = usrname;
+    }
     print("username${username}  nickname:${nickname}");
     return await createWebsocket();
-    // monitorMessage();
   }
   createWebsocket() async {//创建连接并且发送鉴别身份信息
     channel = await new IOWebSocketChannel.connect('ws://121.199.66.17:8800/websocket/'+username);
-    print("连接功");
     channel.stream.listen((data) => listenMessage(data),onError: onError,onDone: onDone);
   }
     
   listenMessage(data){
     connecting = true;
     var json = jsonDecode(data);
-    print("data${data}");
     int code = json["code"];
     String msg = json["msg"];
-    print("before list");
     List<Msg> msgs = [];
     print("after list");
     var mss = json["data"];
+    // 先将传输过来的data转化为msg
     if(mss is List){
       for(var m in mss) {
         print("m is ${m}");
@@ -66,7 +60,7 @@ class WebSocketProvide with ChangeNotifier{
     }
     print("mss ${mss}");
 
-    // 需要维护特定的conversition
+    // 再将msgs加入到provide维护的message_list当中
     for(Msg msg in msgs){
       num i = users.indexOf(msg.sender);
       print("i is ${i}");
@@ -74,15 +68,15 @@ class WebSocketProvide with ChangeNotifier{
         users.add(msg.sender);
         List<Msg> ms = [];
         ms.add(msg);
-        messageList.add(ms);
+        users_message_list.add(ms);
       }
       else {
         // 第i表示对应第i个接受者
         // messagelist[i]表示第i个接受者的所有信息
-        messageList[i].add(msg);
+        users_message_list[i].add(msg);
       }
     }
-    print(messageList);
+    print(users_message_list);
     notifyListeners();
   }
 
@@ -103,16 +97,15 @@ class WebSocketProvide with ChangeNotifier{
     num index = users.indexOf(receiver);
     if(index == -1){
       users.add(receiver);
-      messageList.add([]);
+      users_message_list.add([]);
+      index = users.indexOf(receiver);
     }
-    index = users.indexOf(receiver);
     Msg msg = new Msg();
     msg.sender = username;
     msg.receiver = receiver;
     msg.content = content;
     msg.type = type;
-    messageList[index].add(msg);
-//    currentMessage = msg;
+    users_message_list[index].add(msg);
     channel.sink.add(text);
     notifyListeners();
   }

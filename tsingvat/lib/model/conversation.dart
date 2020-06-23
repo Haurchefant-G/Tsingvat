@@ -4,16 +4,14 @@ import '../style/style.dart';
 
 class Conversation {
   // Conversation表示主页面下的聊天框，点击后即可进入详细界面
-  String avatar;
-  String title;
-  int titleColor;
-  String des;
-  String updateAt;
-  bool isMute;
-  int unreadMsgCount;
-  bool displayDot;
-  int groupId;
-  String userId;
+  String avatar; // 头像
+  String nickname; // 昵称
+  int titleColor; // 昵称颜色，默认黑色
+  String lastMsg;  // 在用户界面显示的最近一次聊天记录
+  String updateAt; // 最近一次更新时间
+  bool isMute;  //是否静音
+  int unreadMsgCount; // 未读消息的数量
+  String receiver;
   int type;
 
   bool isAvatarFromNet() {
@@ -23,20 +21,18 @@ class Conversation {
     return false;
   }
 
-  Conversation(
-      {this.avatar,
-      this.title,
-      this.titleColor: AppColors.TitleColor,
-      this.des,
-      this.updateAt,
-      this.isMute: false,
-      this.unreadMsgCount: 0,
-      this.displayDot: false,
-      this.groupId,
-      this.userId,
-      this.type})
-      : assert(avatar != null),
-        assert(title != null),
+  Conversation({
+    this.avatar,
+    this.nickname,
+    this.titleColor : AppColors.TitleColor,
+    this.lastMsg,
+    this.updateAt,
+    this.isMute : false,
+    this.unreadMsgCount : 0, // 未读的消息数量
+    this.receiver,
+    this.type
+  }) :  assert(avatar != null),
+        assert(nickname != null),
         assert(updateAt != null);
 
   static List<Conversation> getMockConversations() {
@@ -49,7 +45,7 @@ class Conversation {
       mockConversations.add(
         Conversation(
           avatar: ConstUrl.avatarimageurl + "/gac/avatar.png",
-          title: user['username'],
+          nickname: user['username'],
           // des: '[模拟数据]',
           // updateAt: '19:56',
           // unreadMsgCount: 0,
@@ -66,7 +62,7 @@ class Conversation {
       mockConversations.add(
         Conversation(
           avatar: ConstUrl.avatarimageurl + "/${username}/avatar.png",
-          title: user['username'],
+          nickname: username,
           // des: '[模拟数据]',
           // updateAt: '19:56',
           // unreadMsgCount: 0,
