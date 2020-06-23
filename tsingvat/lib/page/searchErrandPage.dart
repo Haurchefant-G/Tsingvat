@@ -49,7 +49,8 @@ class _searchErrandPageState extends State<searchErrandPage> {
     '北门',
     '东南门',
     '西门',
-    '其他'
+    '其他',
+    "空"
   ].map<DropdownMenuItem<String>>((String v) {
     return DropdownMenuItem<String>(
       value: v,
@@ -66,6 +67,7 @@ class _searchErrandPageState extends State<searchErrandPage> {
 
   Future<void> _Search() async {
     var data;
+    searchKey.currentState.save();
     strlikeFocus.unfocus();
     minBonusFocus.unfocus();
     maxBonusFocus.unfocus();
@@ -74,8 +76,8 @@ class _searchErrandPageState extends State<searchErrandPage> {
       load = true;
     });
     try {
-      data = await http.get('/errand', {
-        "strlike": strlike,
+      data = await http.get('/query/errand', {
+        "strLike": strlike,
         "fromAddr": fromAddr,
         "toAddr": toAddr,
         "minBonus": minBonus,
@@ -252,6 +254,9 @@ class _searchErrandPageState extends State<searchErrandPage> {
                                   items: locationItems,
                                   onChanged: (String v) {
                                     fromAddr = v;
+                                    if (v == "空") {
+                                      fromAddr = null;
+                                    }
                                   }),
                             ),
                           ),
@@ -277,6 +282,9 @@ class _searchErrandPageState extends State<searchErrandPage> {
                                   items: locationItems,
                                   onChanged: (String v) {
                                     toAddr = v;
+                                    if (v == "空") {
+                                      fromAddr = null;
+                                    }
                                   }),
                             ),
                           ),

@@ -8,6 +8,7 @@ import 'package:tsingvat/chat/chat_detail_page.dart';
 import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/chat/message_page.dart';
 import 'package:tsingvat/model/msg.dart';
+import 'package:tsingvat/page/MyWaitErrandsPage.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,8 @@ import '../model/conversation.dart';
 
 class WebSocketProvide with ChangeNotifier {
   // username是全局的
-  var username = 'zxj';
-  var nickname = 'LittleHealth';
+  var username = '';
+  var nickname = '';
   List<String> users = []; // 用户
   List<List<Msg>> users_message_list = []; // 所有消息页面人员，包括groups和users
   bool autorelink = false;
@@ -41,12 +42,14 @@ class WebSocketProvide with ChangeNotifier {
     // return await createWebsocket();
   }
 
-  Future<void> tochatpage(String name) {
+  Future<void> topage(String name) {
     Navigator.of(ChatGlobal.context).push(MaterialPageRoute(builder: (context) {
       print('username:${name}');
-      if (name == null) {
+      if (name == "@chatList") {
         print("more than one meg");
         return MessagePage();
+      } else if (name == "@myErrands") {
+        return MyWaitErrandsPage(username);
       } else {
         return ChatDetailPage(name);
       }
@@ -96,12 +99,16 @@ class WebSocketProvide with ChangeNotifier {
       print('收到mss-------');
       print(mss);
       if (mss.length > 0) {
-        _showNotification("多条消息", "请查看");
+        _showNotification("多条消息", "请查看", user: "@chatList");
       }
     } else {
       Msg _msg = Msg.fromJson(mss);
       msgs.add(_msg);
-      _showNotification(_msg.sender, _msg.content, user: _msg.sender);
+      if (_msg.type == 3) {
+        _showNotification(_msg.sender, "接取了你的跑腿任务", user: "@myErrands");
+      } else {
+        _showNotification(_msg.sender, _msg.content, user: _msg.sender);
+      }
       ChatGlobal.addUser(_msg.sender);
     }
     print("mss ${mss}");

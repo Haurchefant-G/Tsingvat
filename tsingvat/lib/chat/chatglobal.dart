@@ -38,7 +38,7 @@ class ChatGlobal {
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: websocketProvide.tochatpage);
+        onSelectNotification: websocketProvide.topage);
   }
 
   static Future initWhenlogin() async {
