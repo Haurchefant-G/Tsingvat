@@ -62,6 +62,23 @@ class Conversation {
     }
   }
 
+  static void MockConversationsAdd(String username) {
+      mockConversations.add(
+        Conversation(
+          avatar: ConstUrl.avatarimageurl + "/${username}/avatar.png",
+          title: user['username'],
+          // des: '[模拟数据]',
+          // updateAt: '19:56',
+          // unreadMsgCount: 0,
+          // displayDot: true,
+          // groupId: 000000,
+          // userId:"000000",
+          // type: 1
+        ),
+      );
+  }
+
+
   static List<Conversation> mockConversations;
   // = [
   //   Conversation(
