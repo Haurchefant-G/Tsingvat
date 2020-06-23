@@ -85,4 +85,5 @@ public class ErrandController extends CommonController {
         List<Errand> errands = errandDao.getTakeErrands(username);
         return wrapperOKResp(errands);
     }
+
 }

@@ -49,4 +49,25 @@
         WHERE uuid=#{uuid}
     </delete>
 
+    <select id="queryErrand" resultType="com.mobilecourse.backend.entity.Errand">
+        SELECT * FROM errand
+        <where>
+            <if test="fromAddr != null and fromAddr != ''">
+                and (fromAddr like concat('%', #{fromAddr}, '%') or sfromAddr like concat('%', #{fromAddr}, '%'))
+            </if>
+            <if test="toAddr != null and toAddr != ''">
+                and (toAddr like concat('%',#{toAddr}, '%') or stoAddr like concat('%',#{toAddr}, '%'))
+            </if>
+            <if test="minBonus != null and minBonus != ''">
+                and bonus >= #{minBonus}+0.0
+            </if>
+            <if test="maxBonus != null and maxBonus != ''">
+                and bonus &lt;=#{maxBonus}+0.0
+            </if>
+            <if test="strLike != null and strLike != ''">
+                and content like concat('%', #{strLike}, '%')
+            </if>
+        </where>
+    </select>
+
 </mapper>
