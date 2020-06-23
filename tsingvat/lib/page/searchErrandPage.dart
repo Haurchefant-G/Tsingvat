@@ -114,7 +114,7 @@ class _searchErrandPageState extends State<searchErrandPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("123"),
+        title: Text("搜索跑腿任务"),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(200),
           child: Container(
@@ -302,7 +302,7 @@ class _searchErrandPageState extends State<searchErrandPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColorDark,
         onPressed: _Search,
-        child: Icon(Icons.done_outline),
+        child: Icon(Icons.search),
       ),
       body: CustomScrollView(slivers: <Widget>[
         SliverToBoxAdapter(

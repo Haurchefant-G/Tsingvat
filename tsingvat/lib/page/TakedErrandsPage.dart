@@ -115,7 +115,7 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("待完成任务"),
+        title: Text("待完成跑腿"),
       ),
       body: RefreshIndicator(
         onRefresh: getTaked,
@@ -177,20 +177,29 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                       style: Theme.of(context).primaryTextTheme.headline6,
                       child: Column(
                         children: <Widget>[
+                          Text("${errands[i].content}\n", textAlign: TextAlign.center,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                            Text(
+                              "起始点", textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColorDark),),
+                              Text(
+                              "目标点", textAlign: TextAlign.center,style: TextStyle(color: Theme.of(context).primaryColorDark),),
+                          ],),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                            Text(
+                              "${errands[i].fromAddr}\n ${errands[i].sfromAddr}\n", textAlign: TextAlign.center,),
                           Text(
-                            "${errands[i].content}\n",
-                            textAlign: TextAlign.center,
+                              "${errands[i].toAddr}\n ${errands[i].stoAddr}\n", textAlign: TextAlign.center,),
+                          ],),
+                          Text(
+                            "补充信息",
+                            textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).primaryColorDark),
                           ),
                           Text(
-                            "起始点:\n${errands[i].fromAddr}\n${errands[i].sfromAddr}\n",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "目标点:\n${errands[i].toAddr}\n${errands[i].stoAddr}\n",
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "补充信息:\n${errands[i].details}",
+                            errands[i].details??" ",
                             textAlign: TextAlign.center,
                           ),
                         ],

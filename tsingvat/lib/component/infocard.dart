@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/component/takederrandcard.dart';
+import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/page/MyDealsPage.dart';
 import 'package:tsingvat/page/MyPostsPage.dart';
 import 'package:tsingvat/page/MyWaitErrandsPage.dart';
@@ -30,6 +32,8 @@ class _InfoCardState extends State<InfoCard> {
 
   var userAvatar;
   var userName;
+  var signature;
+  var nickname;
   var titles = ["需完成跑腿", "我的跑腿", "交易", "资讯", "聊天", "设置"];
   var icons = [
     Icons.event_note,
@@ -46,10 +50,14 @@ class _InfoCardState extends State<InfoCard> {
   info() async {
     var avatar = await SharedPreferenceUtil.getString('avatar');
     var name = await SharedPreferenceUtil.getString('username');
+    var n = await SharedPreferenceUtil.getString('nickname');
+    var s = await SharedPreferenceUtil.getString('signature');
     setState(() {
       userAvatar = avatar ??
           "http://121.199.66.17:8800/images/account/${name}/avatar.png"; //avatar;
       userName = name;
+      nickname = n;
+      signature = s;
     });
     print(userAvatar);
     print(userName);
@@ -82,16 +90,128 @@ class _InfoCardState extends State<InfoCard> {
                   "修改成功",
                   textAlign: TextAlign.center,
                 ),
-                // content:
-                //     //Text("登陆失败",textAlign: TextAlign.center,),
-                //     Text(
-                //   "",
-                //   textAlign: TextAlign.center,
-                // ),
                 actions: <Widget>[],
               );
             });
       }
+    } catch (e) {}
+  }
+
+  changeNick() async {
+    try {
+      Navigator.of(context).pop();
+      var newNick;
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "修改昵称",
+                textAlign: TextAlign.center,
+              ),
+              content: TextField(
+                onChanged: (v) {
+                  newNick = v;
+                },
+                inputFormatters: [
+                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9]"))
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("取消")),
+                FlatButton(
+                    onPressed: () async {
+                      print(newNick);
+                      print(userName);
+                      var data;
+                      try {
+                        //print(DateTime.now().toIso8601String());
+                        print(DateTime.now().millisecondsSinceEpoch);
+                        data = await HttpUtil().put("/account/modify",
+                            {"username": userName, "nickname": newNick??" "});
+                        //await Future.delayed(Duration(milliseconds: 500), () {});
+                        //{"time": DateTime.now().millisecondsSinceEpoch});
+                      } catch (e) {
+                        print(e);
+                        return;
+                      }
+                      //print(data);
+                      if (data['code'] == ResultCode.SUCCESS) {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          nickname = newNick;
+                        });
+                        SharedPreferenceUtil.setString('nickname', nickname);
+                      }
+                    },
+                    child: Text("确认"))
+              ],
+            );
+          });
+    } catch (e) {}
+  }
+
+  changeSig() async {
+    try {
+      Navigator.of(context).pop();
+      var newSig;
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "修改签名",
+                textAlign: TextAlign.center,
+              ),
+              content: TextField(
+                onChanged: (v) {
+                  newSig = v;
+                },
+                inputFormatters: [
+                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9]"))
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("取消")),
+                FlatButton(
+                    onPressed: () async {
+                      print(newSig);
+                      print(signature);
+                      var data;
+                      try {
+                        //print(DateTime.now().toIso8601String());
+                        print(DateTime.now().millisecondsSinceEpoch);
+                        data = await HttpUtil().put("/account/modify",
+                            {"username": userName, "signature": newSig??" "});
+                        //await Future.delayed(Duration(milliseconds: 500), () {});
+                        //{"time": DateTime.now().millisecondsSinceEpoch});
+                      } catch (e) {
+                        print(e);
+                        return;
+                      }
+                      //print(data);
+                      if (data['code'] == ResultCode.SUCCESS) {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          signature = newSig;
+                        });
+                        SharedPreferenceUtil.setString('signature', signature);
+                      }
+                    },
+                    child: Text("确认"))
+              ],
+            );
+          });
     } catch (e) {}
   }
 
@@ -134,6 +254,40 @@ class _InfoCardState extends State<InfoCard> {
                             height: 60,
                             child: FlatButton(
                                 padding: EdgeInsets.zero,
+                                onPressed: changeNick,
+                                child: Text(
+                                  "修改昵称",
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .headline5,
+                                ))))
+                  ],
+                ),
+                Divider(height: 1),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                            height: 60,
+                            child: FlatButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: changeSig,
+                                child: Text(
+                                  "修改签名",
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .headline5,
+                                ))))
+                  ],
+                ),
+                Divider(height: 1),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                            height: 60,
+                            child: FlatButton(
+                                padding: EdgeInsets.zero,
                                 onPressed: logout,
                                 child: Text(
                                   "退出登录",
@@ -162,7 +316,7 @@ class _InfoCardState extends State<InfoCard> {
       SliverAppBar(
         pinned: false,
         //backgroundColor: Colors.blueAccent,
-        expandedHeight: 200.0,
+        expandedHeight: 250.0,
         iconTheme: new IconThemeData(color: Colors.transparent),
         flexibleSpace: InkWell(
             onTap: settingsheet,
@@ -191,9 +345,23 @@ class _InfoCardState extends State<InfoCard> {
                         ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                    child: new Text(
+                    child: Text(
                       userName ?? " ",
-                      style: Theme.of(context).primaryTextTheme.headline6,
+                      style: Theme.of(context).primaryTextTheme.headline5,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                    child: Text(
+                      "昵称: ${nickname}",
+                      style: Theme.of(context).primaryTextTheme.subtitle1,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                    child: Text(
+                      "签名: ${signature}",
+                      style: Theme.of(context).primaryTextTheme.subtitle1,
                     ),
                   )
                 ],

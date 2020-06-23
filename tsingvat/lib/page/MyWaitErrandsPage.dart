@@ -41,9 +41,10 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
       errands.clear();
       for (var json in data['data']) {
         var e = Errand.fromJson(json);
-        if (e.taker == null) {
-          errands.add(e);
-        }
+        errands.add(e);
+        // if (e.taker == null) {
+        //   errands.add(e);
+        // }
       }
     }
     if (current == true) {
@@ -56,7 +57,7 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
-      data = await http.delete("/errand/delete", {"uuid" : errands[i].uuid});
+      data = await http.delete("/errand/delete", {"uuid": errands[i].uuid});
       //await Future.delayed(Duration(milliseconds: 500), () {});
       //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
@@ -89,7 +90,7 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("发布中跑腿"),
+        title: Text("我的跑腿"),
       ),
       body: RefreshIndicator(
         onRefresh: getWait,
@@ -131,7 +132,7 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
                                 ),
                                 Padding(padding: const EdgeInsets.all(1.0)),
                                 Text(
-                                  errands[i].phone??"无电话联系方式",
+                                  errands[i].phone ?? "无电话联系方式",
                                   style: Theme.of(context)
                                       .primaryTextTheme
                                       .subtitle2
@@ -151,59 +152,146 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
                       style: Theme.of(context).primaryTextTheme.headline6,
                       child: Column(
                         children: <Widget>[
-                          Text("${errands[i].content}\n", textAlign: TextAlign.center,),
                           Text(
-                              "起始点:\n ${errands[i].fromAddr}\n ${errands[i].sfromAddr}\n", textAlign: TextAlign.center,),
+                            "${errands[i].content}\n",
+                            textAlign: TextAlign.center,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                "起始点",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark),
+                              ),
+                              Text(
+                                "目标点",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                "${errands[i].fromAddr}\n ${errands[i].sfromAddr}\n",
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                "${errands[i].toAddr}\n ${errands[i].stoAddr}\n",
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                           Text(
-                              "目标点:\n ${errands[i].toAddr}\n ${errands[i].stoAddr}\n", textAlign: TextAlign.center,),
+                            "补充信息",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorDark),
+                          ),
                           Text(
-                            "补充信息:\n ${errands[i].details}",
+                            errands[i].details ?? " ",
                             textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ),
                     Divider(),
+                    Container(
+                        child: errands[i].taker == null
+                            ? null
+                            : Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(children: <Widget>[
+                                  ClipOval(
+                                      child: Container(
+                                    height: 48,
+                                    width: 48,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                    ),
+                                    child: Image.network(
+                                      "${ConstUrl.avatarimageurl}/${errands[i].taker}/avatar.png",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
+                                  Padding(padding: const EdgeInsets.all(8.0)),
+                                  Expanded(
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                        Text(
+                                          errands[i].taker,
+                                          style: Theme.of(context)
+                                              .primaryTextTheme
+                                              .subtitle1,
+                                        ),
+                                        Padding(
+                                            padding: const EdgeInsets.all(1.0)),
+                                        Text(
+                                          "接取人",
+                                        )
+                                      ])),
+                                  Text(
+                                    "",
+                                  ),
+                                ]))),
                     Row(
                       children: <Widget>[
                         Expanded(
                             child: Container(
                           padding: EdgeInsets.zero,
                           height: 50,
-                          child: FlatButton(
-                              onPressed: () {
-                                showModal(
-                                    context: context,
-                                    configuration:
-                                        FadeScaleTransitionConfiguration(),
-                                    builder: (BuildContext context) {
-                                      return CustomDialog(
-                                        title: Text(
-                                          "确认删除",
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        content:
-                                            //Text("登陆失败",textAlign: TextAlign.center,),
-                                            Text(
-                                          "请确认是否删除该任务",
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text("取消")),
-                                          FlatButton(
-                                              onPressed: () {
-                                                delete(i);
-                                              },
-                                              child: Text("确认"))
-                                        ],
-                                      );
-                                    });
-                              },
-                              child: Icon(Icons.delete)),
+                          child: errands[i].taker == null
+                              ? FlatButton(
+                                  onPressed: () {
+                                    showModal(
+                                        context: context,
+                                        configuration:
+                                            FadeScaleTransitionConfiguration(),
+                                        builder: (BuildContext context) {
+                                          return CustomDialog(
+                                            title: Text(
+                                              "确认删除",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            content:
+                                                //Text("登陆失败",textAlign: TextAlign.center,),
+                                                Text(
+                                              "请确认是否删除该任务",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("取消")),
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    delete(i);
+                                                  },
+                                                  child: Text("确认"))
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: Icon(Icons.delete))
+                              : FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return ChatDetailPage(errands[i].taker);
+                                    }));
+                                  },
+                                  child: Icon(Icons.chat)),
                         )),
                       ],
                     )

@@ -96,7 +96,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("我的交易"),
+        title: Text("我的资讯"),
       ),
       body: RefreshIndicator(
         onRefresh: getMyPosts,
