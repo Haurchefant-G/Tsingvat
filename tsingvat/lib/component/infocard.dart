@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/component/takederrandcard.dart';
 import 'package:tsingvat/page/MyDealsPage.dart';
 import 'package:tsingvat/page/MyPostsPage.dart';
@@ -96,6 +97,7 @@ class _InfoCardState extends State<InfoCard> {
 
   logout() {
     SharedPreferenceUtil.clear();
+    ChatGlobal.websocketProvide.closeWebSocket();
     Navigator.of(context)
         .pushNamedAndRemoveUntil('startPage', (route) => false);
   }
@@ -155,122 +157,118 @@ class _InfoCardState extends State<InfoCard> {
 
   @override
   Widget build(BuildContext context) {
-    return new CustomScrollView(
-        reverse: false,
-        shrinkWrap: false,
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: false,
-            //backgroundColor: Colors.blueAccent,
-            expandedHeight: 200.0,
-            iconTheme: new IconThemeData(color: Colors.transparent),
-            flexibleSpace: InkWell(
-                onTap: settingsheet,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: GradientUtil.cloudyApple()
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      userAvatar == null
-                          ? new Image.asset(
-                              "assets/avatar_logo.png",
-                              width: 100,
-                              height: 100,
-                            )
-                          : Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.transparent,
-                                  image: DecorationImage(
-                                      image: NetworkImage(userAvatar),
-                                      fit: BoxFit.cover),
-                                  border: Border.all(
-                                      color: Colors.white, width: 2.0)),
-                            ),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        child: new Text(
-                          userName ?? " ",
-                          style: Theme.of(context).primaryTextTheme.headline6,
+    return new CustomScrollView(reverse: false, shrinkWrap: false, slivers: <
+        Widget>[
+      SliverAppBar(
+        pinned: false,
+        //backgroundColor: Colors.blueAccent,
+        expandedHeight: 200.0,
+        iconTheme: new IconThemeData(color: Colors.transparent),
+        flexibleSpace: InkWell(
+            onTap: settingsheet,
+            child: Container(
+              decoration: BoxDecoration(gradient: GradientUtil.cloudyApple()),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  userAvatar == null
+                      ? new Image.asset(
+                          "assets/avatar_logo.png",
+                          width: 100,
+                          height: 100,
+                        )
+                      : Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.transparent,
+                              image: DecorationImage(
+                                  image: NetworkImage(userAvatar),
+                                  fit: BoxFit.cover),
+                              border:
+                                  Border.all(color: Colors.white, width: 2.0)),
                         ),
-                      )
-                    ],
-                  ),
-                )),
-          ),
-          SliverFixedExtentList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                String title = titles[index];
-                return Container(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                      onTap: () {
-                        print("the is the item of $title");
-                        if (index == 5) {
-                          settingsheet();
-                        } else {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            switch (index) {
-                              case 0:
-                                return TakedErrandsPage(userName);
-                              case 1:
-                                return MyWaitErrandsPage(userName);
-                              case 2:
-                                return MyDealsPage(userName);
-                              case 3:
-                                return MyPostsPage(userName);
-                              case 4:
-                                return MessagePage();
-                              default:
-                                return TakedErrandsPage(userName);
-                            }
-                          }));
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                    child: new Text(
+                      userName ?? " ",
+                      style: Theme.of(context).primaryTextTheme.headline6,
+                    ),
+                  )
+                ],
+              ),
+            )),
+      ),
+      SliverFixedExtentList(
+          delegate:
+              SliverChildBuilderDelegate((BuildContext context, int index) {
+            String title = titles[index];
+            return Container(
+                alignment: Alignment.centerLeft,
+                child: InkWell(
+                  onTap: () {
+                    print("the is the item of $title");
+                    if (index == 5) {
+                      settingsheet();
+                    } else {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        switch (index) {
+                          case 0:
+                            return TakedErrandsPage(userName);
+                          case 1:
+                            return MyWaitErrandsPage(userName);
+                          case 2:
+                            return MyDealsPage(userName);
+                          case 3:
+                            return MyPostsPage(userName);
+                          case 4:
+                            return MessagePage();
+                          default:
+                            return TakedErrandsPage(userName);
                         }
+                      }));
+                    }
 
 //                    Navigator.of(context)
 //                        .push(MaterialPageRoute(builder: (context) {
 //                      return TakedErrandsPage(userName);
 //                    }));
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                12.0, 12.0, 12.0, 12.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Icon(
-                                    icons[index],
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                ),
-                                Expanded(
-                                    child: Text(
-                                  title,
-                                  style: titleTextStyle.copyWith(
-                                      textBaseline: TextBaseline.ideographic),
-                                )),
-                                rightArrowIcon
-                              ],
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                icons[index],
+                                color: Theme.of(context).primaryColorDark,
+                              ),
                             ),
-                          ),
-                          Divider(
-                            height: 1.0,
-                          )
-                        ],
+                            Expanded(
+                                child: Text(
+                              title,
+                              style: titleTextStyle.copyWith(
+                                  textBaseline: TextBaseline.ideographic),
+                            )),
+                            rightArrowIcon
+                          ],
+                        ),
                       ),
-                    ));
-              }, childCount: titles.length),
-              itemExtent: 50.0),
-        ]);
+                      Divider(
+                        height: 1.0,
+                      )
+                    ],
+                  ),
+                ));
+          }, childCount: titles.length),
+          itemExtent: 50.0),
+    ]);
   }
 }

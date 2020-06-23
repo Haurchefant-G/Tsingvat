@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/component/infocard.dart';
 import 'package:tsingvat/page/chatPage.dart';
 import 'package:tsingvat/page/newPostPage.dart';
@@ -70,6 +72,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             setState(() {});
           });
     // _tabController.addListener(() {});
+    //_showNotification();
   }
 
   @override
@@ -108,136 +111,40 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> _showNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await ChatGlobal.flutterLocalNotificationsPlugin.show(
+        0, 'plain title', 'plain body', platformChannelSpecifics,
+        payload: 'item x');
+  }
+
   @override
   Widget build(BuildContext context) {
+    //ChatGlobal.navigator = Navigator.of(context);
+    ChatGlobal.context = context;
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(widget.title),
       // ),
-      appBar:HomeAppBar(
-                      tabController: _tabController,
-                      tabHandler: _handleTabs,
-                      tabs: tabs),
-      // body: 
-      // NestedScrollView(
-      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //     return <Widget>[
-      //       SliverOverlapAbsorber(
-      //         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-      //         sliver: SliverAppBar(
-      //             automaticallyImplyLeading: false,
-      //             //floating: true,
-      //             pinned: true,
-      //             //title: Text("123"),
-      //             //snap: true,
-      //             expandedHeight: _expandAnimation.value,
-      //             flexibleSpace: 
-      //             FlexibleSpaceBar(background: Image.asset('assets/placeholder_image.png', fit: BoxFit.cover)),
-      //                   bottom: TabBar(controller: _tabController, tabs: tabs.map((tab) => Text(tab, style: TextStyle(fontSize: 18.0))).toList()),
-      //                   forceElevated: innerBoxIsScrolled,
-      //                 ),
-      //             // HomeAppBar(
-      //             //     tabController: _tabController,
-      //             //     tabHandler: _handleTabs,
-      //             //     tabs: tabs)),
-      //       )
-      //     ];
-      //   },
-        body: 
-        // Container(
-        //     decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-        //     child: 
-            TabBarView(
-              //physics: NeverScrollableScrollPhysics(),
-              controller: _tabController,
-              children: <Widget>[
-                // Builder(builder: (BuildContext context) {
-                //   return CustomScrollView(
-                //     slivers: <Widget>[
-                //       SliverOverlapInjector(
-                //         // This is the flip side of the SliverOverlapAbsorber above.
-                //         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                //             this.context),
-                //       ),
-                //       ErrandPage(),
-                //     ],
-                //   );
-                // }),
-                ErrandPage(),
-                // Container(
-                //     padding: EdgeInsets.only(left: 10, right: 10),
-                //     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                //     //padding: EdgeInsets.all(16),
-                //     decoration: BoxDecoration(
-                //         color: Colors
-                //             .white70, //Theme.of(context).backgroundColor,
-                //         borderRadius:
-                //             BorderRadius.vertical(top: Radius.circular(15))),
-                //     child: RefreshIndicator(
-                //         child: ListView.builder(itemBuilder: (context, i) {
-                //           return Padding(
-                //             padding: const EdgeInsets.only(bottom: 10),
-                //             child: GoodsCard(),
-                //           );
-                //         }),
-                //         onRefresh: _refresh)),
-                DealPage(),
-                PostPage(),
-                InfoPage()
-              ],
-            ),
-            //),
-      //       ,),
-      // ),
-      // CustomScrollView(slivers: <Widget>[
-      //   SliverAppBar(
-      //     floating: false,
-      //     pinned: true,
-      //     //expandedHeight:96,
-      //     flexibleSpace: CraneAppBar(
-      //         tabController: _tabController,
-      //         tabHandler: _handleTabs,
-      //         tabs: tabs),
-      //   ),
-      //   TabBarView(
-      //       controller: _tabController,
-      //       children: tabs.map((e) => Text(e)).toList())
-      // ]),
+      appBar: HomeAppBar(
+          tabController: _tabController, tabHandler: _handleTabs, tabs: tabs),
+      body:
+          TabBarView(
+        //physics: NeverScrollableScrollPhysics(),
+        controller: _tabController,
+        children: <Widget>[
+          ErrandPage(),
+          DealPage(),
+          PostPage(),
+          InfoPage()
+        ],
+      ),
       floatingActionButton:
-          // _showFab
-          //     ? OpenContainer(
-          //         //transitionDuration: const Duration(milliseconds: 2000),
-          //         closedColor: Theme.of(context).primaryColorDark,
-          //         transitionType: ContainerTransitionType.fade,
-          //         closedBuilder: (BuildContext context, VoidCallback _) {
-          //           return FloatingActionButton(
-          //             onPressed: null,
-          //             backgroundColor: Theme.of(context).primaryColorDark,
-          //             child: Icon(
-          //               Icons.add,
-          //               size: 30,
-          //             ),
-          //           );
-          //         },
-          //         tappable: _fabTappable,
-          //         openBuilder: (BuildContext context, VoidCallback _) {
-          //           switch (_tabController.index) {
-          //             case 0:
-          //               return newTaskPage();
-          //             case 1:
-          //               return newGoodsPage();
-          //             default:
-          //               return newTaskPage();
-          //           }
-          //         },
-          //         closedElevation: 6.0,
-          //         closedShape: const RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.all(
-          //             Radius.circular(56 / 2),
-          //           ),
-          //         ),
-          //       )
-          //     : null,
           ScaleTransition(
         alignment: Alignment.center,
         scale: Tween(begin: 1.0, end: 0.0).animate(_fabController),
@@ -343,12 +250,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
         color: Theme.of(context).primaryColor,
         child: Padding(
           padding: EdgeInsets.only(
-            top: MediaQueryData.fromWindow(window).padding.top
+              top: MediaQueryData.fromWindow(window).padding.top
               //horizontal:
               //isDesktop && !isSmallDesktop ? appPaddingLarge : appPaddingSmall,
               ),
           child: Row(
-
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
