@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:tsingvat/component/errandcard.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/model/errand.dart';
+import 'package:tsingvat/page/searchErrandPage.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -34,7 +36,7 @@ class _ErrandPageState extends State<ErrandPage> {
           _getMore();
         }
       });
-    _getMore();//.then((value) => _getMore());
+    _getMore(); //.then((value) => _getMore());
   }
 
   Future<void> _refresh() async {
@@ -117,55 +119,84 @@ class _ErrandPageState extends State<ErrandPage> {
   @override
   Widget build(BuildContext context) {
     print("build");
-    return RefreshIndicator( child :Container(
-      //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-      //padding: EdgeInsets.all(16),
-      // decoration: BoxDecoration(
-      //     color: Theme.of(context).backgroundColor,
-      //     borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-          child: ListView.builder(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
-              itemCount: errands.length + 2,
-              itemBuilder: (context, i) {
-                if (i == 0) {
-                  return Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow()],
-                      border: Border.all(width: 1, color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      color: Theme.of(context).dialogBackgroundColor,
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(border: InputBorder.none),
-                    ),
-                  );
-                } else if (i == errands.length + 1) {
-                  return nomore
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "没有更多了",
-                            textAlign: TextAlign.center,
+    return RefreshIndicator(
+      child: Container(
+        //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        //padding: EdgeInsets.all(16),
+        // decoration: BoxDecoration(
+        //     color: Theme.of(context).backgroundColor,
+        //     borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+        child: ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            controller: _scrollController,
+            itemCount: errands.length + 2,
+            itemBuilder: (context, i) {
+              if (i == 0) {
+                return OpenContainer(
+                  closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                    return Stack(
+                      alignment: AlignmentDirectional.centerEnd,
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          decoration: BoxDecoration(
+                            boxShadow: [BoxShadow()],
+                            border: Border.all(width: 1, color: Colors.grey),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                            color: Theme.of(context).dialogBackgroundColor,
+                          ),
+                          child: null,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.search,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            ),
+                            onPressed: () {},
                           ),
                         )
-                      : (load
-                          ? Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: SpinKitWave(
-                                  color:
-                                      Colors.lightBlueAccent.withOpacity(0.5),
-                                  size: 30.0),
-                            )
-                          : Padding(padding: EdgeInsets.all(20), child: FlatButton(onPressed: _getMore, child: Text("点击加载更多")),));
-                }
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: ErrandCard(errands[i - 1], _refresh),
+                      ],
+                    );
+                  },
+                  closedElevation: 0,
+                  transitionType: ContainerTransitionType.fade,
+                  openBuilder: (BuildContext _, VoidCallback openContainer) {
+                      return searchErrandPage();
+                    },
                 );
-              }),),
-          onRefresh: _refresh,
+              } else if (i == errands.length + 1) {
+                return nomore
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "没有更多了",
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : (load
+                        ? Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SpinKitWave(
+                                color: Colors.lightBlueAccent.withOpacity(0.5),
+                                size: 30.0),
+                          )
+                        : Padding(
+                            padding: EdgeInsets.all(20),
+                            child: FlatButton(
+                                onPressed: _getMore, child: Text("点击加载更多")),
+                          ));
+              }
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: ErrandCard(errands[i - 1], _refresh),
+              );
+            }),
+      ),
+      onRefresh: _refresh,
     );
 
 //Sliver版本
