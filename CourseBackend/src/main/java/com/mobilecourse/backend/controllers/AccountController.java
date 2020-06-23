@@ -2,6 +2,7 @@ package com.mobilecourse.backend.controllers;
 
 import com.mobilecourse.backend.dao.AccountDao;
 import com.mobilecourse.backend.entity.Account;
+import com.mobilecourse.backend.entity.Errand;
 import com.mobilecourse.backend.utils.QRCodeUtils;
 import com.mobilecourse.backend.utils.ResultModel;
 import com.mobilecourse.backend.utils.TokenUtils;
@@ -71,6 +72,13 @@ public class AccountController extends CommonController {
         return wrapperOKResp(account);
     }
 
+    // TODO 用户修改用户名、密码、之类的。
+    @RequestMapping(value = "/modify", method = {RequestMethod.PUT})
+    public ResponseEntity<ResultModel> modify(@RequestBody Account account) {
+        accountDao.modifyUser(account);
+        return wrapperOKResp(null);
+    }
+
     /**
     * 上述login和register使用的是post,以下为get，这样就不会有出现二义性
     **/
@@ -94,12 +102,6 @@ public class AccountController extends CommonController {
         List<Account> accounts = accountDao.getFollowings(username);
         return wrapperOKResp(accounts);
     }
-    // TODO 用户修改用户名、密码、之类的。
 
 
-    public static boolean checkString(String s){
-        if(s == null) return false;
-        if(s.length() == 0) return false;
-        return true;
-    }
 }

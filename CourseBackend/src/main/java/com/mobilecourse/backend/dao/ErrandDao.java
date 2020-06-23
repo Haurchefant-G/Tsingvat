@@ -19,7 +19,7 @@ public interface ErrandDao {
     List<Errand> getTakeErrands(String taker);
 
     // taker接单,应当记录更新的接单时间和接单人
-    void takeErrand(Errand errand);
+    void takeErrand(String uuid, String taker, Timestamp takeTime);
 
     void finishErrand(Errand errand);
 

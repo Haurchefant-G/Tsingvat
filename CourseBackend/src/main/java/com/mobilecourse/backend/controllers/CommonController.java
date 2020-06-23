@@ -79,4 +79,9 @@ public class CommonController {
         if(username.equals(compare)) return true;
         return false;
     }
+    public static boolean checkString(String s){
+        if(s == null) return false;
+        if(s.length() == 0) return false;
+        return true;
+    }
 }

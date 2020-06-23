@@ -11,7 +11,7 @@
 
     <select id="getIndexDeals" resultType="com.mobilecourse.backend.entity.Deal">
         SELECT * FROM deal
-        WHERE created &lt; #{time}
+        WHERE created &lt; #{time} and taker is null
         order by created desc
         limit #{num};
     </select>

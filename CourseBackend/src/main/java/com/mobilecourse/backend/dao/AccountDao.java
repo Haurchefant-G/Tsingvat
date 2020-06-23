@@ -18,4 +18,6 @@ public interface AccountDao {
 
     List<Account> getFollowings(String username);
 
+    void modifyUser(Account account);
+
 }

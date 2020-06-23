@@ -49,6 +49,8 @@ public class WebSocketServer {
 
     private static Hashtable<String, WebSocketServer> webSocketTable = new Hashtable<>();
 
+    private static WebSocketServer notifyWebSocketTable = new WebSocketServer();
+
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
@@ -108,8 +110,7 @@ public class WebSocketServer {
             msg.setSent(false);
         }
         else {
-            String messgae = wrapperMessage(RECV_SUCCESS, "发送成功",msg);
-            server.sendMessage(messgae);
+            server.sendMessage(wrapperMessage(RECV_SUCCESS, "发送成功",msg));
         }
         msgDao.addMsg(msg);
         System.out.printf("message:"+msg);
@@ -128,6 +129,10 @@ public class WebSocketServer {
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setNotify(Msg msg){
+        sendMessage(wrapperMessage(SEND_SUCCESS, "接取成功", msg));
     }
 
     @Async
