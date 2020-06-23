@@ -7,10 +7,10 @@ import 'package:tsingvat/routers/application.dart';
 import '../chat_detail_page.dart';
 class ConversationItem extends StatelessWidget {
 
-  ConversationItem(this.conversationItemData,this.username,this.type)
+  ConversationItem(this.conversationItemData,this.username,this.chat_type)
   :assert(conversationItemData != null);
   String username;
-  int type;
+  int chat_type;
   final Conversation conversationItemData;
   var tapPos;
   @override
@@ -140,7 +140,7 @@ class ConversationItem extends StatelessWidget {
   }
 
  
-  Widget Tip(conversationItemData){
+  Widget Tip(conversationItemData){  
     var _rightArea =<Widget>[
       Text(conversationItemData.updateAt,style:TextStyle(fontSize: ScreenUtil().setSp(24.0),color: Color(AppColors.DesTextColor))),
       SizedBox(height: ScreenUtil().setHeight(15.0),)

@@ -14,7 +14,7 @@ class MessagePage extends StatelessWidget {
         //  参与聊天的用户
         var users = Provide.value<WebSocketProvide>(context).users;
         // 需要加入之前已存在的用户
-        var length = Conversation.getMockConversations().length + 1;
+        var length = Conversation.getMockConversations().length+1;
         print(length);
         return Scaffold(
           appBar: AppBar(title: Text("聊天")),

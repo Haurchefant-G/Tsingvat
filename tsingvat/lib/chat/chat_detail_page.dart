@@ -96,7 +96,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 //                list.add({'type':1,'content':"hi",'nickname':"nick",'avatar':"http://121.199.66.17:8800/images/account/zxj/avatar.png"});
                 print("index ${index}, username ${username}");
                 if(index != -1){
-                  List<Msg> msgs = websocket.messageList[index];
+                  List<Msg> msgs = websocket.users_message_list[index];
                   for(Msg msg in msgs){
                     // 判断必然相等
                     if(msg.sender ==  username){
