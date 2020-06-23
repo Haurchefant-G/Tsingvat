@@ -26,4 +26,6 @@ public interface ErrandDao {
     void modifyErrand(Errand errand);
 
     void deleteErrand(String uuid);
+
+    List<Errand> queryErrand(String strLike, String fromAddr, String toAddr, String minBonus, String maxBonus);
 }

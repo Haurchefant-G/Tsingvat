@@ -17,6 +17,8 @@ public class ResultModel {
 
     public static int REPLY_NOT_FOUND = 16;
 
+    public static int QUERY_FAIL = 51;
+
     /**
      * 返回码
      */

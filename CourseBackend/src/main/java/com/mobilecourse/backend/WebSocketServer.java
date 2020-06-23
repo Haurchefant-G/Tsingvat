@@ -91,9 +91,6 @@ public class WebSocketServer {
 //        String sender = this.username;
         String receiver = json.getString("receiver");
 
-//        if(!checkExist(accountDao.getUser(receiver))){
-//            sendMessage(wrapperMessage(SEND_FAILURE, "接受者不存在", null));
-//        }
 
         String content = json.getString("content");
         if(content == null || content.length() == 0) {
