@@ -56,6 +56,12 @@ public class AccountController extends CommonController {
     public ResponseEntity<ResultModel> register(@RequestBody Account account) {
         // 如果对应参数没有传的话，则会默认为null
         // TODO 发送邮箱验证码验证
+        if(!checkString(account.getSignature())){
+            account.setSignature("暂未设置签名");
+        }
+        if(!checkString(account.getNickname())){
+            account.setNickname("暂未设置昵称");
+        }
         if(!checkString(account.getUsername()) || !checkString(account.getPassword()) || !checkString(account.getEmail()))
             return wrapperErrorResp(ResultModel.REGISTER_FAIL, "username or password or email can't be null!");
         // 判断长度为空

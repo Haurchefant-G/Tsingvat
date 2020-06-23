@@ -53,9 +53,8 @@ public class ErrandController extends CommonController {
             return wrapperErrorResp(ResultModel.ERRAND_TAKE_FAIL, "should specify taker, user and uuid!");
         errand.setTakeTime(this.getCurrentTime());
         errandDao.takeErrand(errand.getUuid(), errand.getTaker(),errand.getTakeTime());
-        Msg msg = new Msg(this.getUuid(),errand.getUsername(), errand.getTaker(), errand.getUuid(), errand.getTakeTime(), 3, false);
-        WebSocketServer receiver =
-        WebSocketServer.getWebSocketTable().get(errand.getUsername());
+        Msg msg = new Msg(this.getUuid(),errand.getTaker(), errand.getUsername(), errand.getUuid(), errand.getTakeTime(), 3, false);
+        WebSocketServer receiver = WebSocketServer.getWebSocketTable().get(msg.getReceiver());
         if(receiver != null){
             receiver.setNotify(msg);
             msg.setSent(true);

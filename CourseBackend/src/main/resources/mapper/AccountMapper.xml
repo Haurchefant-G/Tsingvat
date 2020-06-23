@@ -51,8 +51,9 @@
             <if test="signature != null and signature!=''">
                 signature=#{signature},
             </if>
-            <if test="email != null and email != null"></if>
+            <if test="email != null and email != ''">
                 email=#{email},
+            </if>
             <if test="password != null and password != ''">
                 password=#{password},
             </if>
