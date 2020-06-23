@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/model/deal.dart';
+import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
@@ -188,7 +189,7 @@ class _newDealPageState extends State<newDealPage> {
           floating: false,
           pinned: true,
           expandedHeight: 200,
-          flexibleSpace: FlexibleSpaceBar(title: Text("发布交易")),
+          flexibleSpace: FlexibleSpaceBar(title: Text("发布交易"),background: DecoratedBox(decoration: BoxDecoration(gradient: GradientUtil.lightBlue(angle: 45))),),
         ),
         // SliverFixedExtentList(
         //   itemExtent: 50.0,
@@ -232,8 +233,6 @@ class _newDealPageState extends State<newDealPage> {
                           onSaved: (v) {
                             deal.content = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (v) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -255,7 +254,7 @@ class _newDealPageState extends State<newDealPage> {
                               border: InputBorder.none,
                             ),
                             inputFormatters: [
-                              WhitelistingTextInputFormatter(RegExp("[1-9.]"))
+                              WhitelistingTextInputFormatter(RegExp("[0-9.]"))
                             ],
 
                             keyboardType: TextInputType.numberWithOptions(

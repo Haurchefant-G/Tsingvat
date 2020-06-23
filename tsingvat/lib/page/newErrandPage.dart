@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/model/errand.dart';
+import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
@@ -168,17 +169,8 @@ class _newErrandPageState extends State<newErrandPage> {
           floating: false,
           pinned: true,
           expandedHeight: 200,
-          flexibleSpace: FlexibleSpaceBar(title: Text("发布任务")),
+          flexibleSpace: FlexibleSpaceBar(title: Text("发布跑腿"), background: DecoratedBox(decoration: BoxDecoration(gradient: GradientUtil.freshOasis(angle: 45))),),
         ),
-        // SliverFixedExtentList(
-        //   itemExtent: 50.0,
-        //   delegate: SliverChildBuilderDelegate(
-        //     (context, index) => ListTile(
-        //       title: Text("Item $index"),
-        //     ),
-        //     childCount: 30,
-        //   ),
-        // ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -196,15 +188,11 @@ class _newErrandPageState extends State<newErrandPage> {
                         ),
                         child: TextFormField(
                           focusNode: contentFocus,
-                          //textAlign: TextAlign.center,
                           decoration: InputDecoration(
                             hintText: '任务简述',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon: Icon(Icons.local_offer),
                             border: InputBorder.none,
                           ),
-                          // TODO 除了检查邮箱外还应检查清华邮箱，或者只需填写用户名即可
                           onEditingComplete: () {
                             contentFocus.unfocus();
                             bonusFocus.requestFocus();
@@ -213,8 +201,6 @@ class _newErrandPageState extends State<newErrandPage> {
                           onSaved: (v) {
                             errand.content = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (v) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -235,7 +221,7 @@ class _newErrandPageState extends State<newErrandPage> {
                             border: InputBorder.none,
                           ),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(RegExp("[1-9.]"))
+                            WhitelistingTextInputFormatter(RegExp("[0-9]"))
                           ],
 
                           keyboardType: TextInputType.numberWithOptions(

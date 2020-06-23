@@ -99,6 +99,7 @@ class _ErrandCardState extends State<ErrandCard>
       animation: _controller.view,
       builder: (BuildContext context, Widget child) {
         return Card(
+          elevation: 4,
             //color: Color(0xffB2EBF2),
             child: InkWell(
           //splashColor: Colors.blue.withAlpha(30),

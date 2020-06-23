@@ -26,13 +26,14 @@ class _InfoCardState extends State<InfoCard> {
 
   var userAvatar;
   var userName;
-  var titles = ["需完成跑腿", "我的跑腿", "交易", "资讯", "聊天"];
+  var titles = ["需完成跑腿", "我的跑腿", "交易", "资讯", "聊天", "设置"];
   var icons = [
     Icons.event_note,
     Icons.list,
     Icons.attach_money,
     Icons.turned_in_not,
-    Icons.chat_bubble_outline
+    Icons.chat_bubble_outline,
+    Icons.settings
   ];
 
   var titleTextStyle = TextStyle(fontSize: 16.0);
@@ -77,6 +78,54 @@ class _InfoCardState extends State<InfoCard> {
         .pushNamedAndRemoveUntil('startPage', (route) => false);
   }
 
+  settingsheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 300,
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                            height: 60,
+                            child: FlatButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: changeAvatar,
+                                child: Text(
+                                  "修改头像",
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .headline5,
+                                ))))
+                  ],
+                ),
+                Divider(height: 1),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                            height: 60,
+                            child: FlatButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: logout,
+                                child: Text(
+                                  "退出登录",
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .headline5
+                                      .copyWith(color: Colors.red),
+                                ))))
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   initState() {
     info();
@@ -94,52 +143,7 @@ class _InfoCardState extends State<InfoCard> {
             expandedHeight: 200.0,
             iconTheme: new IconThemeData(color: Colors.transparent),
             flexibleSpace: new InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: 300,
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      child: Container(
-                                          height: 60,
-                                          child: FlatButton(
-                                              padding: EdgeInsets.zero,
-                                              onPressed: changeAvatar,
-                                              child: Text(
-                                                "修改头像",
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline5,
-                                              ))))
-                                ],
-                              ),
-                              Divider(height: 1),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      child: Container(
-                                          height: 60,
-                                          child: FlatButton(
-                                              padding: EdgeInsets.zero,
-                                              onPressed: logout,
-                                              child: Text(
-                                                "退出登录",
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline5.copyWith(color:Colors.red),
-                                              ))))
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      });
-                },
+                onTap: settingsheet,
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -180,24 +184,27 @@ class _InfoCardState extends State<InfoCard> {
                     child: InkWell(
                       onTap: () {
                         print("the is the item of $title");
-
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          switch (index) {
-                            case 0:
-                              return TakedErrandsPage(userName);
-                            case 1:
-                              return MyWaitErrandsPage(userName);
-                            case 2:
-                              return MyDealsPage(userName);
-                            case 3:
-                              return MyPostsPage(userName);
-                            case 4:
-                              return MessagePage();
-                            default:
-                              return TakedErrandsPage(userName);
-                          }
-                        }));
+                        if (index == 5) {
+                          settingsheet();
+                        } else {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            switch (index) {
+                              case 0:
+                                return TakedErrandsPage(userName);
+                              case 1:
+                                return MyWaitErrandsPage(userName);
+                              case 2:
+                                return MyDealsPage(userName);
+                              case 3:
+                                return MyPostsPage(userName);
+                              case 4:
+                                return MessagePage();
+                              default:
+                                return TakedErrandsPage(userName);
+                            }
+                          }));
+                        }
 
 //                    Navigator.of(context)
 //                        .push(MaterialPageRoute(builder: (context) {

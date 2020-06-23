@@ -46,7 +46,7 @@ class Conversation {
   static List<Conversation> mockConversations  = [
     Conversation(
         avatar: ConstUrl.avatarimageurl+"/gac/avatar.png",
-        title: 'gac',
+        title: 'zxj',
         des: '[模拟数据]',
         updateAt: '19:56',
         unreadMsgCount: 0,

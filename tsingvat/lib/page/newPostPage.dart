@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/model/post.dart';
+import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
@@ -175,7 +176,7 @@ class _newPostPageState extends State<newPostPage> {
           floating: false,
           pinned: true,
           expandedHeight: 200,
-          flexibleSpace: FlexibleSpaceBar(title: Text("发布资讯")),
+          flexibleSpace: FlexibleSpaceBar(title: Text("发布资讯"),background: DecoratedBox(decoration: BoxDecoration(gradient: GradientUtil.warmFlame(angle: 45))),),
         ),
         // SliverFixedExtentList(
         //   itemExtent: 50.0,
