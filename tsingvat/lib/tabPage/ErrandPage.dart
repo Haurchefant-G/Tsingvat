@@ -57,6 +57,7 @@ class _ErrandPageState extends State<ErrandPage> {
     //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       errands.clear();
+      print(data['data'].length);
       for (var json in data['data']) {
         var e = Errand.fromJson(json);
         if (e.taker == null) {
@@ -165,8 +166,8 @@ class _ErrandPageState extends State<ErrandPage> {
                   closedElevation: 0,
                   transitionType: ContainerTransitionType.fade,
                   openBuilder: (BuildContext _, VoidCallback openContainer) {
-                      return searchErrandPage();
-                    },
+                    return searchErrandPage();
+                  },
                 );
               } else if (i == errands.length + 1) {
                 return nomore

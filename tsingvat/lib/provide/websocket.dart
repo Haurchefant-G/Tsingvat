@@ -115,17 +115,19 @@ class WebSocketProvide with ChangeNotifier {
 
     // 再将msgs加入到provide维护的message_list当中
     for (Msg msg in msgs) {
-      num i = users.indexOf(msg.sender);
-      print("i is ${i}");
-      if (i == -1) {
-        users.add(msg.sender);
-        List<Msg> ms = [];
-        ms.add(msg);
-        users_message_list.add(ms);
-      } else {
-        // 第i表示对应第i个接受者
-        // messagelist[i]表示第i个接受者的所有信息
-        users_message_list[i].add(msg);
+      if (msg.type != 3) {
+        num i = users.indexOf(msg.sender);
+        print("i is ${i}");
+        if (i == -1) {
+          users.add(msg.sender);
+          List<Msg> ms = [];
+          ms.add(msg);
+          users_message_list.add(ms);
+        } else {
+          // 第i表示对应第i个接受者
+          // messagelist[i]表示第i个接受者的所有信息
+          users_message_list[i].add(msg);
+        }
       }
     }
     print(users_message_list);

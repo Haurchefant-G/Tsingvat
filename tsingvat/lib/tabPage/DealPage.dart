@@ -111,127 +111,126 @@ class _DealPageState extends State<DealPage> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      child: StaggeredGridView.countBuilder(
-          physics: AlwaysScrollableScrollPhysics(),
-          itemCount: deals.length + 2,
-          controller: _scrollController,
-          crossAxisCount: 2,
-          addAutomaticKeepAlives: false,
-          addRepaintBoundaries: false,
-          itemBuilder: (BuildContext context, int i) {
-            if (i == 0) {
-              return Container(
-                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                decoration: BoxDecoration(
-                  boxShadow: [BoxShadow()],
-                  border: Border.all(width: 1, color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: Theme.of(context).dialogBackgroundColor,
-                ),
-                child: TextField(
-                  decoration: InputDecoration(border: InputBorder.none),
-                ),
-              );
-            } else if (i == deals.length + 1) {
-              return nomore
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "没有更多了",
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : (load
-                      ? Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: SpinKitWave(
-                              color: Colors.lightBlueAccent.withOpacity(0.5),
-                              size: 30.0),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.all(20),
-                          child: FlatButton(
-                              onPressed: _getMore, child: Text("点击加载更多")),
-                        ));
-            } else {
-              return Padding(
-                  padding: const EdgeInsets.all(5),
-                  child:
-                      //GoodsCard(),
-                      OpenContainer(
-                    closedElevation: 0,
-                    transitionType: ContainerTransitionType.fade,
-                    closedBuilder:
-                        (BuildContext _, VoidCallback openContainer) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DealCard(deals[i - 1]),
-                      );
-                    },
-                    openBuilder: (BuildContext _, VoidCallback openContainer) {
-                      return DealDetail(deals[i - 1]);
-                    },
-                  ));
-            }
-          },
-          staggeredTileBuilder: (int index) {
-            if (index == deals.length + 1 || index == 0) {
-              return StaggeredTile.fit(2);
-            } else {
-              return StaggeredTile.fit(1);
-            }
-          }),
-      onRefresh: _refresh,
-    );
     // return RefreshIndicator(
-    //       child: StaggeredGridView.countBuilder(
-    //         physics: AlwaysScrollableScrollPhysics(),
-    //           itemCount: deals.length + 1,
-    //           controller: _scrollController,
-    //           crossAxisCount: 2,
-    //           addAutomaticKeepAlives: false,
-    //           addRepaintBoundaries: false,
-    //           itemBuilder: (BuildContext context, int i) {
-    //             if (i == deals.length) {
-    //               return load
+    //   child: StaggeredGridView.countBuilder(
+    //       physics: AlwaysScrollableScrollPhysics(),
+    //       itemCount: deals.length + 2,
+    //       controller: _scrollController,
+    //       crossAxisCount: 2,
+    //       addAutomaticKeepAlives: false,
+    //       addRepaintBoundaries: false,
+    //       itemBuilder: (BuildContext context, int i) {
+    //         if (i == 0) {
+    //           return Container(
+    //             margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+    //             decoration: BoxDecoration(
+    //               boxShadow: [BoxShadow()],
+    //               border: Border.all(width: 1, color: Colors.grey),
+    //               borderRadius: BorderRadius.all(Radius.circular(100)),
+    //               color: Theme.of(context).dialogBackgroundColor,
+    //             ),
+    //             child: TextField(
+    //               decoration: InputDecoration(border: InputBorder.none),
+    //             ),
+    //           );
+    //         } else if (i == deals.length + 1) {
+    //           return nomore
+    //               ? Padding(
+    //                   padding: const EdgeInsets.all(8.0),
+    //                   child: Text(
+    //                     "没有更多了",
+    //                     textAlign: TextAlign.center,
+    //                   ),
+    //                 )
+    //               : (load
     //                   ? Padding(
-    //                       padding: const EdgeInsets.only(bottom: 20),
+    //                       padding: const EdgeInsets.all(10),
     //                       child: SpinKitWave(
     //                           color: Colors.lightBlueAccent.withOpacity(0.5),
     //                           size: 30.0),
     //                     )
-    //                   : Padding(padding: EdgeInsets.all(20));
-    //             } else {
-    //               return Padding(
-    //                   padding: const EdgeInsets.all(5),
-    //                   child:
-    //                       //GoodsCard(),
-    //                       OpenContainer(
-    //                     closedElevation: 0,
-    //                     transitionType: ContainerTransitionType.fade,
-    //                     closedBuilder:
-    //                         (BuildContext _, VoidCallback openContainer) {
-    //                       return Padding(
-    //                         padding: const EdgeInsets.all(8.0),
-    //                         child: DealCard(deals[i]),
-    //                       );
-    //                     },
-    //                     openBuilder:
-    //                         (BuildContext _, VoidCallback openContainer) {
-    //                       return DealDetail(deals[i]);
-    //                     },
-    //                   ));
-    //             }
-    //           },
-    //           staggeredTileBuilder: (int index) {
-    //             if (index == deals.length) {
-    //               return StaggeredTile.fit(2);
-    //             } else {
-    //               return StaggeredTile.fit(1);
-    //             }
-    //           }),
-    //       onRefresh: _refresh,
+    //                   : Padding(
+    //                       padding: EdgeInsets.all(20),
+    //                       child: FlatButton(
+    //                           onPressed: _getMore, child: Text("点击加载更多")),
+    //                     ));
+    //         } else {
+    //           return Padding(
+    //               padding: const EdgeInsets.all(5),
+    //               child:
+    //                   OpenContainer(
+    //                 closedElevation: 0,
+    //                 transitionType: ContainerTransitionType.fade,
+    //                 closedBuilder:
+    //                     (BuildContext _, VoidCallback openContainer) {
+    //                   return Padding(
+    //                     padding: const EdgeInsets.all(8.0),
+    //                     child: DealCard(deals[i - 1]),
+    //                   );
+    //                 },
+    //                 openBuilder: (BuildContext _, VoidCallback openContainer) {
+    //                   return DealDetail(deals[i - 1]);
+    //                 },
+    //               ));
+    //         }
+    //       },
+    //       staggeredTileBuilder: (int index) {
+    //         if (index == deals.length + 1 || index == 0) {
+    //           return StaggeredTile.fit(2);
+    //         } else {
+    //           return StaggeredTile.fit(1);
+    //         }
+    //       }),
+    //   onRefresh: _refresh,
     // );
+    return RefreshIndicator(
+          child: StaggeredGridView.countBuilder(
+            physics: AlwaysScrollableScrollPhysics(),
+              itemCount: deals.length + 1,
+              controller: _scrollController,
+              crossAxisCount: 2,
+              addAutomaticKeepAlives: false,
+              addRepaintBoundaries: false,
+              itemBuilder: (BuildContext context, int i) {
+                if (i == deals.length) {
+                  return load
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: SpinKitWave(
+                              color: Colors.lightBlueAccent.withOpacity(0.5),
+                              size: 30.0),
+                        )
+                      : Padding(padding: EdgeInsets.all(20));
+                } else {
+                  return Padding(
+                      padding: const EdgeInsets.all(5),
+                      child:
+                          //GoodsCard(),
+                          OpenContainer(
+                        closedElevation: 0,
+                        transitionType: ContainerTransitionType.fade,
+                        closedBuilder:
+                            (BuildContext _, VoidCallback openContainer) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DealCard(deals[i]),
+                          );
+                        },
+                        openBuilder:
+                            (BuildContext _, VoidCallback openContainer) {
+                          return DealDetail(deals[i]);
+                        },
+                      ));
+                }
+              },
+              staggeredTileBuilder: (int index) {
+                if (index == deals.length) {
+                  return StaggeredTile.fit(2);
+                } else {
+                  return StaggeredTile.fit(1);
+                }
+              }),
+          onRefresh: _refresh,
+    );
   }
 }
