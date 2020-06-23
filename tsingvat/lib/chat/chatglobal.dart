@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provide/provide.dart';
 import 'package:tsingvat/const/const_url.dart';
 import 'package:tsingvat/model/conversation.dart';
@@ -9,22 +11,40 @@ import 'package:tsingvat/provide/websocket.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 
 class ChatGlobal {
+  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   static List chatusers;
   static Profile me = Profile();
   static Providers providers;
   static CurrentIndexProvide currentIndexProvide;
   static WebSocketProvide websocketProvide;
+  static BuildContext context;
+
+  static Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    print('onDidReceiveLocalNotification');
+  }
+
   static Future init() async {
+
     providers = Providers();
     currentIndexProvide = CurrentIndexProvide();
     websocketProvide = WebSocketProvide();
+     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification:
+            ChatGlobal.onDidReceiveLocalNotification);
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: websocketProvide.tochatpage);
   }
 
   static Future initWhenlogin() async {
     String list = await SharedPreferenceUtil.getString("chatlist") ?? '[]';
     print(list);
-    chatusers =
-        json.decode(list);
+    chatusers = json.decode(list);
     print(chatusers);
     Conversation.initMockConversations(chatusers);
     me.avatar = await SharedPreferenceUtil.getString("avatar");

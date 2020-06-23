@@ -24,7 +24,7 @@ class UserAvatar extends StatelessWidget {
         borderRadius:  BorderRadius.all(Radius.circular(5.0)),
         child: this.isNetwork ?  
           FadeInImage.assetNetwork(
-            placeholder: 'assets/images/ic_public_account.png',
+            placeholder: 'assets/avatar_logo.png',
             //预览图
             fit: BoxFit.fitWidth,
             image: image,

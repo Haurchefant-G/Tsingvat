@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tsingvat/chat/chat_detail_page.dart';
+import 'package:tsingvat/chat/chatglobal.dart';
+import 'package:tsingvat/chat/message_page.dart';
 import 'package:tsingvat/model/msg.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:web_socket_channel/io.dart';
@@ -36,6 +40,30 @@ class WebSocketProvide with ChangeNotifier {
     // return await createWebsocket();
   }
 
+  Future<void> tochatpage(String name) {
+    Navigator.of(ChatGlobal.context).push(MaterialPageRoute(builder: (context) {
+      print('username:${name}');
+      if (name == null) {
+        print("more than one meg");
+        return MessagePage();
+      } else {
+        return ChatDetailPage(name);
+      }
+    }));
+  }
+
+  Future<void> _showNotification(String title, String body,
+      {String user}) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'tsingvat', 'tingvat', 'tsingvatMessage',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await ChatGlobal.flutterLocalNotificationsPlugin
+        .show(0, title, body, platformChannelSpecifics, payload: user);
+  }
+
   createWebsocket(String name) async {
     //创建连接并且发送鉴别身份信息
     username = name;
@@ -54,14 +82,20 @@ class WebSocketProvide with ChangeNotifier {
     print("after list");
     var mss = json["data"];
     // 先将传输过来的data转化为msg
+    print(mss);
     if (mss is List) {
       for (var m in mss) {
         print("m is ${m}");
         msgs.add(Msg.fromJson(m));
+        ChatGlobal.addUser(m.sender);
       }
+    print(mss);
+      _showNotification("多条消息", "请查看");
     } else {
       Msg _msg = Msg.fromJson(mss);
       msgs.add(_msg);
+      _showNotification(_msg.sender, _msg.content, user: _msg.sender);
+      ChatGlobal.addUser(_msg.sender);
     }
     print("mss ${mss}");
 
@@ -127,6 +161,7 @@ class WebSocketProvide with ChangeNotifier {
 
   closeWebSocket() {
     //关闭链接
+
     channel.sink.close();
     print('关闭了websocket');
     notifyListeners();

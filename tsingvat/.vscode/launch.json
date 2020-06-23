@@ -4,6 +4,7 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
     
         {
             "name": "Flutter",
@@ -12,6 +13,12 @@
         },
         {
             "name": "Flutter Release",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "Flutter Release pixel",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
