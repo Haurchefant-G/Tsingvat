@@ -23,7 +23,7 @@ class MessagePage extends StatelessWidget {
               itemBuilder:  (BuildContext context, int index){
                 if (index < Conversation.getMockConversations().length){
                   print("index is ${index}, length:${Conversation.mockConversations.length}");
-                  return ConversationItem(Conversation.mockConversations[index],Conversation.mockConversations[index].title,0);
+                  return ConversationItem(Conversation.mockConversations[index],Conversation.mockConversations[index].nickname,0);
                 }
 //              else {
 //                var inde = index - 1 - Conversation.mockConversations.length;

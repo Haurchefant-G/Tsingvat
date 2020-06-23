@@ -19,7 +19,7 @@ class ConversationItem extends StatelessWidget {
       color: Color(AppColors.ConversationItemBg),
       child: InkWell(
         onTap: (){
-          print('打开会话:${conversationItemData.title}');
+          print('打开会话:${conversationItemData.nickname}');
 //          Application.router.navigateTo(context, '/chatdetail?index=${username}');
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context){
@@ -33,7 +33,7 @@ class ConversationItem extends StatelessWidget {
         },
         onLongPress: (){
           _showMenu(context,tapPos);
-          print('弹出会话菜单:${conversationItemData.title}');
+          print('弹出会话菜单:${conversationItemData.nickname}');
         },
         child: Container(
           height: ScreenUtil().setHeight(120),
@@ -113,7 +113,7 @@ class ConversationItem extends StatelessWidget {
       width: ScreenUtil().setWidth(100),
       height: ScreenUtil().setWidth(100)
     );
-  } 
+  }
 
   Widget Title(conversationItemData){
     return Expanded(
@@ -122,14 +122,14 @@ class ConversationItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            conversationItemData.title,
+            conversationItemData.nickname,
             style: TextStyle(fontSize: ScreenUtil().setSp(30.0),color: Color(AppColors.TitleColor),fontWeight:FontWeight.w400),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: ScreenUtil().setHeight(15.0),),
           Text(
-            conversationItemData.des,
+            conversationItemData.lastMsg,
             style: TextStyle(fontSize: ScreenUtil().setSp(24.0),color: Color(AppColors.DesTextColor)),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -166,28 +166,11 @@ class ConversationItem extends StatelessWidget {
         overflow: Overflow.visible,
         children: <Widget>[
           Avatar(conversationItemData),
-          Positioned(
-            right:-3.0 ,
-            top: -3.0,
-            child: unreadMsgCountText(conversationItemData),
-          )
         ],
       );
     }else{
       return Avatar(conversationItemData);
     }
-  }
-  Widget unreadMsgCountText(conversationItemData){
-    return Container(
-      width: ScreenUtil().setWidth(32.0),
-      height: ScreenUtil().setWidth(32.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(35.0),
-        color: Color(AppColors.NotifyDotBg)
-      ),
-      child: Text(conversationItemData.unreadMsgCount.toString(),style:TextStyle(fontSize: ScreenUtil().setSp(18),color: Color(AppColors.NotifyDotText))),
-    );
   }
 
   Widget muteIcon(){
