@@ -19,6 +19,7 @@ class WebSocketProvide with ChangeNotifier {
   var nickname = 'LittleHealth';
   List<String> users = []; // 用户
   List<List<Msg>> users_message_list = []; // 所有消息页面人员，包括groups和users
+  bool autorelink = false;
   var connecting = false; //websocket连接状态
   IOWebSocketChannel channel;
 
@@ -66,6 +67,7 @@ class WebSocketProvide with ChangeNotifier {
 
   createWebsocket(String name) async {
     //创建连接并且发送鉴别身份信息
+    autorelink = true;
     username = name;
     channel = await new IOWebSocketChannel.connect(
         'ws://121.199.66.17:8800/websocket/' + username);
@@ -74,12 +76,14 @@ class WebSocketProvide with ChangeNotifier {
   }
 
   listenMessage(data) {
+    print("listenmss");
     connecting = true;
     var json = jsonDecode(data);
     int code = json["code"];
     String msg = json["msg"];
     List<Msg> msgs = [];
     print("after list");
+    print(json);
     var mss = json["data"];
     // 先将传输过来的data转化为msg
     print(mss);
@@ -89,8 +93,11 @@ class WebSocketProvide with ChangeNotifier {
         msgs.add(Msg.fromJson(m));
         ChatGlobal.addUser(m.sender);
       }
-    print(mss);
-      _showNotification("多条消息", "请查看");
+      print('收到mss-------');
+      print(mss);
+      if (mss.length > 0) {
+        _showNotification("多条消息", "请查看");
+      }
     } else {
       Msg _msg = Msg.fromJson(mss);
       msgs.add(_msg);
@@ -154,14 +161,16 @@ class WebSocketProvide with ChangeNotifier {
   }
 
   void onDone() {
-    print('websocket断开了');
-    createWebsocket(username);
-    print('websocket重连');
+    if (autorelink) {
+      print('websocket断开了');
+      createWebsocket(username);
+      print('websocket重连');
+    }
   }
 
   closeWebSocket() {
     //关闭链接
-
+    autorelink = false;
     channel.sink.close();
     print('关闭了websocket');
     notifyListeners();
