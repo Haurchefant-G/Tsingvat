@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/services.dart';
+import 'package:tsingvat/loginPage.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
@@ -18,6 +20,7 @@ class _Login extends State<SignupPage> {
   String repeatPassword;
   bool isShowPassWord = false;
   HttpUtil http;
+  RegExp emailexp = RegExp(r'^.+@mails.tsinghua.edu.cn$');
 
   @override
   void initState() {
@@ -28,14 +31,41 @@ class _Login extends State<SignupPage> {
 
   void signup() async {
     //读取当前的Form状态
+    String error = null;
     var signupForm = signupKey.currentState;
     //验证Form表单
-    if (signupForm.validate()) {
-      signupForm.save();
-      print('userName: ' + userName + ' password: ' + password);
+    // if (signupForm.validate()) {
+    //   signupForm.save();
+    //   print('userName: ' + userName + ' password: ' + password);
+    //   return;
+    // }
+    signupForm.save();
+    if (userName.length < 4 || userName.length > 16) {
+      error = "请输入规范的用户名";
+    } else if (!emailexp.hasMatch(email)) {
+      error = "请使用后缀为@mails.tsinghua.edu.cn的邮箱注册";
+    } else if (password.length < 6 || password.length > 16) {
+      error = "密码不符合要求";
+    } else if (password != repeatPassword) {
+      error = "两次输入密码不一致";
     }
-    //Navigator.pushNamed(context, "homepage");
-    //Navigator.pushReplacementNamed(context, "homepage");
+
+    if (error != null) {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                error,
+                style: TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+            );
+          });
+      return;
+    }
+
     var data;
     try {
       data = await http.post('/account/register',
@@ -51,9 +81,7 @@ class _Login extends State<SignupPage> {
                 "注册失败",
                 textAlign: TextAlign.center,
               ),
-              content:
-                  //Text("登陆失败",textAlign: TextAlign.center,),
-                  Text(
+              content: Text(
                 "连接错误",
                 textAlign: TextAlign.center,
               ),
@@ -64,16 +92,25 @@ class _Login extends State<SignupPage> {
     }
     print(data);
     if (data['code'] == ResultCode.SUCCESS) {
-      // showModal(
-      //     context: context,
-      //     configuration: FadeScaleTransitionConfiguration(),
-      //     builder: (BuildContext context) {
-      //       return SnackBar(content: Text("注册成功"), animation: FadeScaleTransitionConfiguration(),);
-      //     });
-      // Scaffold.of(context).showSnackBar(SnackBar(content: Text("注册成功", ), behavior: SnackBarBehavior.floating,));
-      Future.delayed(Duration(milliseconds: 1500), (){
-        Navigator.pushReplacementNamed(context, "loginPage");
-      });
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "注册成功",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("返回登录界面")),
+              ],
+            );
+          });
     } else if (data['code'] == ResultCode.ACCOUNT_ALREADY_EXISTS) {
       showModal(
           context: context,
@@ -84,16 +121,13 @@ class _Login extends State<SignupPage> {
                 "注册失败",
                 textAlign: TextAlign.center,
               ),
-              content:
-                  //Text("登陆失败",textAlign: TextAlign.center,),
-                  Text(
+              content: Text(
                 "该用户名已被注册",
                 textAlign: TextAlign.center,
               ),
               actions: <Widget>[],
             );
           });
-      //}
     } else {
       showModal(
           context: context,
@@ -104,9 +138,7 @@ class _Login extends State<SignupPage> {
                 "注册失败",
                 textAlign: TextAlign.center,
               ),
-              content:
-                  //Text("登陆失败",textAlign: TextAlign.center,),
-                  Text(
+              content: Text(
                 "未能完成注册",
                 textAlign: TextAlign.center,
               ),
@@ -163,19 +195,17 @@ class _Login extends State<SignupPage> {
                         child: TextFormField(
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
-                            hintText: '用户名',
+                            hintText: '用户名(4-16位字母或数字)',
                             border: InputBorder.none,
-                            //suffixText: "@mails.tinghua.edu.cn",
                           ),
                           keyboardType: TextInputType.text,
                           onSaved: (value) {
                             userName = value;
                           },
-                          validator: (username) {
-                            if (username.length == 0) {
-                              print('请输入用户名');
-                            }
-                          },
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter(
+                                RegExp("[a-zA-Z0-9]"))
+                          ],
                           onFieldSubmitted: (value) {},
                         ),
                       ),
@@ -199,11 +229,6 @@ class _Login extends State<SignupPage> {
                           onSaved: (value) {
                             email = value;
                           },
-                          validator: (username) {
-                            if (username.length == 0) {
-                              print('请输入用户名');
-                            }
-                          },
                           onFieldSubmitted: (value) {},
                         ),
                       ),
@@ -222,18 +247,16 @@ class _Login extends State<SignupPage> {
                             child: TextFormField(
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
-                                hintText: '输入密码',
+                                hintText: '输入密码(6-16位字母或数字)',
                                 border: InputBorder.none,
                               ),
+                              inputFormatters: [
+                                WhitelistingTextInputFormatter(
+                                    RegExp("[a-zA-Z0-9]"))
+                              ],
                               obscureText: !isShowPassWord,
-                              onChanged: (v) {
+                              onSaved: (v) {
                                 password = v;
-                              },
-                              validator: (v) {
-                                //if (v.length == 0) {
-                                print(v);
-                                //}
-                                // return v.length > 0 ? null : "密码不能为空";
                               },
                             ),
                           ),
@@ -264,28 +287,11 @@ class _Login extends State<SignupPage> {
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 hintText: '再次输入密码',
-
                                 border: InputBorder.none,
-                                // border: OutlineInputBorder(
-                                //     borderRadius:
-                                //         BorderRadius.all(Radius.circular(100)),
-                                //     borderSide: BorderSide(
-                                //         width: 0,
-                                //         color: Colors.white)),
-                                // fillColor:
-                                //     Theme.of(context).dialogBackgroundColor,
-                                // filled: true,
                               ),
                               obscureText: !isShowPassWord,
-                              onChanged: (v) {
+                              onSaved: (v) {
                                 repeatPassword = v;
-                              },
-                              validator: (v) {
-                                //if (v.length == 0) {
-                                print(password);
-                                print(v);
-                                //}
-                                // return v == password ? null : "前后两次密码不一致";
                               },
                             ),
                           ),
@@ -330,15 +336,6 @@ class _Login extends State<SignupPage> {
                           children: <Widget>[
                             FlatButton(
                               onPressed: () {
-                                // Navigator.push(context, PageRouteBuilder(
-                                //     pageBuilder: (BuildContext context,
-                                //         Animation animation,
-                                //         Animation secondaryAnimation) {
-                                //   return FadeTransition(
-                                //     opacity: animation,
-                                //     child: SignupPage(),
-                                //   );
-                                // }));
                                 Navigator.pop(context);
                               },
                               child: Text(
@@ -348,12 +345,7 @@ class _Login extends State<SignupPage> {
                                     color: Color.fromARGB(255, 53, 53, 53)),
                               ),
                             ),
-                            Text(
-                              '',
-                              style: TextStyle(
-                                  fontSize: 13.0,
-                                  color: Color.fromARGB(255, 53, 53, 53)),
-                            ),
+                            Container(),
                           ],
                         ),
                       ),

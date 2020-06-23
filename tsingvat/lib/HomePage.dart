@@ -13,6 +13,7 @@ import 'package:tsingvat/tabPage/InfoPage.dart';
 import 'package:tsingvat/tabPage/ErrandPage.dart';
 import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
+import 'dart:ui';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -37,9 +38,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   TabController _tabController;
   List tabs = [" 跑腿 ", " 交易 ", " 资讯 ", " 我的 "];
   AnimationController _fabController;
+  AnimationController _expandController;
   Animation<double> _expandAnimation;
   bool _showFab = true;
   bool _fabTappable = true;
+  //List oage = [ErrandPage(), DealPage(), PostPage(), InfoPage()];
 
   void _incrementCounter() {
     setState(() {
@@ -57,12 +60,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     _fabController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _expandController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     // _expandAnimation =
-    //     Tween<double>(begin: 200.0, end: 0.0).animate(_expandController)
-    //       ..addListener(() {
-    //         setState(() {});
-    //       });
-    //_tabController.addListener(() { })
+    //     Tween<double>(begin: 200.0, end: 0.0).animate(_fabController);
+    _expandAnimation =
+        Tween<double>(begin: 200.0, end: 48.0).animate(_fabController)
+          ..addListener(() {
+            setState(() {});
+          });
+    // _tabController.addListener(() {});
   }
 
   @override
@@ -107,30 +114,55 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       // appBar: AppBar(
       //   title: Text(widget.title),
       // ),
-      // appBar:HomeAppBar(
-      //                 tabController: _tabController,
-      //                 tabHandler: _handleTabs,
-      //                 tabs: tabs),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-                automaticallyImplyLeading: false,
-                floating: false,
-                pinned: true,
-                expandedHeight: 0, //_expandAnimation.value,
-                flexibleSpace: HomeAppBar(
-                    tabController: _tabController,
-                    tabHandler: _handleTabs,
-                    tabs: tabs))
-          ];
-        },
-        body: Container(
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-            child: TabBarView(
+      appBar:HomeAppBar(
+                      tabController: _tabController,
+                      tabHandler: _handleTabs,
+                      tabs: tabs),
+      // body: 
+      // NestedScrollView(
+      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      //     return <Widget>[
+      //       SliverOverlapAbsorber(
+      //         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+      //         sliver: SliverAppBar(
+      //             automaticallyImplyLeading: false,
+      //             //floating: true,
+      //             pinned: true,
+      //             //title: Text("123"),
+      //             //snap: true,
+      //             expandedHeight: _expandAnimation.value,
+      //             flexibleSpace: 
+      //             FlexibleSpaceBar(background: Image.asset('assets/placeholder_image.png', fit: BoxFit.cover)),
+      //                   bottom: TabBar(controller: _tabController, tabs: tabs.map((tab) => Text(tab, style: TextStyle(fontSize: 18.0))).toList()),
+      //                   forceElevated: innerBoxIsScrolled,
+      //                 ),
+      //             // HomeAppBar(
+      //             //     tabController: _tabController,
+      //             //     tabHandler: _handleTabs,
+      //             //     tabs: tabs)),
+      //       )
+      //     ];
+      //   },
+        body: 
+        // Container(
+        //     decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+        //     child: 
+            TabBarView(
               //physics: NeverScrollableScrollPhysics(),
               controller: _tabController,
               children: <Widget>[
+                // Builder(builder: (BuildContext context) {
+                //   return CustomScrollView(
+                //     slivers: <Widget>[
+                //       SliverOverlapInjector(
+                //         // This is the flip side of the SliverOverlapAbsorber above.
+                //         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                //             this.context),
+                //       ),
+                //       ErrandPage(),
+                //     ],
+                //   );
+                // }),
                 ErrandPage(),
                 // Container(
                 //     padding: EdgeInsets.only(left: 10, right: 10),
@@ -153,8 +185,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 PostPage(),
                 InfoPage()
               ],
-            )),
-      ),
+            ),
+            //),
+      //       ,),
+      // ),
       // CustomScrollView(slivers: <Widget>[
       //   SliverAppBar(
       //     floating: false,
@@ -303,80 +337,86 @@ class _HomeAppBarState extends State<HomeAppBar> {
     //final isSmallDesktop = isDisplaySmallDesktop(context);
     //final textScaleFactor = GalleryOptions.of(context).textScaleFactor(context);
 
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            //horizontal:
-            //isDesktop && !isSmallDesktop ? appPaddingLarge : appPaddingSmall,
-            ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // const ExcludeSemantics(
-            //   child: FadeInImagePlaceholder(
-            //     image: AssetImage(
-            //       'assets/placeholder_image.png',
-            //     ),
-            //     placeholder: SizedBox(
-            //       width: 40,
-            //       height: 60,
-            //     ),
-            //     width: 40,
-            //     height: 60,
-            //   ),
-            // ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 24, end: 24),
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    splashColor: Colors.transparent,
-                  ),
-                  child: TabBar(
-                    indicator:
-                        // BoxDecoration(
-                        //   border: Border.all(width:2),
-                        //   borderRadius: BorderRadius.circular(100),
-                        //   gradient: GradientUtil.warmFlame()
+    return Material(
+      elevation: 4.0,
+      child: Container(
+        color: Theme.of(context).primaryColor,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: MediaQueryData.fromWindow(window).padding.top
+              //horizontal:
+              //isDesktop && !isSmallDesktop ? appPaddingLarge : appPaddingSmall,
+              ),
+          child: Row(
 
-                        // )
-                        // ,
-                        // indicatorSize: TabBarIndicatorSize.label,
-                        BorderTabIndicator(
-                      indicatorHeight: 32,
-                      textScaleFactor: 1,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // const ExcludeSemantics(
+              //   child: FadeInImagePlaceholder(
+              //     image: AssetImage(
+              //       'assets/placeholder_image.png',
+              //     ),
+              //     placeholder: SizedBox(
+              //       width: 40,
+              //       height: 60,
+              //     ),
+              //     width: 40,
+              //     height: 60,
+              //   ),
+              // ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 24, end: 24),
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      splashColor: Colors.transparent,
                     ),
-                    controller: widget.tabController,
-                    // labelPadding:
-                    //     // isDesktop ?
-                    //     const EdgeInsets.symmetric(horizontal: 20),
-                    // : EdgeInsets.zero,
-                    isScrollable: false, // left-align tabs on desktop
-                    labelStyle: Theme.of(context).primaryTextTheme.headline6,
-                    labelColor: Theme.of(context).accentColor,
-                    unselectedLabelStyle:
-                        Theme.of(context).primaryTextTheme.button,
-                    unselectedLabelColor: Theme.of(context).hintColor,
-                    onTap: (index) {
-                      // widget.tabController.animateTo(
-                      //   index,
-                      //   duration: const Duration(milliseconds: 300),
-                      // );
-                      //widget.tabHandler(index);
-                      //widget.tabHandler(index);
-                    },
+                    child: TabBar(
+                      indicator:
+                          // BoxDecoration(
+                          //   border: Border.all(width:2),
+                          //   borderRadius: BorderRadius.circular(100),
+                          //   gradient: GradientUtil.warmFlame()
 
-                    tabs: widget.tabs
-                        .map((e) => Tab(
-                              text: e,
-                            ))
-                        .toList(),
+                          // )
+                          // ,
+                          // indicatorSize: TabBarIndicatorSize.label,
+                          BorderTabIndicator(
+                        indicatorHeight: 32,
+                        textScaleFactor: 1,
+                      ),
+                      controller: widget.tabController,
+                      // labelPadding:
+                      //     // isDesktop ?
+                      //     const EdgeInsets.symmetric(horizontal: 20),
+                      // : EdgeInsets.zero,
+                      isScrollable: false, // left-align tabs on desktop
+                      labelStyle: Theme.of(context).primaryTextTheme.headline6,
+                      labelColor: Theme.of(context).accentColor,
+                      unselectedLabelStyle:
+                          Theme.of(context).primaryTextTheme.button,
+                      unselectedLabelColor: Theme.of(context).hintColor,
+                      onTap: (index) {
+                        // widget.tabController.animateTo(
+                        //   index,
+                        //   duration: const Duration(milliseconds: 300),
+                        // );
+                        //widget.tabHandler(index);
+                        //widget.tabHandler(index);
+                      },
+
+                      tabs: widget.tabs
+                          .map((e) => Tab(
+                                text: e,
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

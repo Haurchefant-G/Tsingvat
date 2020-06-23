@@ -16,8 +16,9 @@ class _PostPageState extends State<PostPage> {
   List<Post> posts = [];
   List<int> imagenum = [];
   ScrollController _scrollController;
-  bool more = false;
+  bool load = false;
   bool current;
+  bool nomore = false;
 
   @override
   void initState() {
@@ -35,13 +36,12 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<void> _refresh() async {
+    nomore = false;
     var data;
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/post", null);
       await Future.delayed(Duration(milliseconds: 500));
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
@@ -64,31 +64,37 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<void> _getMore() async {
-    var data;
-    setState(() {
-      more = true;
-    });
-    try {
-      print(DateTime.now().millisecondsSinceEpoch);
-      data = await http.get("/post", null);
-      await Future.delayed(Duration(milliseconds: 500), () {});
-    } catch (e) {
-      print(e);
-      return;
-    }
-    if (data['code'] == ResultCode.SUCCESS) {
-      for (var json in data['data']) {
-        var p = Post.fromJson(json);
-        int num = (await http.get("/images/num/${p.uuid}", null))['data'];
-        print(num);
-        posts.add(p);
-        imagenum.add(num);
-      }
-    }
-    if (current == true) {
+    if (!nomore) {
+      var data;
       setState(() {
-        more = false;
+        load = true;
       });
+      try {
+        print(DateTime.now().millisecondsSinceEpoch);
+        data = await http.get("/post", posts.length > 0 ? {"time": posts.last.created} : null);
+        await Future.delayed(Duration(milliseconds: 500), () {});
+      } catch (e) {
+        print(e);
+        return;
+      }
+      var n = posts.length;
+      if (data['code'] == ResultCode.SUCCESS) {
+        for (var json in data['data']) {
+          var p = Post.fromJson(json);
+          int num = (await http.get("/images/num/${p.uuid}", null))['data'];
+          print(num);
+          posts.add(p);
+          imagenum.add(num);
+        }
+      }
+      if (posts.length == n) {
+        nomore = true;
+      }
+      if (current == true) {
+        setState(() {
+          load = false;
+        });
+      }
     }
   }
 
@@ -109,17 +115,26 @@ class _PostPageState extends State<PostPage> {
               crossAxisCount: 1,
               itemBuilder: (BuildContext context, int i) {
                 if (i == posts.length) {
-                  return more
+                  return nomore
                       ? Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: SpinKitWave(
-                              color: Colors.lightBlueAccent.withOpacity(0.5),
-                              size: 30.0),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "没有更多了",
+                            textAlign: TextAlign.center,
+                          ),
                         )
-                      : Padding(padding: EdgeInsets.all(20));
+                      : (load
+                          ? Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: SpinKitWave(
+                                  color:
+                                      Colors.lightBlueAccent.withOpacity(0.5),
+                                  size: 30.0),
+                            )
+                          : Padding(padding: EdgeInsets.all(20), child: FlatButton(onPressed: _getMore, child: Text("点击加载更多")),));
                 } else {
                   return Padding(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: PostCard(posts[i], num: imagenum[i]));
                 }
               },

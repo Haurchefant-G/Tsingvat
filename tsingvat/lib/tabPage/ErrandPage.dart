@@ -17,8 +17,9 @@ class _ErrandPageState extends State<ErrandPage> {
   HttpUtil http;
   List<Errand> errands = [];
   ScrollController _scrollController;
-  bool more = false;
+  bool load = false;
   bool current;
+  bool nomore = false;
 
   @override
   void initState() {
@@ -33,10 +34,11 @@ class _ErrandPageState extends State<ErrandPage> {
           _getMore();
         }
       });
-    _getMore();
+    _getMore();//.then((value) => _getMore());
   }
 
   Future<void> _refresh() async {
+    nomore = false;
     var data;
     // await Future.delayed(Duration(seconds: 2), () {
     //   print("刷新结束");
@@ -46,7 +48,6 @@ class _ErrandPageState extends State<ErrandPage> {
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand", null);
       await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
@@ -61,41 +62,48 @@ class _ErrandPageState extends State<ErrandPage> {
         }
       }
     }
+    // if (errands.length < 8) {
+    //   await _getMore();
+    // }
     if (current == true) {
       setState(() {});
     }
   }
 
   Future<void> _getMore() async {
-    print(1);
-    var data;
-    setState(() {
-      more = true;
-    });
-    try {
-      //print(DateTime.now().toIso8601String());
-      print(DateTime.now().millisecondsSinceEpoch);
-      data = await http.get("/errand",
-          errands.length > 0 ? {"time": errands.last.created} : null);
-      await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
-    } catch (e) {
-      print(e);
-      return;
-    }
-    //print(data);
-    if (data['code'] == ResultCode.SUCCESS) {
-      for (var json in data['data']) {
-        var e = Errand.fromJson(json);
-        if (e.taker == null) {
-          errands.add(e);
+    if (!nomore) {
+      var data;
+      setState(() {
+        load = true;
+      });
+      try {
+        print(DateTime.now().millisecondsSinceEpoch);
+        data = await http.get("/errand",
+            errands.length > 0 ? {"time": errands.last.created} : null);
+        await Future.delayed(Duration(milliseconds: 500), () {});
+      } catch (e) {
+        print(e);
+        return;
+      }
+      //print(data);
+      var n = errands.length;
+      if (data['code'] == ResultCode.SUCCESS) {
+        for (var json in data['data']) {
+          var e = Errand.fromJson(json);
+          //errands.add(e);
+          if (e.taker == null) {
+            errands.add(e);
+          }
         }
       }
-    }
-    if (current == true) {
-      setState(() {
-        more = false;
-      });
+      if (data['data'].length == 0) {
+        nomore = true;
+      }
+      if (current == true) {
+        setState(() {
+          load = false;
+        });
+      }
     }
   }
 
@@ -109,33 +117,82 @@ class _ErrandPageState extends State<ErrandPage> {
   @override
   Widget build(BuildContext context) {
     print("build");
-    return Container(
-        padding: EdgeInsets.only(left: 10, right: 10),
-        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        //padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-            color: Colors.white70, //Theme.of(context).backgroundColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-        child: RefreshIndicator(
-            child: ListView.builder(
-                controller: _scrollController,
-                itemCount: errands.length + 1,
-                itemBuilder: (context, i) {
-                  if (i == errands.length) {
-                    return more
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: SpinKitWave(
-                                color: Colors.lightBlueAccent.withOpacity(0.5),
-                                size: 30.0),
-                          )
-                        : Padding(padding: EdgeInsets.all(20));
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: ErrandCard(errands[i], _refresh),
+    return RefreshIndicator( child :Container(
+      //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      //padding: EdgeInsets.all(16),
+      // decoration: BoxDecoration(
+      //     color: Theme.of(context).backgroundColor,
+      //     borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+          child: ListView.builder(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: _scrollController,
+              itemCount: errands.length + 2,
+              itemBuilder: (context, i) {
+                if (i == 0) {
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    decoration: BoxDecoration(
+                      boxShadow: [BoxShadow()],
+                      border: Border.all(width: 1, color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                      color: Theme.of(context).dialogBackgroundColor,
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(border: InputBorder.none),
+                    ),
                   );
-                }),
-            onRefresh: _refresh));
+                } else if (i == errands.length + 1) {
+                  return nomore
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "没有更多了",
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : (load
+                          ? Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: SpinKitWave(
+                                  color:
+                                      Colors.lightBlueAccent.withOpacity(0.5),
+                                  size: 30.0),
+                            )
+                          : Padding(padding: EdgeInsets.all(20), child: FlatButton(onPressed: _getMore, child: Text("点击加载更多")),));
+                }
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: ErrandCard(errands[i - 1], _refresh),
+                );
+              }),),
+          onRefresh: _refresh,
+    );
+
+//Sliver版本
+    // return CustomScrollView(
+    //   controller: _scrollController,
+    //   slivers: <Widget>[
+    //     SliverOverlapInjector(
+    //       This is the flip side of the SliverOverlapAbsorber above.
+    //       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(this.context),
+    //     ),
+    //     SliverList(
+    //       delegate: SliverChildBuilderDelegate((context, i) {
+    //         if (i == errands.length) {
+    //           return more
+    //               ? Padding(
+    //                   padding: const EdgeInsets.only(bottom: 20),
+    //                   child: SpinKitWave(
+    //                       color: Colors.lightBlueAccent.withOpacity(0.5),
+    //                       size: 30.0),
+    //                 )
+    //               : Padding(padding: EdgeInsets.all(20));
+    //         }
+    //         return Padding(
+    //           padding: const EdgeInsets.only(bottom: 10),
+    //           child: ErrandCard(errands[i], _refresh),
+    //         );
+    //       }, childCount: errands.length + 1),
+    //     ),
   }
 }

@@ -46,7 +46,7 @@ class Conversation {
   static List<Conversation> mockConversations  = [
     Conversation(
         avatar: ConstUrl.avatarimageurl+"/gac/avatar.png",
-        title: 'gac',
+        title: 'zxj',
         des: '[模拟数据]',
         updateAt: '19:56',
         unreadMsgCount: 0,
@@ -55,26 +55,6 @@ class Conversation {
         userId:"000000",
         type: 1
     ),
-
-//    new Conversation(
-//        avatar: 'assets/images/ic_tx_news.png',
-//        title: '腾讯新闻',
-//        des: '豪车与出租车刮擦 俩车主划拳定责',
-//        updateAt: '17:20',
-//        groupId: 000000,
-//        userId:"000000",
-//        type: 1
-//    ),
-//    new Conversation(
-//        avatar: 'assets/images/ic_wx_games.png',
-//        title: '微信游戏',
-//        titleColor: 0xff586b95,
-//        des: '25元现金助力开学季！',
-//        updateAt: '17:12',
-//        groupId: 000000,
-//        userId:"000000",
-//        type: 1
-//    ),
     Conversation(
         avatar: 'https://randomuser.me/api/portraits/men/10.jpg',
         title: '特朗普',
@@ -97,16 +77,6 @@ class Conversation {
        userId:"000000",
        type: 1
      ),
-//     new Conversation(
-//       avatar: 'assets/images/ic_fengchao.png',
-//       title: '蜂巢智能柜',
-//       titleColor: 0xff586b95,
-//       des: '喷一喷，竟比洗牙还神奇！5秒钟还你一个漂亮洁白的口腔。',
-//       updateAt: '17:12',
-//       groupId: 000000,
-//       userId:"000000",
-//       type: 1
-//     ),
      new Conversation(
        avatar: 'https://randomuser.me/api/portraits/women/57.jpg',
        title: 'Lily',
@@ -126,60 +96,5 @@ class Conversation {
        isMute: true,
        unreadMsgCount: 0,
      ),
-    // new Conversation(
-    //   avatar: 'https://randomuser.me/api/portraits/women/10.jpg',
-    //   title: 'Tina Morgan',
-    //   des: '晚自习是什么来着？你知道吗，看到的话赶紧回复我',
-    //   updateAt: '17:58',
-    //   isMute: false,
-    //   unreadMsgCount: 0,
-    //   groupId: 000000,
-    //   userId:"000000",
-    //   type: 1
-    // ),
-    // new Conversation(
-    //   avatar: 'https://randomuser.me/api/portraits/women/57.jpg',
-    //   title: 'Lily',
-    //   des: '今天要去运动场锻炼吗？',
-    //   updateAt: '昨天',
-    //   isMute: false,
-    //   unreadMsgCount: 0,
-    //   groupId: 000000,
-    //   userId:"000000",
-    //   type: 1
-    // ),
-    // new Conversation(
-    //   avatar: 'https://randomuser.me/api/portraits/men/10.jpg',
-    //   title: '汤姆丁',
-    //   des: '今晚要一起去吃肯德基吗？',
-    //   updateAt: '17:56',
-    //   isMute: true,
-    //   unreadMsgCount: 0,
-    //   groupId: 000000,
-    //   userId:"000000",
-    //   type: 1
-    // ),
-    // new Conversation(
-    //   avatar: 'https://randomuser.me/api/portraits/women/10.jpg',
-    //   title: 'Tina Morgan',
-    //   des: '晚自习是什么来着？你知道吗，看到的话赶紧回复我',
-    //   updateAt: '17:58',
-    //   isMute: false,
-    //   unreadMsgCount: 0,
-    //   groupId: 000000,
-    //   userId:"000000",
-    //   type: 1
-    // ),
-    // new Conversation(
-    //   avatar: 'https://randomuser.me/api/portraits/women/57.jpg',
-    //   title: 'Lily',
-    //   des: '今天要去运动场锻炼吗？',
-    //   updateAt: '昨天',
-    //   isMute: false,
-    //   unreadMsgCount: 0,
-    //   groupId: 000000,
-    //   userId:"000000",
-    //   type: 1
-    // )
   ];
 }

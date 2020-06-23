@@ -22,7 +22,8 @@ class DealCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // name = '商品名称';
     // price = 0;
-    return Container(
+    return Material(
+      elevation: 3,
       // child: Card(
       child: Column(
         children: <Widget>[

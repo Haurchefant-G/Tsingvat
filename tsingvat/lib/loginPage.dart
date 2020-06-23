@@ -13,7 +13,6 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> {
-  //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = GlobalKey<FormState>();
   User user;
   String userName;
@@ -23,6 +22,8 @@ class _Login extends State<Login> {
   bool validP = false;
   bool valid = false;
   HttpUtil http;
+  FocusNode usernameFocus = FocusNode();
+  FocusNode passwordFocus = FocusNode();
 
   @override
   void initState() {
@@ -31,16 +32,11 @@ class _Login extends State<Login> {
   }
 
   Future<void> login() async {
-    //读取当前的Form状态
-
     var loginForm = loginKey.currentState;
-    //验证Form表单
-    //if (loginForm.validate()) {
     loginForm.save();
     print('userName: ' + userName + ' password: ' + password);
     var data;
     try {
-      Map<String, dynamic> a = {"username": userName, "password": password};
       data = await http
           .post('/account/login', {"username": userName, "password": password});
     } catch (e) {
@@ -54,9 +50,7 @@ class _Login extends State<Login> {
                 "登陆失败",
                 textAlign: TextAlign.center,
               ),
-              content:
-                  //Text("登陆失败",textAlign: TextAlign.center,),
-                  Text(
+              content: Text(
                 "连接错误",
                 textAlign: TextAlign.center,
               ),
@@ -70,14 +64,17 @@ class _Login extends State<Login> {
       User user = User.fromJson(data['data']);
       print(user);
       SharedPreferenceUtil.setString('username', user.username);
-      SharedPreferenceUtil.setString('password', password);
       SharedPreferenceUtil.setString('email', user.email);
       SharedPreferenceUtil.setInt('phone', user.phone);
       SharedPreferenceUtil.setString('nickname', user.nickname);
       SharedPreferenceUtil.setString('signature', user.signature);
-      SharedPreferenceUtil.setString('avatar', user.avatar??"http://121.199.66.17:8800/images/account/${user.username}/avatar.png" + "?" +
-                  DateTime.now().microsecondsSinceEpoch.toString());
-      
+      SharedPreferenceUtil.setString(
+          'avatar',
+          "http://121.199.66.17:8800/images/account/${user.username}/avatar.png" +
+              "?" +
+              DateTime.now().microsecondsSinceEpoch.toString());
+      SharedPreferenceUtil.setString('password', password);
+
       Navigator.pushReplacementNamed(context, "homePage");
     } else {
       showModal(
@@ -89,9 +86,7 @@ class _Login extends State<Login> {
                 "登陆失败",
                 textAlign: TextAlign.center,
               ),
-              content:
-                  //Text("登陆失败",textAlign: TextAlign.center,),
-                  Text(
+              content: Text(
                 "用户名或密码错误",
                 textAlign: TextAlign.center,
               ),
@@ -113,7 +108,6 @@ class _Login extends State<Login> {
     return MaterialApp(
       title: 'Tsingvat',
       home: Scaffold(
-        // 使用Column排列，包含两个Container
         backgroundColor: Theme.of(context).primaryColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -131,11 +125,9 @@ class _Login extends State<Login> {
                   ),
                 )),
             Container(
-              // 左右的边距
               padding: const EdgeInsets.all(30.0),
               child: Form(
                 key: loginKey,
-                //autovalidate: true,
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.subtitle1,
                   child: Column(
@@ -147,27 +139,16 @@ class _Login extends State<Login> {
                         ),
                         child: TextFormField(
                           //autovalidate: true,
+                          focusNode: usernameFocus,
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
-                              hintText: '用户名',
-                              // filled: true,
-                              // fillColor: Theme.of(context).dialogBackgroundColor,
-                              border: InputBorder.none
-                              // OutlineInputBorder(
-                              //   gapPadding: 100,
-                              //   borderRadius: BorderRadius.all(Radius.circular(100)),
-                              //   borderSide: BorderSide.none,
-                              //   //color: Theme.of(context).dialogBackgroundColor,
-                              // ),
-                              //InputBorder.none,
-                              ),
+                              hintText: '用户名', border: InputBorder.none),
                           keyboardType: TextInputType.text,
                           onSaved: (value) {
                             userName = value;
                           },
                           onChanged: (value) {
                             if (value.length == 0) {
-                              print('请输入用户名');
                               setState(() {
                                 validU = false;
                               });
@@ -177,7 +158,10 @@ class _Login extends State<Login> {
                               });
                             }
                           },
-                          onFieldSubmitted: (value) {},
+                          onEditingComplete: () {
+                            usernameFocus.unfocus();
+                            passwordFocus.requestFocus();
+                          },
                         ),
                       ),
                       Padding(
@@ -193,23 +177,19 @@ class _Login extends State<Login> {
                               color: Theme.of(context).dialogBackgroundColor,
                             ),
                             child: TextFormField(
-                              //autovalidate: true,
-                              //toolbarOptions: ToolbarOptions(),
+                              focusNode: passwordFocus,
                               enableInteractiveSelection: false,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
-                                hintText: '输入密码',
+                                hintText: '密码',
                                 border: InputBorder.none,
-                                //errorMaxLines: 0
                               ),
                               obscureText: !isShowPassWord,
                               onSaved: (value) {
                                 password = value;
                               },
-
                               onChanged: (value) {
                                 if (value.length == 0) {
-                                  print('请输入密码');
                                   setState(() {
                                     validP = false;
                                   });
@@ -218,6 +198,9 @@ class _Login extends State<Login> {
                                     validP = true;
                                   });
                                 }
+                              },
+                              onEditingComplete: () {
+                                passwordFocus.unfocus();
                               },
                             ),
                           ),
@@ -259,11 +242,12 @@ class _Login extends State<Login> {
                         margin: EdgeInsets.only(top: 30.0),
                         padding: EdgeInsets.only(left: 8.0, right: 8.0),
                         child: Row(
-                          // spaceBetween分散至左右两边
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             FlatButton(
                               onPressed: () {
+                                usernameFocus.unfocus();
+                                passwordFocus.unfocus();
                                 Navigator.push(context, PageRouteBuilder(
                                     pageBuilder: (BuildContext context,
                                         Animation animation,
@@ -281,12 +265,13 @@ class _Login extends State<Login> {
                                     color: Color.fromARGB(255, 53, 53, 53)),
                               ),
                             ),
-                            Text(
-                              '忘记密码？',
-                              style: TextStyle(
-                                  fontSize: 13.0,
-                                  color: Color.fromARGB(255, 53, 53, 53)),
-                            ),
+                            // Text(
+                            //   '忘记密码？',
+                            //   style: TextStyle(
+                            //       fontSize: 13.0,
+                            //       color: Color.fromARGB(255, 53, 53, 53)),
+                            // ),
+                            Container(),
                           ],
                         ),
                       ),

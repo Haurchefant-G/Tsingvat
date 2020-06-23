@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animations/animations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,6 +16,8 @@ import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 import 'package:tsingvat/chat/message_page.dart';
 
+import 'customDiaglog.dart';
+
 class InfoCard extends StatefulWidget {
   @override
   _InfoCardState createState() => _InfoCardState();
@@ -26,13 +29,14 @@ class _InfoCardState extends State<InfoCard> {
 
   var userAvatar;
   var userName;
-  var titles = ["需完成跑腿", "我的跑腿", "交易", "资讯", "聊天"];
+  var titles = ["需完成跑腿", "我的跑腿", "交易", "资讯", "聊天", "设置"];
   var icons = [
     Icons.event_note,
     Icons.list,
     Icons.attach_money,
     Icons.turned_in_not,
-    Icons.chat_bubble_outline
+    Icons.chat_bubble_outline,
+    Icons.settings
   ];
 
   var titleTextStyle = TextStyle(fontSize: 16.0);
@@ -52,6 +56,7 @@ class _InfoCardState extends State<InfoCard> {
 
   changeAvatar() async {
     try {
+      Navigator.of(context).pop();
       var picker = ImagePicker();
       final image = await picker.getImage(source: ImageSource.gallery);
       var _image = File(image.path);
@@ -67,6 +72,24 @@ class _InfoCardState extends State<InfoCard> {
                   DateTime.now().microsecondsSinceEpoch.toString();
         });
         SharedPreferenceUtil.setString('avatar', userAvatar);
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: Text(
+                  "修改成功",
+                  textAlign: TextAlign.center,
+                ),
+                // content:
+                //     //Text("登陆失败",textAlign: TextAlign.center,),
+                //     Text(
+                //   "",
+                //   textAlign: TextAlign.center,
+                // ),
+                actions: <Widget>[],
+              );
+            });
       }
     } catch (e) {}
   }
@@ -75,6 +98,54 @@ class _InfoCardState extends State<InfoCard> {
     SharedPreferenceUtil.clear();
     Navigator.of(context)
         .pushNamedAndRemoveUntil('startPage', (route) => false);
+  }
+
+  settingsheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 300,
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                            height: 60,
+                            child: FlatButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: changeAvatar,
+                                child: Text(
+                                  "修改头像",
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .headline5,
+                                ))))
+                  ],
+                ),
+                Divider(height: 1),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                            height: 60,
+                            child: FlatButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: logout,
+                                child: Text(
+                                  "退出登录",
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .headline5
+                                      .copyWith(color: Colors.red),
+                                ))))
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   @override
@@ -93,82 +164,42 @@ class _InfoCardState extends State<InfoCard> {
             //backgroundColor: Colors.blueAccent,
             expandedHeight: 200.0,
             iconTheme: new IconThemeData(color: Colors.transparent),
-            flexibleSpace: new InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: 300,
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      child: Container(
-                                          height: 60,
-                                          child: FlatButton(
-                                              padding: EdgeInsets.zero,
-                                              onPressed: changeAvatar,
-                                              child: Text(
-                                                "修改头像",
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline5,
-                                              ))))
-                                ],
-                              ),
-                              Divider(height: 1),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      child: Container(
-                                          height: 60,
-                                          child: FlatButton(
-                                              padding: EdgeInsets.zero,
-                                              onPressed: logout,
-                                              child: Text(
-                                                "退出登录",
-                                                style: Theme.of(context)
-                                                    .primaryTextTheme
-                                                    .headline5.copyWith(color:Colors.red),
-                                              ))))
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      });
-                },
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    userAvatar == null
-                        ? new Image.asset(
-                            "assets/avatar_logo.png",
-                            width: 100,
-                            height: 100,
-                          )
-                        : Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.transparent,
-                                image: DecorationImage(
-                                    image: NetworkImage(userAvatar),
-                                    fit: BoxFit.cover),
-                                border: Border.all(
-                                    color: Colors.white, width: 2.0)),
-                          ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      child: new Text(
-                        userName ?? " ",
-                        style: Theme.of(context).primaryTextTheme.headline6,
-                      ),
-                    )
-                  ],
+            flexibleSpace: InkWell(
+                onTap: settingsheet,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: GradientUtil.cloudyApple()
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      userAvatar == null
+                          ? new Image.asset(
+                              "assets/avatar_logo.png",
+                              width: 100,
+                              height: 100,
+                            )
+                          : Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.transparent,
+                                  image: DecorationImage(
+                                      image: NetworkImage(userAvatar),
+                                      fit: BoxFit.cover),
+                                  border: Border.all(
+                                      color: Colors.white, width: 2.0)),
+                            ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                        child: new Text(
+                          userName ?? " ",
+                          style: Theme.of(context).primaryTextTheme.headline6,
+                        ),
+                      )
+                    ],
+                  ),
                 )),
           ),
           SliverFixedExtentList(
@@ -180,24 +211,27 @@ class _InfoCardState extends State<InfoCard> {
                     child: InkWell(
                       onTap: () {
                         print("the is the item of $title");
-
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          switch (index) {
-                            case 0:
-                              return TakedErrandsPage(userName);
-                            case 1:
-                              return MyWaitErrandsPage(userName);
-                            case 2:
-                              return MyDealsPage(userName);
-                            case 3:
-                              return MyPostsPage(userName);
-                            case 4:
-                              return MessagePage();
-                            default:
-                              return TakedErrandsPage(userName);
-                          }
-                        }));
+                        if (index == 5) {
+                          settingsheet();
+                        } else {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            switch (index) {
+                              case 0:
+                                return TakedErrandsPage(userName);
+                              case 1:
+                                return MyWaitErrandsPage(userName);
+                              case 2:
+                                return MyDealsPage(userName);
+                              case 3:
+                                return MyPostsPage(userName);
+                              case 4:
+                                return MessagePage();
+                              default:
+                                return TakedErrandsPage(userName);
+                            }
+                          }));
+                        }
 
 //                    Navigator.of(context)
 //                        .push(MaterialPageRoute(builder: (context) {

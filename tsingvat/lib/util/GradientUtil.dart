@@ -58,4 +58,46 @@ class GradientUtil {
         0.99,
         1.0
       ], angle: angle, opacity: opacity, tilemode: tilemode);
+
+  static Gradient lightBlue({
+    double opacity = 1.0,
+    double angle = 0,
+    TileMode tilemode,
+  }) =>
+      _getLinearGradient(colors: [
+        stringToColor("#9EFBD3"),
+        stringToColor("#57E9F2"),
+        stringToColor("#45D4FB")
+      ], stops: [
+        0.0,
+        0.48,
+        1.0
+      ], angle: angle, opacity: opacity, tilemode: tilemode);
+
+  static Gradient freshOasis({
+    double opacity = 1.0,
+    double angle = 0,
+    TileMode tilemode,
+  }) =>
+      _getLinearGradient(
+          colors: [stringToColor("#7DE2FC"), stringToColor("#B9B6E5")],
+          stops: [0.0, 1.0],
+          angle: angle,
+          opacity: opacity,
+          tilemode: tilemode);
+
+  static Gradient cloudyApple({
+    double opacity = 1.0,
+    double angle = 0,
+    TileMode tilemode,
+  }) =>
+      _getLinearGradient(colors: [
+        stringToColor("#f3e7e9"),
+        stringToColor("#e3eeff"),
+        stringToColor("#e3eeff")
+      ], stops: [
+        0.0,
+        0.99,
+        1.0
+      ], angle: angle, opacity: opacity, tilemode: tilemode);
 }

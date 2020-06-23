@@ -28,6 +28,7 @@ class PostCard extends StatelessWidget {
     // time = '时间';
     return Container(
       child: Card(
+        elevation: 3,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -88,6 +89,7 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               Container(
+                constraints: imagenum > 0 ? BoxConstraints(maxHeight: 300, minHeight: 0) : null,
                 child: imagenum > 0
                     ? Padding(
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
