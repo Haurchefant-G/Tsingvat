@@ -16,7 +16,7 @@
 
     <select id="getIndexErrands" resultType="com.mobilecourse.backend.entity.Errand">
         SELECT * FROM errand
-        WHERE created &lt; #{time}
+        WHERE created &lt; #{time} and taker is null
         order by created desc
         limit #{num};
     </select>
@@ -67,6 +67,7 @@
             <if test="strLike != null and strLike != ''">
                 and content like concat('%', #{strLike}, '%')
             </if>
+            and taker is null
         </where>
     </select>
 

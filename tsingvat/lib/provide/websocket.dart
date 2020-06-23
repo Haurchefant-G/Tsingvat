@@ -82,7 +82,6 @@ class WebSocketProvide with ChangeNotifier {
     int code = json["code"];
     String msg = json["msg"];
     List<Msg> msgs = [];
-    print("after list");
     print(json);
     var mss = json["data"];
     // 先将传输过来的data转化为msg

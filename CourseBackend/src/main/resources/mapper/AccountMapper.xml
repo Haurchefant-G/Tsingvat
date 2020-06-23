@@ -41,4 +41,22 @@
         SELECT * FROM account
         where username=#{username}
     </select>
+
+    <update id="modifyUser" parameterType="com.mobilecourse.backend.entity.Account">
+        UPDATE account
+        <set>
+            <if test="nickname != null and nickname != ''">
+                nickname=#{nickname},
+            </if>
+            <if test="signature != null and signature!=''">
+                signature=#{signature},
+            </if>
+            <if test="email != null and email != null"></if>
+                email=#{email},
+            <if test="password != null and password != ''">
+                password=#{password},
+            </if>
+        </set>
+        WHERE username=#{username}
+    </update>
 </mapper>
