@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:provide/provide.dart';
+import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/provide/currentIndex.dart';
 import 'package:tsingvat/provide/websocket.dart';
 import 'startPage.dart';
@@ -18,14 +19,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 Dio dio = Dio();
 
 void main() {
-  var providers = Providers();
-  var currentIndexProvide = CurrentIndexProvide();
-  var websocketProvide = WebSocketProvide();
-  print("websocket${websocketProvide}");
-  providers
-    ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
-    ..provide(Provider<WebSocketProvide>.value(websocketProvide));
-  runApp(ProviderNode(child:MyApp(),providers: providers));
+  WidgetsFlutterBinding.ensureInitialized();
+  ChatGlobal.init();
+  print("websocket${ChatGlobal.websocketProvide}");
+  ChatGlobal.providers
+    ..provide(Provider<CurrentIndexProvide>.value(ChatGlobal.currentIndexProvide))
+    ..provide(Provider<WebSocketProvide>.value(ChatGlobal.websocketProvide));
+  runApp(ProviderNode(child: MyApp(), providers: ChatGlobal.providers));
+  // runApp(MyApp());
 
   if (Platform.isAndroid) {
     // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
       initialRoute:
           //'homePage',
           'startPage',
-          //'messagePage',
+      //'messagePage',
       routes: {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),

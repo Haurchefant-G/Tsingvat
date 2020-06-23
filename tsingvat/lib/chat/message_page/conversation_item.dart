@@ -129,7 +129,7 @@ class ConversationItem extends StatelessWidget {
           ),
           SizedBox(height: ScreenUtil().setHeight(15.0),),
           Text(
-            conversationItemData.lastMsg,
+            conversationItemData.lastMsg??'',
             style: TextStyle(fontSize: ScreenUtil().setSp(24.0),color: Color(AppColors.DesTextColor)),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

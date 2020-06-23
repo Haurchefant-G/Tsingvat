@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
-import 'package:tsingvat/style/style.dart' show ICons,AppColors;
 import './message_page/conversation_item.dart';
 import '../model/conversation.dart';
 import '../provide/websocket.dart';

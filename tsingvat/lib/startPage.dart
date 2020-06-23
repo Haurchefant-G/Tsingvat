@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/loginPage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
@@ -32,6 +33,7 @@ class StartPage extends StatelessWidget {
     }
     print(data);
     if (data['code'] == ResultCode.SUCCESS) {
+      ChatGlobal.initWhenlogin();
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pushReplacementNamed(context, 'homePage');
       });
