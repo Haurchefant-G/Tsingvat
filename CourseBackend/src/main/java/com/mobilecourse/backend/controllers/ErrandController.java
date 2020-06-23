@@ -1,7 +1,11 @@
 package com.mobilecourse.backend.controllers;
 
+import com.alibaba.fastjson.JSON;
+import com.mobilecourse.backend.WebSocketServer;
 import com.mobilecourse.backend.dao.ErrandDao;
+import com.mobilecourse.backend.dao.MsgDao;
 import com.mobilecourse.backend.entity.Errand;
+import com.mobilecourse.backend.entity.Msg;
 import com.mobilecourse.backend.utils.Global;
 import com.mobilecourse.backend.utils.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,9 @@ import java.util.List;
 public class ErrandController extends CommonController {
     @Autowired
     private ErrandDao errandDao;
+
+    @Autowired
+    private MsgDao msgDao;
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ResponseEntity<ResultModel> createErrand(@RequestBody Errand errand){
@@ -42,10 +49,18 @@ public class ErrandController extends CommonController {
 
     @RequestMapping(value = "/take", method = {RequestMethod.PUT})
     public ResponseEntity<ResultModel> takeErrand(@RequestBody Errand errand){
-        if(errand.getUuid() == null || errand.getTaker() == null)
-            return wrapperErrorResp(ResultModel.ERRAND_TAKE_FAIL, "should specify taker!");
+        if(!checkString(errand.getTaker()) || !checkString(errand.getUsername()) || !checkString(errand.getUuid()))
+            return wrapperErrorResp(ResultModel.ERRAND_TAKE_FAIL, "should specify taker, user and uuid!");
         errand.setTakeTime(this.getCurrentTime());
-        errandDao.takeErrand(errand);
+        errandDao.takeErrand(errand.getUuid(), errand.getTaker(),errand.getTakeTime());
+        Msg msg = new Msg(this.getUuid(),errand.getUsername(), errand.getTaker(), errand.getUuid(), errand.getTakeTime(), 3, false);
+        WebSocketServer receiver =
+        WebSocketServer.getWebSocketTable().get(errand.getUsername());
+        if(receiver != null){
+            receiver.setNotify(msg);
+            msg.setSent(true);
+        }
+        msgDao.addMsg(msg);
         return wrapperOKResp(errand);
     }
 
