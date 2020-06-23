@@ -42,11 +42,7 @@ class _ErrandPageState extends State<ErrandPage> {
   Future<void> _refresh() async {
     nomore = false;
     var data;
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   print("刷新结束");
-    // });
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand", null);
       await Future.delayed(Duration(milliseconds: 500), () {});
@@ -54,7 +50,6 @@ class _ErrandPageState extends State<ErrandPage> {
       print(e);
       return;
     }
-    //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       errands.clear();
       print(data['data'].length);
@@ -65,9 +60,6 @@ class _ErrandPageState extends State<ErrandPage> {
         }
       }
     }
-    // if (errands.length < 8) {
-    //   await _getMore();
-    // }
     if (current == true) {
       setState(() {});
     }
@@ -122,11 +114,6 @@ class _ErrandPageState extends State<ErrandPage> {
     print("build");
     return RefreshIndicator(
       child: Container(
-        //padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-        //padding: EdgeInsets.all(16),
-        // decoration: BoxDecoration(
-        //     color: Theme.of(context).backgroundColor,
-        //     borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
         child: ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
@@ -199,32 +186,5 @@ class _ErrandPageState extends State<ErrandPage> {
       ),
       onRefresh: _refresh,
     );
-
-//Sliver版本
-    // return CustomScrollView(
-    //   controller: _scrollController,
-    //   slivers: <Widget>[
-    //     SliverOverlapInjector(
-    //       This is the flip side of the SliverOverlapAbsorber above.
-    //       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(this.context),
-    //     ),
-    //     SliverList(
-    //       delegate: SliverChildBuilderDelegate((context, i) {
-    //         if (i == errands.length) {
-    //           return more
-    //               ? Padding(
-    //                   padding: const EdgeInsets.only(bottom: 20),
-    //                   child: SpinKitWave(
-    //                       color: Colors.lightBlueAccent.withOpacity(0.5),
-    //                       size: 30.0),
-    //                 )
-    //               : Padding(padding: EdgeInsets.all(20));
-    //         }
-    //         return Padding(
-    //           padding: const EdgeInsets.only(bottom: 10),
-    //           child: ErrandCard(errands[i], _refresh),
-    //         );
-    //       }, childCount: errands.length + 1),
-    //     ),
   }
 }

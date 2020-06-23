@@ -38,31 +38,6 @@ class _newDealPageState extends State<newDealPage> {
   final picker = ImagePicker();
   File _image;
 
-  // List<DropdownMenuItem<String>> locationItems = [
-  //   '第六教学楼',
-  //   '第三教学楼',
-  //   '第二教学楼',
-  //   '第四教学楼',
-  //   '桃李园周边',
-  //   '紫荆园周边',
-  //   '清芬园周边',
-  //   '李兆基大楼',
-  //   '东操周边',
-  //   '主楼周边',
-  //   '西操周边',
-  //   '北馆',
-  //   '快递点',
-  //   '北门',
-  //   '东南门',
-  //   '西门',
-  //   '其他'
-  // ].map<DropdownMenuItem<String>>((String v) {
-  //   return DropdownMenuItem<String>(
-  //     value: v,
-  //     child: Text(v),
-  //   );
-  // }).toList();
-
   @override
   void initState() {
     super.initState();
@@ -86,8 +61,6 @@ class _newDealPageState extends State<newDealPage> {
     phoneFocus.unfocus();
     detailFocus.unfocus();
     var DealForm = dealKey.currentState;
-    //验证Form表单
-    //if (loginForm.validate()) {
     DealForm.save();
     if (_image == null) {
       showModal(
@@ -129,12 +102,6 @@ class _newDealPageState extends State<newDealPage> {
                 "上传失败",
                 textAlign: TextAlign.center,
               ),
-              // content:
-              //     //Text("登陆失败",textAlign: TextAlign.center,),
-              //     Text(
-              //   "",
-              //   textAlign: TextAlign.center,
-              // ),
               actions: <Widget>[],
             );
           });
@@ -155,12 +122,6 @@ class _newDealPageState extends State<newDealPage> {
                 "上传成功",
                 textAlign: TextAlign.center,
               ),
-              // content:
-              //     //Text("登陆失败",textAlign: TextAlign.center,),
-              //     Text(
-              //   "用户名或密码错误",
-              //   textAlign: TextAlign.center,
-              // ),
               actions: <Widget>[],
             );
           });
@@ -199,14 +160,6 @@ class _newDealPageState extends State<newDealPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: <Widget>[
-      //     IconButton(icon: Icon(Icons.home), onPressed: null)
-      //   ],
-      //   backgroundColor: Theme.of(context).secondaryHeaderColor,
-      //   //bottom: TabBar(tabs: [Tab(child: Text("123"))]),
-      //   flexibleSpace: FlexibleSpaceBar(title: Text("123")),
-      // ),
       backgroundColor: Colors.grey[200],
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -227,15 +180,6 @@ class _newDealPageState extends State<newDealPage> {
                     BoxDecoration(gradient: GradientUtil.lightBlue(angle: 45))),
           ),
         ),
-        // SliverFixedExtentList(
-        //   itemExtent: 50.0,
-        //   delegate: SliverChildBuilderDelegate(
-        //     (context, index) => ListTile(
-        //       title: Text("Item $index"),
-        //     ),
-        //     childCount: 30,
-        //   ),
-        // ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

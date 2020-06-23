@@ -9,10 +9,8 @@ import 'package:tsingvat/chat/chatglobal.dart';
 import 'package:tsingvat/chat/message_page.dart';
 import 'package:tsingvat/model/msg.dart';
 import 'package:tsingvat/page/MyWaitErrandsPage.dart';
-import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter/material.dart';
-import '../model/conversation.dart';
 
 class WebSocketProvide with ChangeNotifier {
   // username是全局的
@@ -30,16 +28,6 @@ class WebSocketProvide with ChangeNotifier {
 
   init() async {
     print("init websocket");
-    // //String usrname;
-    // String usrname = await SharedPreferenceUtil.getString("username");
-    // if (usrname == null) {
-    //   username = "zxj";
-    //   nickname = "zxj";
-    // } else {
-    //   username = usrname;
-    // }
-    // print("username${username}  nickname:${nickname}");
-    // return await createWebsocket();
   }
 
   Future<void> topage(String name) {

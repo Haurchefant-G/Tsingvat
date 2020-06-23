@@ -59,8 +59,6 @@ class MyApp extends StatelessWidget {
         'startPage': (context) => StartPage(),
         'loginPage': (context) => Login(),
         'homePage': (context) => HomePage(title: 'Home Page'),
-        //'newTaskPage': (context) => newTaskPage(),
-        //'messagePage': (context) => MessagePage()
       },
       //home: Login(),
     );

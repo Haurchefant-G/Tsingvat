@@ -23,15 +23,10 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
 
   Future<void> getWait() async {
     var data;
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   print("刷新结束");
-    // });
     try {
       //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand/${widget.username}", null);
-      //await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
@@ -42,9 +37,6 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
       for (var json in data['data']) {
         var e = Errand.fromJson(json);
         errands.add(e);
-        // if (e.taker == null) {
-        //   errands.add(e);
-        // }
       }
     }
     if (current == true) {
@@ -55,16 +47,12 @@ class _MyWaitErrandsPageState extends State<MyWaitErrandsPage> {
   delete(int i) async {
     var data;
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.delete("/errand/delete", {"uuid": errands[i].uuid});
-      //await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
     }
-    //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       Navigator.of(context).pop();
       getWait();

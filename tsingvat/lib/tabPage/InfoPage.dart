@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tsingvat/component/takederrandcard.dart';
-import 'package:tsingvat/util/GradientUtil.dart';
 import 'package:tsingvat/component/infocard.dart';
 
 class InfoPage extends StatefulWidget {

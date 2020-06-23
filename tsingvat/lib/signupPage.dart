@@ -33,12 +33,6 @@ class _Login extends State<SignupPage> {
     //读取当前的Form状态
     String error = null;
     var signupForm = signupKey.currentState;
-    //验证Form表单
-    // if (signupForm.validate()) {
-    //   signupForm.save();
-    //   print('userName: ' + userName + ' password: ' + password);
-    //   return;
-    // }
     signupForm.save();
     if (userName.length < 4 || userName.length > 16) {
       error = "请输入规范的用户名";

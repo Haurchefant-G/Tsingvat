@@ -3,18 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tsingvat/chat/chatglobal.dart';
-import 'package:tsingvat/component/infocard.dart';
-import 'package:tsingvat/page/chatPage.dart';
 import 'package:tsingvat/page/newPostPage.dart';
 import 'package:tsingvat/page/newErrandPage.dart';
 import 'package:tsingvat/page/newDealPage.dart';
-import 'package:tsingvat/component/errandcard.dart';
 import 'package:tsingvat/tabPage/DealPage.dart';
 import 'package:tsingvat/tabPage/PostPage.dart';
 import 'package:tsingvat/tabPage/InfoPage.dart';
 import 'package:tsingvat/tabPage/ErrandPage.dart';
-import 'package:tsingvat/util/GradientUtil.dart';
-import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'dart:ui';
 
 class HomePage extends StatefulWidget {

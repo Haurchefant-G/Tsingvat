@@ -1,13 +1,9 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:tsingvat/component/customDiaglog.dart';
 import 'package:tsingvat/component/errandcard.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/model/errand.dart';
-import 'package:tsingvat/util/GradientUtil.dart';
-import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
 class searchErrandPage extends StatefulWidget {

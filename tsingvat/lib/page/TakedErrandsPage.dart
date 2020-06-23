@@ -24,15 +24,9 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
 
   Future<void> getTaked() async {
     var data;
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   print("刷新结束");
-    // });
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/errand/${widget.username}/take", null);
-      //await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
@@ -88,7 +82,6 @@ class _TakedErrandsPageState extends State<TakedErrandsPage> {
                   textAlign: TextAlign.center,
                 ),
                 content:
-                    //Text("登陆失败",textAlign: TextAlign.center,),
                     Text(
                   "没有有效的电话号码",
                 ));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
-import '../chat/chat_detail_page.dart';
 
 Handler chatDetailHandler = Handler(
   handlerFunc: (BuildContext context,Map<String,List<String>> params){

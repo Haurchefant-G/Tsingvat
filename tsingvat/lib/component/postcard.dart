@@ -22,10 +22,6 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // username = '发布者';
-    // news =
-    //     '具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容具体资讯内容';
-    // time = '时间';
     return Container(
       child: Card(
         elevation: 3,
@@ -35,14 +31,7 @@ class PostCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
-                  //crossAxisAlignment: CrossAxisAlignment.stretch,
-                  //mainAxisSize: MainAxisSize.min,
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    // CircleAvatar(
-                    //   backgroundColor: Theme.of(context).primaryColorLight,
-                    //   radius: 24,
-                    // ),
                     ClipOval(
                         child: Container(
                       height: 48,
@@ -104,12 +93,6 @@ class PostCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        //     Image.asset(
-                        //   'assets/placeholder_image.png',
-                        //   color: Colors.grey,
-                        //   colorBlendMode: BlendMode.color,
-                        //   fit: BoxFit.fitWidth,
-                        // )
                       )
                     : null,
               ),

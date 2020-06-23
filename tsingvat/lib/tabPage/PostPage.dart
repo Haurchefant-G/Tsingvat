@@ -46,7 +46,6 @@ class _PostPageState extends State<PostPage> {
       print(e);
       return;
     }
-    //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       posts.clear();
       imagenum.clear();

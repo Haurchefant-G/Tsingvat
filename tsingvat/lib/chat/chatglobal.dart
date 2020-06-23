@@ -52,11 +52,6 @@ class ChatGlobal {
     websocketProvide.createWebsocket(me.name);
   }
 
-  // static Future initMe() async {
-  //   me.avatar = await SharedPreferenceUtil.getString("avatar");
-  //   me.name = await SharedPreferenceUtil.getString("username");
-  // }
-
   static Future addUser(String username) {
     for (var userinfo in chatusers) {
       if (userinfo['nickname'] == username) {

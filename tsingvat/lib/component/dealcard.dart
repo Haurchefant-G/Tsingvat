@@ -60,20 +60,7 @@ class DealCard extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                      child: 
-                      // CircleAvatar(
-                      //   backgroundColor: Theme.of(context).primaryColorLight,
-                      //   child: Container(
-                      //     height: 80,
-                      //     width: 80,
-                      //     decoration: BoxDecoration(
-                      //       shape: BoxShape.circle,
-                      //       //borderRadius: BorderRadius.circular(12)
-                      //     ),
-                      //     child: Image.network(
-                      //       "${ConstUrl.avatarimageurl}/${name}/avatar.png", fit: BoxFit.cover,)),
-                      //   radius: 40,
-                      // ),
+                      child:
                       ClipOval(child: Container(
                         height: 24,
                         width: 24,

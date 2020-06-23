@@ -268,12 +268,6 @@ class _Login extends State<Login> {
                                     color: Color.fromARGB(255, 53, 53, 53)),
                               ),
                             ),
-                            // Text(
-                            //   '忘记密码？',
-                            //   style: TextStyle(
-                            //       fontSize: 13.0,
-                            //       color: Color.fromARGB(255, 53, 53, 53)),
-                            // ),
                             Container(),
                           ],
                         ),

@@ -2,12 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:tsingvat/chat/chat_detail_page.dart';
 import 'package:tsingvat/component/customDiaglog.dart';
 import 'package:tsingvat/const/code.dart';
 import 'package:tsingvat/const/const_url.dart';
-import 'package:tsingvat/model/deal.dart';
-import 'package:tsingvat/model/errand.dart';
 import 'package:tsingvat/model/post.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 
@@ -28,20 +25,13 @@ class _MyPostsPageState extends State<MyPostsPage> {
 
   Future<void> getMyPosts() async {
     var data;
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   print("刷新结束");
-    // });
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.get("/post/${widget.username}", null);
-      //await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
     }
-    //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       posts.clear();
       imagenum.clear();
@@ -61,16 +51,12 @@ class _MyPostsPageState extends State<MyPostsPage> {
   delete(int i) async {
     var data;
     try {
-      //print(DateTime.now().toIso8601String());
       print(DateTime.now().millisecondsSinceEpoch);
       data = await http.delete("/post/delete", {"uuid": posts[i].uuid});
-      //await Future.delayed(Duration(milliseconds: 500), () {});
-      //{"time": DateTime.now().millisecondsSinceEpoch});
     } catch (e) {
       print(e);
       return;
     }
-    //print(data);
     if (data['code'] == ResultCode.SUCCESS) {
       Navigator.of(context).pop();
       getMyPosts();
@@ -112,14 +98,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
-                            //crossAxisAlignment: CrossAxisAlignment.stretch,
-                            //mainAxisSize: MainAxisSize.min,
-                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              // CircleAvatar(
-                              //   backgroundColor: Theme.of(context).primaryColorLight,
-                              //   radius: 24,
-                              // ),
                               ClipOval(
                                   child: Container(
                                 height: 48,
@@ -211,12 +190,6 @@ class _MyPostsPageState extends State<MyPostsPage> {
                                       ),
                                     ),
                                   ),
-                                  //     Image.asset(
-                                  //   'assets/placeholder_image.png',
-                                  //   color: Colors.grey,
-                                  //   colorBlendMode: BlendMode.color,
-                                  //   fit: BoxFit.fitWidth,
-                                  // )
                                 )
                               : null,
                         ),

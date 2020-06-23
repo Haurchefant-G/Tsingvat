@@ -39,11 +39,6 @@ class _DealDetailState extends State<DealDetail> {
               child: SpinKitThreeBounce(color: Colors.blueAccent, size: 10,),
             )),
           ),
-          // Image(
-          //   image: NetworkImage(
-          //       '${ConstUrl.dealimageurl}/${widget.deal.uuid}/0.png'),
-          //   fit: BoxFit.cover,
-          // ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -94,11 +89,6 @@ class _DealDetailState extends State<DealDetail> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
                           child:
-                              // CircleAvatar(
-                              //   backgroundColor:
-                              //       Theme.of(context).primaryColorLight,
-                              //   radius: 12,
-                              // ),
                               ClipOval(
                                   child: Container(
                             height: 36,
@@ -127,11 +117,6 @@ class _DealDetailState extends State<DealDetail> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
                           child:
-                              // CircleAvatar(
-                              //   backgroundColor:
-                              //       Theme.of(context).primaryColorLight,
-                              //   radius: 12,
-                              // ),
                           Icon(Icons.phone, size: 36,)
                         ),
                         Text(
