@@ -114,9 +114,6 @@ class _InfoCardState extends State<InfoCard> {
                 onChanged: (v) {
                   newNick = v;
                 },
-                inputFormatters: [
-                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9]"))
-                ],
               ),
               actions: <Widget>[
                 FlatButton(
@@ -173,9 +170,6 @@ class _InfoCardState extends State<InfoCard> {
                 onChanged: (v) {
                   newSig = v;
                 },
-                inputFormatters: [
-                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9]"))
-                ],
               ),
               actions: <Widget>[
                 FlatButton(
