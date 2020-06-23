@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animations/animations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +15,8 @@ import 'package:tsingvat/loginPage.dart';
 import 'package:tsingvat/util/SharedPreferenceUtil.dart';
 import 'package:tsingvat/util/httpUtil.dart';
 import 'package:tsingvat/chat/message_page.dart';
+
+import 'customDiaglog.dart';
 
 class InfoCard extends StatefulWidget {
   @override
@@ -53,6 +56,7 @@ class _InfoCardState extends State<InfoCard> {
 
   changeAvatar() async {
     try {
+      Navigator.of(context).pop();
       var picker = ImagePicker();
       final image = await picker.getImage(source: ImageSource.gallery);
       var _image = File(image.path);
@@ -68,6 +72,24 @@ class _InfoCardState extends State<InfoCard> {
                   DateTime.now().microsecondsSinceEpoch.toString();
         });
         SharedPreferenceUtil.setString('avatar', userAvatar);
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: Text(
+                  "修改成功",
+                  textAlign: TextAlign.center,
+                ),
+                // content:
+                //     //Text("登陆失败",textAlign: TextAlign.center,),
+                //     Text(
+                //   "",
+                //   textAlign: TextAlign.center,
+                // ),
+                actions: <Widget>[],
+              );
+            });
       }
     } catch (e) {}
   }
@@ -142,37 +164,42 @@ class _InfoCardState extends State<InfoCard> {
             //backgroundColor: Colors.blueAccent,
             expandedHeight: 200.0,
             iconTheme: new IconThemeData(color: Colors.transparent),
-            flexibleSpace: new InkWell(
+            flexibleSpace: InkWell(
                 onTap: settingsheet,
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    userAvatar == null
-                        ? new Image.asset(
-                            "assets/avatar_logo.png",
-                            width: 100,
-                            height: 100,
-                          )
-                        : Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.transparent,
-                                image: DecorationImage(
-                                    image: NetworkImage(userAvatar),
-                                    fit: BoxFit.cover),
-                                border: Border.all(
-                                    color: Colors.white, width: 2.0)),
-                          ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      child: new Text(
-                        userName ?? " ",
-                        style: Theme.of(context).primaryTextTheme.headline6,
-                      ),
-                    )
-                  ],
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: GradientUtil.cloudyApple()
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      userAvatar == null
+                          ? new Image.asset(
+                              "assets/avatar_logo.png",
+                              width: 100,
+                              height: 100,
+                            )
+                          : Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.transparent,
+                                  image: DecorationImage(
+                                      image: NetworkImage(userAvatar),
+                                      fit: BoxFit.cover),
+                                  border: Border.all(
+                                      color: Colors.white, width: 2.0)),
+                            ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                        child: new Text(
+                          userName ?? " ",
+                          style: Theme.of(context).primaryTextTheme.headline6,
+                        ),
+                      )
+                    ],
+                  ),
                 )),
           ),
           SliverFixedExtentList(

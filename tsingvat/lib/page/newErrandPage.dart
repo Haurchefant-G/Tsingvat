@@ -74,60 +74,74 @@ class _newErrandPageState extends State<newErrandPage> {
     phoneFocus.unfocus();
     detailFocus.unfocus();
     var errandForm = errandKey.currentState;
-    //验证Form表单
-    //if (loginForm.validate()) {
     errandForm.save();
-    var data;
-    try {
-      errand.username = await SharedPreferenceUtil.getString('username');
-      data = await http.post('/errand/create', errand.toJson());
-      errand = Errand.fromJson(data['data']);
-    } catch (e) {
-      print(e);
-      showModal(
-          context: context,
-          configuration: FadeScaleTransitionConfiguration(),
-          builder: (BuildContext context) {
-            return CustomDialog(
-              title: Text(
-                "发布失败",
-                textAlign: TextAlign.center,
-              ),
-              // content:
-              //     //Text("登陆失败",textAlign: TextAlign.center,),
-              //     Text(
-              //   "",
-              //   textAlign: TextAlign.center,
-              // ),
-              actions: <Widget>[],
-            );
-          });
-      return;
-    }
-    print(data);
-    if (data['code'] == ResultCode.SUCCESS) {
-      showModal(
-          context: context,
-          configuration: FadeScaleTransitionConfiguration(),
-          builder: (BuildContext context) {
-            Future.delayed(Duration(milliseconds: 500), () {
-              Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+    if (errand.content.length > 0 &&
+        errand.bonus >= 0 &&
+        errand.fromAddr.length > 0 &&
+        errand.sfromAddr.length > 0 &&
+        errand.toAddr.length > 0 &&
+        errand.stoAddr.length > 0 &&
+        errand.ddlTime > 0) {
+      var data;
+      try {
+        errand.username = await SharedPreferenceUtil.getString('username');
+        data = await http.post('/errand/create', errand.toJson());
+        errand = Errand.fromJson(data['data']);
+      } catch (e) {
+        print(e);
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: Text(
+                  "发布失败",
+                  textAlign: TextAlign.center,
+                ),
+                // content:
+                //     //Text("登陆失败",textAlign: TextAlign.center,),
+                //     Text(
+                //   "",
+                //   textAlign: TextAlign.center,
+                // ),
+                actions: <Widget>[],
+              );
             });
-            return CustomDialog(
-              title: Text(
-                "发布成功",
-                textAlign: TextAlign.center,
-              ),
-              // content:
-              //     //Text("登陆失败",textAlign: TextAlign.center,),
-              //     Text(
-              //   "用户名或密码错误",
-              //   textAlign: TextAlign.center,
-              // ),
-              actions: <Widget>[],
-            );
-          });
-      //}
+        return;
+      }
+      print(data);
+      if (data['code'] == ResultCode.SUCCESS) {
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              Future.delayed(Duration(milliseconds: 500), () {
+                Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+              });
+              return CustomDialog(
+                title: Text(
+                  "发布成功",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
+            });
+        //}
+      } else {
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: Text(
+                  "发布失败",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
+            });
+        //}
+      }
     } else {
       showModal(
           context: context,
@@ -135,27 +149,18 @@ class _newErrandPageState extends State<newErrandPage> {
           builder: (BuildContext context) {
             return CustomDialog(
               title: Text(
-                "发布失败",
+                "请完善任务信息",
                 textAlign: TextAlign.center,
               ),
               actions: <Widget>[],
             );
           });
-      //}
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: <Widget>[
-      //     IconButton(icon: Icon(Icons.home), onPressed: null)
-      //   ],
-      //   backgroundColor: Theme.of(context).secondaryHeaderColor,
-      //   //bottom: TabBar(tabs: [Tab(child: Text("123"))]),
-      //   flexibleSpace: FlexibleSpaceBar(title: Text("123")),
-      // ),
       backgroundColor: Colors.grey[200],
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -165,11 +170,15 @@ class _newErrandPageState extends State<newErrandPage> {
       ),
       body: CustomScrollView(slivers: <Widget>[
         SliverAppBar(
-          //title: Text("title"),
           floating: false,
           pinned: true,
           expandedHeight: 200,
-          flexibleSpace: FlexibleSpaceBar(title: Text("发布跑腿"), background: DecoratedBox(decoration: BoxDecoration(gradient: GradientUtil.freshOasis(angle: 45))),),
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text("发布跑腿"),
+            background: DecoratedBox(
+                decoration: BoxDecoration(
+                    gradient: GradientUtil.freshOasis(angle: 45))),
+          ),
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -210,12 +219,9 @@ class _newErrandPageState extends State<newErrandPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
-                          //textAlign: TextAlign.center,
                           focusNode: bonusFocus,
                           decoration: InputDecoration(
                             hintText: '报酬',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon:
                                 ImageIcon(AssetImage("assets/icon/RMB.png")),
                             border: InputBorder.none,
@@ -223,21 +229,18 @@ class _newErrandPageState extends State<newErrandPage> {
                           inputFormatters: [
                             WhitelistingTextInputFormatter(RegExp("[0-9]"))
                           ],
-
                           keyboardType: TextInputType.numberWithOptions(
                               signed: false, decimal: true),
                           onEditingComplete: () {
                             bonusFocus.unfocus();
                           },
                           onSaved: (v) {
-                            errand.bonus = double.parse(v);
-                          },
-                          validator: (username) {
-                            if (username.length == 0) {
-                              print('请输入用户名');
+                            try {
+                              errand.bonus = double.parse(v);
+                            } catch (e) {
+                              errand.bonus = -1;
                             }
                           },
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -256,13 +259,7 @@ class _newErrandPageState extends State<newErrandPage> {
                               child: DropdownButtonFormField<String>(
                                   decoration: InputDecoration(
                                     hintText: '取物地点',
-
-                                    //prefixText: '￥  ',
-
-                                    //prefixIcon: Icon(Icons.attach_money),
-
                                     prefixIcon: Icon(Icons.location_city),
-
                                     border: InputBorder.none,
                                   ),
                                   icon: Icon(Icons.arrow_downward),
@@ -316,18 +313,12 @@ class _newErrandPageState extends State<newErrandPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
-                          //textAlign: TextAlign.center,
                           focusNode: sfromFocus,
                           decoration: InputDecoration(
                             hintText: '具体取物地点',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon: Icon(Icons.location_on),
                             border: InputBorder.none,
                           ),
-                          // inputFormatters: [
-                          //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          // ],
                           keyboardType: TextInputType.text,
                           onEditingComplete: () {
                             sfromFocus.unfocus();
@@ -335,7 +326,6 @@ class _newErrandPageState extends State<newErrandPage> {
                           onSaved: (v) {
                             errand.sfromAddr = v;
                           },
-                          validator: (v) {},
                           onFieldSubmitted: (value) {},
                         ),
                       ),
@@ -355,13 +345,7 @@ class _newErrandPageState extends State<newErrandPage> {
                               child: DropdownButtonFormField<String>(
                                   decoration: InputDecoration(
                                     hintText: '送达地点',
-
-                                    //prefixText: '￥  ',
-
-                                    //prefixIcon: Icon(Icons.attach_money),
-
                                     prefixIcon: Icon(Icons.location_city),
-
                                     border: InputBorder.none,
                                   ),
                                   icon: Icon(Icons.arrow_downward),
@@ -399,7 +383,7 @@ class _newErrandPageState extends State<newErrandPage> {
                                                     .copyWith(
                                                         // alwaysUse24HourFormat:
                                                         //     true
-                                                            ),
+                                                        ),
                                                 child: child,
                                               );
                                             },
@@ -408,8 +392,6 @@ class _newErrandPageState extends State<newErrandPage> {
                                             setState(() {
                                               endTime =
                                                   "${value.hour}:${value.minute}";
-                                              //endTime = value.toString();
-                                              // }
                                             });
                                             errand.ddlTime = DateTime(
                                                     DateTime.now().year,
@@ -435,17 +417,11 @@ class _newErrandPageState extends State<newErrandPage> {
                         ),
                         child: TextFormField(
                           focusNode: stoFocus,
-                          //textAlign: TextAlign.center,
                           decoration: InputDecoration(
                             hintText: '具体送达地点',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon: Icon(Icons.location_on),
                             border: InputBorder.none,
                           ),
-                          // inputFormatters: [
-                          //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          // ],
                           keyboardType: TextInputType.text,
                           onEditingComplete: () {
                             stoFocus.unfocus();
@@ -454,8 +430,6 @@ class _newErrandPageState extends State<newErrandPage> {
                           onSaved: (v) {
                             errand.stoAddr = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -465,18 +439,12 @@ class _newErrandPageState extends State<newErrandPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
-                          //textAlign: TextAlign.center,
                           focusNode: phoneFocus,
                           decoration: InputDecoration(
-                            hintText: '联系电话',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
+                            hintText: '联系电话,可省略',
                             prefixIcon: Icon(Icons.phone),
                             border: InputBorder.none,
                           ),
-                          // inputFormatters: [
-                          //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          // ],
                           keyboardType: TextInputType.phone,
                           onEditingComplete: () {
                             phoneFocus.unfocus();
@@ -484,10 +452,7 @@ class _newErrandPageState extends State<newErrandPage> {
                           },
                           onSaved: (v) {
                             errand.phone = null;
-                            //v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -499,17 +464,10 @@ class _newErrandPageState extends State<newErrandPage> {
                         ),
                         child: TextFormField(
                           focusNode: detailFocus,
-                          //textAlign: TextAlign.center,
                           decoration: InputDecoration(
-                            hintText: '补充信息(如快递单号，快递收件人等)',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
-                            //prefixIcon: Icon(Icons.info),
+                            hintText: '补充信息，可省略(只有接单人可看到，对于部分关键信息如取件码，收件人名登请填写在此)',
                             border: InputBorder.none,
                           ),
-                          // inputFormatters: [
-                          //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          // ],
                           style: Theme.of(context)
                               .primaryTextTheme
                               .subtitle1
@@ -519,8 +477,6 @@ class _newErrandPageState extends State<newErrandPage> {
                           onSaved: (v) {
                             errand.details = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(top: 300)),

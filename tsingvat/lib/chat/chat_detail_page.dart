@@ -140,12 +140,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   Container(
                     width: ScreenUtil().setWidth(60.0),
                     margin: EdgeInsets.only(right: ScreenUtil().setWidth(20.0)),
-                    child:  IconButton(
-                      icon: Icon(Icons.keyboard_voice),
-                      onPressed: () {
-                        print('切换到语音');
-                      } 
-                    ), 
+                    child:  null
+                    // IconButton(
+                    //   icon: Icon(Icons.keyboard_voice),
+                    //   onPressed: () {
+                    //     print('切换到语音');
+                    //   } 
+                    // ), 
                   ),
                   Expanded(
                     child: Container(
@@ -175,15 +176,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       enabled: true, //是否禁用
                     ),
                   )),
-                  Container(
-                    width: ScreenUtil().setWidth(60.0),
-                    child:  IconButton(
-                      icon: Icon(Icons.face), //发送按钮图标
-                      onPressed: () {
-                        print('打开表情面板');
-                      } 
-                    ), 
-                  ),
+                  // Container(
+                  //   width: ScreenUtil().setWidth(60.0),
+                  //   child:  IconButton(
+                  //     icon: Icon(Icons.face), //发送按钮图标
+                  //     onPressed: () {
+                  //       print('打开表情面板');
+                  //     } 
+                  //   ), 
+                  // ),
                   Container(
                     width: ScreenUtil().setWidth(60.0),
                     margin: EdgeInsets.only(right: ScreenUtil().setWidth(20.0)),

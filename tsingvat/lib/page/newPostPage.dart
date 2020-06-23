@@ -69,69 +69,73 @@ class _newPostPageState extends State<newPostPage> {
 
   Future<void> createPost() async {
     contentFocus.unfocus();
-    var loginForm = postKey.currentState;
+    var dealForm = postKey.currentState;
     //验证Form表单
     //if (loginForm.validate()) {
-    loginForm.save();
-    var data;
-    var data2;
-    try {
-      post.username = await SharedPreferenceUtil.getString('username');
-      data = await http.post('/post/create', post.toJson());
-      post = Post.fromJson(data['data']);
-      if (_image != null) {
-        data2 = await http.post(
-            '/images/${post.uuid}',
-            FormData.fromMap(
-                {'images': MultipartFile.fromFileSync(_image.path)}));
-        print(data2);
-      }
-    } catch (e) {
-      print(e);
-      showModal(
-          context: context,
-          configuration: FadeScaleTransitionConfiguration(),
-          builder: (BuildContext context) {
-            return CustomDialog(
-              title: Text(
-                "上传失败",
-                textAlign: TextAlign.center,
-              ),
-              // content:
-              //     //Text("登陆失败",textAlign: TextAlign.center,),
-              //     Text(
-              //   "",
-              //   textAlign: TextAlign.center,
-              // ),
-              actions: <Widget>[],
-            );
-          });
-      return;
-    }
-    print(data);
-    if (data['code'] == ResultCode.SUCCESS) {
-      showModal(
-          context: context,
-          configuration: FadeScaleTransitionConfiguration(),
-          builder: (BuildContext context) {
-            Future.delayed(Duration(milliseconds: 500), () {
-              Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+    dealForm.save();
+    if (post.content.length > 0) {
+      var data;
+      var data2;
+      try {
+        post.username = await SharedPreferenceUtil.getString('username');
+        data = await http.post('/post/create', post.toJson());
+        post = Post.fromJson(data['data']);
+        if (_image != null) {
+          data2 = await http.post(
+              '/images/${post.uuid}',
+              FormData.fromMap(
+                  {'images': MultipartFile.fromFileSync(_image.path)}));
+          print(data2);
+        }
+      } catch (e) {
+        print(e);
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: Text(
+                  "发布失败",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
             });
-            return CustomDialog(
-              title: Text(
-                "上传成功",
-                textAlign: TextAlign.center,
-              ),
-              // content:
-              //     //Text("登陆失败",textAlign: TextAlign.center,),
-              //     Text(
-              //   "用户名或密码错误",
-              //   textAlign: TextAlign.center,
-              // ),
-              actions: <Widget>[],
-            );
-          });
-      //}
+        return;
+      }
+      print(data);
+      if (data['code'] == ResultCode.SUCCESS) {
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              Future.delayed(Duration(milliseconds: 500), () {
+                Navigator.of(context).popUntil(ModalRoute.withName('homePage'));
+              });
+              return CustomDialog(
+                title: Text(
+                  "发布成功",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
+            });
+        //}
+      } else {
+        showModal(
+            context: context,
+            configuration: FadeScaleTransitionConfiguration(),
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: Text(
+                  "发布失败",
+                  textAlign: TextAlign.center,
+                ),
+                actions: <Widget>[],
+              );
+            });
+        //}
+      }
     } else {
       showModal(
           context: context,
@@ -139,54 +143,39 @@ class _newPostPageState extends State<newPostPage> {
           builder: (BuildContext context) {
             return CustomDialog(
               title: Text(
-                "上传失败",
+                "当前内容为空",
                 textAlign: TextAlign.center,
               ),
               actions: <Widget>[],
             );
           });
-      //}
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: <Widget>[
-      //     IconButton(icon: Icon(Icons.home), onPressed: null)
-      //   ],
-      //   backgroundColor: Theme.of(context).secondaryHeaderColor,
-      //   //bottom: TabBar(tabs: [Tab(child: Text("123"))]),
-      //   flexibleSpace: FlexibleSpaceBar(title: Text("123")),
-      // ),
       backgroundColor: Colors.grey[200],
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColorDark,
         onPressed: () {
-          //Navigator.pop(context);
           createPost();
         },
         child: Icon(Icons.done_outline),
       ),
       body: CustomScrollView(slivers: <Widget>[
         SliverAppBar(
-          //title: Text("title"),
           floating: false,
           pinned: true,
           expandedHeight: 200,
-          flexibleSpace: FlexibleSpaceBar(title: Text("发布资讯"),background: DecoratedBox(decoration: BoxDecoration(gradient: GradientUtil.warmFlame(angle: 45))),),
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text("发布资讯"),
+            background: DecoratedBox(
+                decoration:
+                    BoxDecoration(gradient: GradientUtil.warmFlame(angle: 45))),
+          ),
         ),
-        // SliverFixedExtentList(
-        //   itemExtent: 50.0,
-        //   delegate: SliverChildBuilderDelegate(
-        //     (context, index) => ListTile(
-        //       title: Text("Item $index"),
-        //     ),
-        //     childCount: 30,
-        //   ),
-        // ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -209,14 +198,8 @@ class _newPostPageState extends State<newPostPage> {
                           //textAlign: TextAlign.center,
                           decoration: InputDecoration(
                             hintText: '内容',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
-                            //prefixIcon: Icon(Icons.info),
                             border: InputBorder.none,
                           ),
-                          // inputFormatters: [
-                          //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          // ],
                           style: Theme.of(context)
                               .primaryTextTheme
                               .subtitle1
@@ -226,8 +209,6 @@ class _newPostPageState extends State<newPostPage> {
                           onSaved: (v) {
                             post.content = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),

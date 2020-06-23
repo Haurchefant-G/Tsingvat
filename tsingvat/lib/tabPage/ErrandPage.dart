@@ -96,7 +96,7 @@ class _ErrandPageState extends State<ErrandPage> {
           }
         }
       }
-      if (errands.length == n) {
+      if (data['data'].length == 0) {
         nomore = true;
       }
       if (current == true) {

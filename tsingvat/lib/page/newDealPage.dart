@@ -89,6 +89,21 @@ class _newDealPageState extends State<newDealPage> {
     //验证Form表单
     //if (loginForm.validate()) {
     DealForm.save();
+    if (_image == null) {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "请选择物品图片",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+      return;
+    } else if (deal.content.length > 0 && deal.price >=0 && deal.phone.length > 0 && deal.details.length > 0) { 
     var data;
     var data2;
     try {
@@ -97,7 +112,9 @@ class _newDealPageState extends State<newDealPage> {
       deal = Deal.fromJson(data['data']);
       if (_image != null) {
         data2 = await http.post(
-            '/images/${deal.uuid}', FormData.fromMap({'images': MultipartFile.fromFileSync(_image.path)}));
+            '/images/${deal.uuid}',
+            FormData.fromMap(
+                {'images': MultipartFile.fromFileSync(_image.path)}));
         print("data2-----------");
         print(data2);
       }
@@ -163,6 +180,20 @@ class _newDealPageState extends State<newDealPage> {
           });
       //}
     }
+    } else {
+      showModal(
+          context: context,
+          configuration: FadeScaleTransitionConfiguration(),
+          builder: (BuildContext context) {
+            return CustomDialog(
+              title: Text(
+                "请完善任务信息",
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[],
+            );
+          });
+    }
   }
 
   @override
@@ -189,7 +220,12 @@ class _newDealPageState extends State<newDealPage> {
           floating: false,
           pinned: true,
           expandedHeight: 200,
-          flexibleSpace: FlexibleSpaceBar(title: Text("发布交易"),background: DecoratedBox(decoration: BoxDecoration(gradient: GradientUtil.lightBlue(angle: 45))),),
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text("发布交易"),
+            background: DecoratedBox(
+                decoration:
+                    BoxDecoration(gradient: GradientUtil.lightBlue(angle: 45))),
+          ),
         ),
         // SliverFixedExtentList(
         //   itemExtent: 50.0,
@@ -220,8 +256,6 @@ class _newDealPageState extends State<newDealPage> {
                           focusNode: contentFocus,
                           decoration: InputDecoration(
                             hintText: '出售物品',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon: Icon(Icons.local_offer),
                             border: InputBorder.none,
                           ),
@@ -247,16 +281,13 @@ class _newDealPageState extends State<newDealPage> {
                             focusNode: priceFocus,
                             decoration: InputDecoration(
                               hintText: '价格',
-                              //prefixText: '￥  ',
-                              //prefixIcon: Icon(Icons.attach_money),
                               prefixIcon:
                                   ImageIcon(AssetImage("assets/icon/RMB.png")),
                               border: InputBorder.none,
                             ),
                             inputFormatters: [
-                              WhitelistingTextInputFormatter(RegExp("[0-9.]"))
+                              WhitelistingTextInputFormatter(RegExp("[0-9]"))
                             ],
-
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
                             onEditingComplete: () {
@@ -264,7 +295,11 @@ class _newDealPageState extends State<newDealPage> {
                               phoneFocus.requestFocus();
                             },
                             onSaved: (v) {
-                              deal.price = double.parse(v);
+                              try {
+                                deal.price = double.parse(v);
+                              } catch (e) {
+                                deal.price = -1;
+                              }
                             },
                             validator: (v) {
                               if (v.length == 0) {
@@ -280,12 +315,9 @@ class _newDealPageState extends State<newDealPage> {
                           color: Theme.of(context).dialogBackgroundColor,
                         ),
                         child: TextFormField(
-                          //textAlign: TextAlign.center,
                           focusNode: phoneFocus,
                           decoration: InputDecoration(
                             hintText: '联系电话',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
                             prefixIcon: Icon(Icons.phone),
                             border: InputBorder.none,
                           ),
@@ -300,8 +332,6 @@ class _newDealPageState extends State<newDealPage> {
                           onSaved: (v) {
                             deal.phone = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
@@ -316,14 +346,8 @@ class _newDealPageState extends State<newDealPage> {
                           focusNode: detailFocus,
                           decoration: InputDecoration(
                             hintText: '补充信息(出售物品具体描述)',
-                            //prefixText: '￥  ',
-                            //prefixIcon: Icon(Icons.attach_money),
-                            //prefixIcon: Icon(Icons.info),
                             border: InputBorder.none,
                           ),
-                          // inputFormatters: [
-                          //   WhitelistingTextInputFormatter(RegExp("[1-9.]"))
-                          // ],
                           style: Theme.of(context)
                               .primaryTextTheme
                               .subtitle1
@@ -336,8 +360,6 @@ class _newDealPageState extends State<newDealPage> {
                           onSaved: (v) {
                             deal.details = v;
                           },
-                          validator: (v) {},
-                          onFieldSubmitted: (value) {},
                         ),
                       ),
                       Padding(padding: EdgeInsets.all(8.0)),
